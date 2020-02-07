@@ -27,5 +27,10 @@ class RefreshNewsPortalBloc extends NewsPortalEvent {
   RefreshNewsPortalBloc(this.skip, this.top) : super([skip, top]);
 }
 
-class GetNewsPortalFromCacheBlocEvent extends NewsPortalEvent {}
+class GetNewsPortalFromCacheBlocEvent extends NewsPortalEvent {
+  final skip;
+  final top;
+
+  GetNewsPortalFromCacheBlocEvent(this.skip, this.top) : super([skip, top]);
+}
 

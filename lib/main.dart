@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/app_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
 import 'injection_container.dart' as di;
 
 void main() async {

@@ -9,22 +9,22 @@ abstract class ProfileState extends Equatable{
 }
 
 class InitialProfileState extends ProfileState {}
-class Empty extends ProfileState {}
-class Loading extends ProfileState {}
-class Auth extends ProfileState {}
+class EmptyProfile extends ProfileState {}
+class LoadingProfile extends ProfileState {}
+class NeedAuthProfile extends ProfileState {}
 
-class Loaded extends ProfileState {
+class LoadedProfile extends ProfileState {
   final ProfileModel model;
 
-  Loaded({@required this.model}) : super([model]){
+  LoadedProfile({@required this.model}) : super([model]){
     print('model === $model');
     print('model.profile === ${model.profile}');
     GlobalData.profile = model.profile;
   }
 }
 
-class Error extends ProfileState {
+class ErrorProfile extends ProfileState {
   final String message;
 
-  Error({@required this.message}) : super([message]);
+  ErrorProfile({@required this.message}) : super([message]);
 }

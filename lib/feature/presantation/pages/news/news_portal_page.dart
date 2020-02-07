@@ -11,7 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 int skipNews = 0;
 int top = 5;
-var _news;
 
 bool _disableRefreshNews = false;
 bool _disableNextNews = false;
@@ -27,8 +26,13 @@ void disableOrEnable(bool trueOrFalse){
 
 
 class NewsPortalPage extends StatelessWidget {
+  var news;
+  NewsPortalPage({this.news});
+
+
   @override
   Widget build(BuildContext context) {
+    print('news ==================================== $news');
     return Scaffold(
       body: BlocProvider(
           create: (context) => sl<NewsPortalBloc>(),
@@ -38,28 +42,25 @@ class NewsPortalPage extends StatelessWidget {
   }
 }
 class BuildPageNewsPortal extends StatelessWidget{
+  var news;
+  BuildPageNewsPortal({this.news});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NewsPortalBloc, NewsPortalState>(
       builder: (context, state) {
-        if (state is Empty) {
-          _news = GlobalData.news;
-          if(_news == null){
-            //dispatchGetNewsFromCache();
-
+        if (state is EmptyNewsPortal) {
+          if(news == null){
             return NewsPortalShimmer();
           } else {
-            print('111111 ==== $_news');
-            return NewsPortalBody(news: _news,);
+            return NewsPortalBody(news: news,);
           }
-        } else if (state is Loading) {
+        } else if (state is LoadingNewsPortal) {
           return NewsPortalShimmer();
-        } else if (state is Loaded) {
-          _news = state.model.news;
-          print('111111111111111 ==== $_news');
-          return NewsPortalBody(news: _news,);
-        } else if (state is Error) {
+        } else if (state is LoadedNewsPortal) {
+          news = state.model.news;
+          return NewsPortalBody(news: news,);
+        } else if (state is ErrorNewsPortal) {
           return Container(
             child: Center(
               child: Text(state.message),
@@ -84,7 +85,7 @@ class NewsPortalBody extends StatefulWidget {
 class NewsPortalBodyState extends State<NewsPortalBody> {
   ScrollController _scrollController = new ScrollController();
   GlobalKey<RefreshIndicatorState> refreshKey;
-
+  var news;
   @override
   void dispose(){
     _scrollController.dispose();
@@ -94,7 +95,7 @@ class NewsPortalBodyState extends State<NewsPortalBody> {
   @override
   void initState() {
     super.initState();
-    _news = widget.news;
+    news = widget.news;
     print('RENDER NEWS PORTAL');
 
     _scrollController.addListener(() {
@@ -119,16 +120,16 @@ class NewsPortalBodyState extends State<NewsPortalBody> {
                 pinned: false,
                 automaticallyImplyLeading: false,
                 expandedHeight: 245,
-                flexibleSpace: NewsPortalTitle(news: _news[0])
+                flexibleSpace: NewsPortalTitle(news: news[0])
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate((BuildContext context, int index){
                 index++;
-                final news = _news[index];
+                final newss = news[index];
 
-                return NewsPortalItems(news: news, index: index);
+                return NewsPortalItems(news: newss, index: index);
               },
-                  childCount: (_news.length - 1)
+                  childCount: (news.length - 1)
               ),
             ),
             SliverList(

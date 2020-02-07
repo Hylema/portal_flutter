@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture_project/core/api/token/token.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
-import 'package:flutter_architecture_project/core/token.dart';
 import 'package:http/http.dart' as http;
 
 class ImageNetworkWidget extends StatelessWidget{
@@ -19,7 +19,7 @@ class ImageNetworkWidget extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    final String token = AuthToken.token;
+    final String token = Token.authToken;
 
     bool badImage = false;
     String file;

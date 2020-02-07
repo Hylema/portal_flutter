@@ -30,7 +30,7 @@ class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> {
         getNewsFromCache = getNewsFromCache;
 
   @override
-  NewsPortalState get initialState => Empty();
+  NewsPortalState get initialState => EmptyNewsPortal();
 
   @override
   Stream<NewsPortalState> mapEventToState(
@@ -40,20 +40,31 @@ class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> {
       skiped = event.skip;
       top = event.top;
 
-      yield Loading();
+      yield LoadingNewsPortal();
 
       yield* _eitherLoadedOrErrorState(either: await _getNewsFromNetwork());
 
     } else if(event is GetNewsPortalFromCacheBlocEvent){
-      yield Loading();
+      skiped = event.skip;
+      top = event.top;
+      yield LoadingNewsPortal();
 
       var modelOrFailure = await _failureOrModelCache(
         either: await _getNewsFromCache(),
       );
 
       yield modelOrFailure.fold(
-            (failure) => Error(message: _mapFailureToMessage(failure)),
-            (model) => Loaded(model: model),
+            (failure){
+          if(failure is AuthFailure){
+            print('нужно авторизация для профиля');
+            return NeedAuthNews();
+          }
+          return ErrorNewsPortal(message: _mapFailureToMessage(failure));
+        },
+            (model){
+          print('все норм');
+          return LoadedNewsPortal(model: model);
+        },
       );
     }
   }
@@ -74,8 +85,8 @@ class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> {
     Either<Failure, NewsPortal> either,
   }) async* {
     yield either.fold(
-          (failure) => Error(message: _mapFailureToMessage(failure)),
-          (model) => Loaded(model: model),
+          (failure) => ErrorNewsPortal(message: _mapFailureToMessage(failure)),
+          (model) => LoadedNewsPortal(model: model),
     );
   }
 
@@ -84,9 +95,11 @@ class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> {
   }) async {
     return either.fold(
           (failure) async {
+            print('данных нет в кэшэ у новостей');
             return await _getNewsFromNetwork();
           },
           (model){
+            print('данные есть в кэшэ у новостей');
             return Right(model);
           },
     );

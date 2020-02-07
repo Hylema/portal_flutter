@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture_project/core/api/token/token.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
-import 'package:flutter_architecture_project/core/token.dart';
 import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
 import 'package:http/http.dart' as http;
 
@@ -16,7 +16,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   final http.Client client;
   final ProfileParser parser;
 
-  ProfileRemoteDataSourceImpl({@required this.client, @required this.parser});
+  ProfileRemoteDataSourceImpl({
+    @required this.client,
+    @required this.parser,
+  });
 
   @override
   Future<ProfileModel> getProfile() =>
@@ -27,7 +30,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       url,
       headers: {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ${AuthToken.token}'
+        'Authorization': 'Bearer ${Token.authToken}'
       },
     );
 

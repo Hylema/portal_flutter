@@ -48,8 +48,8 @@ class NewsPortalRepositoryImpl implements NewsPortalRepository {
         final remoteNewsPortal = await remoteDataSource.getNewsPortal(skip, top);
         localDataSource.cacheNewsPortal(remoteNewsPortal);
         return Right(remoteNewsPortal);
-      } on ServerException {
-        return Left(ServerFailure());
+      } on AuthFailure {
+        return Left(AuthFailure());
       }
     } else {
       return Left(NetworkFailure());

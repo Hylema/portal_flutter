@@ -29,26 +29,35 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         getProfileFromCache = getProfileFromCache;
 
   @override
-  ProfileState get initialState => Empty();
+  ProfileState get initialState => EmptyProfile();
 
   @override
   Stream<ProfileState> mapEventToState(
       ProfileEvent event,
       ) async* {
     if (event is GetProfileFromNetworkBlocEvent) {
-      yield Loading();
+      yield LoadingProfile();
 
       yield* _eitherLoadedOrErrorState(either: await _getProfileFromNetwork());
     } else if(event is GetProfileFromCacheBlocEvent){
-      yield Loading();
+      yield LoadingProfile();
 
       var modelOrFailure = await _failureOrModelCache(
         either: await _getProfileFromCache(),
       );
 
       yield modelOrFailure.fold(
-            (failure) => Error(message: _mapFailureToMessage(failure)),
-            (model) => Loaded(model: model),
+            (failure){
+          if(failure is AuthFailure){
+            print('нужно авторизация для профиля');
+            return NeedAuthProfile();
+          }
+          return ErrorProfile(message: _mapFailureToMessage(failure));
+        },
+            (model){
+          print('все норм');
+          return LoadedProfile(model: model);
+        },
       );
     }
   }
@@ -70,12 +79,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }) async {
     return either.fold(
           (failure) async {
-            print('данных нет в кэшэ');
+            print('данных нет в кэшэ у профиля');
         return await _getProfileFromNetwork();
       },
           (model){
             print('данные есть в кэшэ === $model');
-            print('данные есть в кэшэ === ${model.profile}');
         return Right(model);
       },
     );
@@ -87,13 +95,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     yield either.fold(
           (failure){
             if(failure is AuthFailure){
-              return Auth();
+              print('нужно авторизация для профиля');
+              return NeedAuthProfile();
             }
-            return Error(message: _mapFailureToMessage(failure));
+            return ErrorProfile(message: _mapFailureToMessage(failure));
           },
           (model){
             print('все норм');
-            return Loaded(model: model);
+            return LoadedProfile(model: model);
           },
     );
   }

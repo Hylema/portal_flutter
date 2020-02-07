@@ -1,4 +1,5 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:flutter_architecture_project/core/api/token/auth_token.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
 import 'package:flutter_architecture_project/core/until/input_converter.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_architecture_project/feature/domain/usecases/news/get_ne
 import 'package:flutter_architecture_project/feature/domain/usecases/news/get_news_portal_from_network.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/profile/get_profile_from_cache.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/profile/get_profile_from_network.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -38,9 +40,12 @@ Future<void> init() async {
     ),
   );
 
+  sl.registerFactory(() => AppBloc(),);
+
   /// Use cases
   sl.registerLazySingleton(() => GetNewsPortalFormNetwork(sl()));
   sl.registerLazySingleton(() => GetNewsPortalFromCache(sl()));
+
   sl.registerLazySingleton(() => GetProfileFormNetwork(sl()));
   sl.registerLazySingleton(() => GetProfileFromCache(sl()));
 
@@ -63,7 +68,9 @@ Future<void> init() async {
 
   /// Data sources
   sl.registerLazySingleton<NewsPortalRemoteDataSource>(
-        () => NewsPortalRemoteDataSourceImpl(client: sl()),
+        () => NewsPortalRemoteDataSourceImpl(
+            client: sl(),
+        ),
   );
   sl.registerLazySingleton<NewsPortalLocalDataSource>(
         () => NewsPortalLocalDataSourceImpl(sharedPreferences: sl()),
@@ -72,7 +79,7 @@ Future<void> init() async {
   sl.registerLazySingleton<ProfileRemoteDataSource>(
         () => ProfileRemoteDataSourceImpl(
         client: sl(),
-        parser: sl()
+        parser: sl(),
     ),
   );
   sl.registerLazySingleton<ProfileLocalDataSource>(
@@ -82,6 +89,7 @@ Future<void> init() async {
   );
 
   ///! Core
+  sl.registerLazySingleton<AuthToken>(() => AuthToken());
   sl.registerLazySingleton(() => InputConverter());
   sl.registerLazySingleton(() => ProfileParser());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));

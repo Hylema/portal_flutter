@@ -43,28 +43,29 @@ class NewsMainPageCarouselState extends State<NewsMainPageCarousel> with Automat
   Widget build(BuildContext context) {
     return BlocBuilder<NewsPortalBloc, NewsPortalState>(
       builder: (context, state) {
-        if (state is Empty) {
-          _news = GlobalData.news;
-          if(_news == null){
-
-            return Container();
-          } else {
-            return NewsMainPageSwipeWidgetBody(news: _news,);
-          }
-        } else if (state is Loading) {
-          return Container();
-        } else if (state is Loaded) {
-          _news = state.model.news;
-          return NewsMainPageSwipeWidgetBody(news: _news,);
-        } else if (state is Error) {
-          return Container(
-            child: Center(
-              child: Text(state.message),
-            ),
-          );
-        } else {
-          return Container();
-        }
+        return Container();
+//        if (state is Empty) {
+//          _news = GlobalData.news;
+//          if(_news == null){
+//
+//            return Container();
+//          } else {
+//            return NewsMainPageSwipeWidgetBody(news: _news,);
+//          }
+//        } else if (state is Loading) {
+//          return Container();
+//        } else if (state is Loaded) {
+//          _news = state.model.news;
+//          return NewsMainPageSwipeWidgetBody(news: _news,);
+//        } else if (state is Error) {
+//          return Container(
+//            child: Center(
+//              child: Text(state.message),
+//            ),
+//          );
+//        } else {
+//          return Container();
+//        }
       },
     );
   }

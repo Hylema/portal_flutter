@@ -1,28 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/app_page.dart';
-import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
-import 'package:flutter_architecture_project/injection_container.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Bla extends StatelessWidget {
-@override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => sl<NewsPortalBloc>(),
-        child: GetAllDataProgressBar()
-    );
-  }
-}
-
-
-class GetAllDataProgressBar extends StatefulWidget {
+class ProgressBar extends StatefulWidget {
 
   @override
-  GetAllDataProgressBarState createState() => GetAllDataProgressBarState();
+  ProgressBarState createState() => ProgressBarState();
 }
 
-class GetAllDataProgressBarState extends State<GetAllDataProgressBar> with SingleTickerProviderStateMixin {
+class ProgressBarState extends State<ProgressBar> with SingleTickerProviderStateMixin {
   AnimationController controller;
   Animation animation;
 
@@ -48,61 +32,44 @@ class GetAllDataProgressBarState extends State<GetAllDataProgressBar> with Singl
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: MultiBlocListener(
-          listeners: [
-            BlocListener<NewsPortalBloc, NewsPortalState>(
-              listener: (context, state) {
-                print('NewsPortalBloc state - $state');
-                if (state is Empty) {
-                  print('NewsPortalBloc state is Empty');
-                  //dispatchNews();
-                } else if (state is Loaded) {
-                  print('NewsPortalBloc state is Loaded');
-                  Navigator.push(context, FadeRoute(page: AppPage()));
-                } else if (state is Error) {}
-              },
+        body: Stack(
+          children: <Widget>[
+            Image.asset(
+              "assets/images/metInvestBackground.png",
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              fit: BoxFit.cover,
             ),
-            //TODO сюда нужно будет добавить получение остальных данных
-          ],
-          child: Stack(
-            children: <Widget>[
-              Image.asset(
-                "assets/images/metInvestBackground.png",
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                fit: BoxFit.cover,
-              ),
-              Scaffold(
-                backgroundColor: Colors.transparent,
-                body: Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment(0, 0),
-                      child: Image.asset(
-                        'assets/images/metInvestIcon.png',
-                        width: 220,
-                      ),
+            Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Stack(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment(0, 0),
+                    child: Image.asset(
+                      'assets/images/metInvestIcon.png',
+                      width: 220,
                     ),
-                    Align(
-                      alignment: Alignment(0, 0.8),
-                      child: SizedBox(
-                        height: 5,
-                        width: 300,
-                        child: LinearProgressIndicator(
+                  ),
+                  Align(
+                    alignment: Alignment(0, 0.8),
+                    child: SizedBox(
+                      height: 5,
+                      width: 300,
+                      child: LinearProgressIndicator(
 //                          value: test
 //                              ? animation.value
 //                              : 1.0,
 //                          backgroundColor: Colors.grey[300],
-//                          valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(238, 0, 38, 1)),
-                        ),
+                          valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(238, 0, 38, 1)),
                       ),
                     ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        )
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
     );
   }
 }

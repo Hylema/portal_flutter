@@ -9,21 +9,24 @@ abstract class NewsPortalState extends Equatable{
   NewsPortalState([List props = const <dynamic>[]]) : super(props);
 }
 
-class Empty extends NewsPortalState {}
-class Loading extends NewsPortalState {}
-class Loaded extends NewsPortalState {
+class EmptyNewsPortal extends NewsPortalState {}
+class LoadingNewsPortal extends NewsPortalState {}
+class AuthNewsPortal extends NewsPortalState {}
+class NeedAuthNews extends NewsPortalState {}
+
+class LoadedNewsPortal extends NewsPortalState {
   final NewsPortal model;
 
-  Loaded({@required this.model}) : super([model]){
+  LoadedNewsPortal({@required this.model}) : super([model]){
     print('model ==== $model');
     GlobalData.news = model.news;
   }
 }
 
-class Error extends NewsPortalState {
+class ErrorNewsPortal extends NewsPortalState {
   final String message;
 
-  Error({@required this.message}) : super([message]);
+  ErrorNewsPortal({@required this.message}) : super([message]);
 }
 
 
