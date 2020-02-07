@@ -12,9 +12,8 @@ class BottomNavigationBarWidget extends StatefulWidget {
     this.notchedShape,
     this.onTabSelected,
     this.selectedIndex,
-  }) {
-    assert(this.items.length == 2);
-  }
+  });
+
   final int selectedIndex;
   final List items;
   final String centerItemText;

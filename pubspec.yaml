@@ -22,7 +22,7 @@ dependencies:
   # Service locator
   get_it: ^2.0.1
   # Bloc for state management
-  flutter_bloc: ^0.21.0
+  flutter_bloc: ^3.2.0
   # Value equality
   equatable: ^0.4.0
   # Functional programming thingies
@@ -47,9 +47,15 @@ dependencies:
   # A flutter date time picker inspired by flutter-cupertino-date-picker
   flutter_datetime_picker: ^1.3.2
   # Loading button with simple implementation
-  loading_button: ^0.0.2
+  rounded_loading_button: ^1.0.0
   # A carousel slider widget, support infinite scroll and custom child widget, with auto play feature.
   carousel_slider: ^1.4.1
+  # Use this package if you need more customization when notifying your user. For Android developers,
+  # it is made to substitute toasts and snackbars. IOS developers,
+  # I don't know what you use there, but you will like it.
+  flushbar: ^1.9.1
+  # The best swiper for flutter , with multiple layouts, infinite loop. Compatible with Android & iOS.
+  flutter_swiper: ^1.1.6
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2

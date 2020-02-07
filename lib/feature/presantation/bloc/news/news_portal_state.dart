@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_architecture_project/feature/domain/entities/news_portal.dart';
+import 'package:flutter_architecture_project/feature/data/globalData/global_data.dart';
+import 'package:flutter_architecture_project/feature/domain/entities/news/news_portal.dart';
+
 import 'package:meta/meta.dart';
 
 @immutable
@@ -12,7 +14,10 @@ class Loading extends NewsPortalState {}
 class Loaded extends NewsPortalState {
   final NewsPortal model;
 
-  Loaded({@required this.model}) : super([model]);
+  Loaded({@required this.model}) : super([model]){
+    print('model ==== $model');
+    GlobalData.news = model.news;
+  }
 }
 
 class Error extends NewsPortalState {

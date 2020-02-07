@@ -30,7 +30,109 @@ class NewsPortalItemsState extends State<NewsPortalItems> {
     final _news = widget.news;
     final _index = widget.index;
 
+    _childrenWidgets(){
+      return <Widget>[
+        Expanded(
+          //fit: FlexFit.tight,
+          child: ClipRRect(
+            borderRadius: widget.vertical == false ? BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                bottomLeft: Radius.circular(10.0)
+            )
+                : BorderRadius.only(
+                topLeft: Radius.circular(10.0),
+                topRight: Radius.circular(10.0)
+            ),
+            child: ImageNetworkWidget(
+                path: _news['slNewsCover'],
+                index: _index
+            ),
+          ),
+        ),
+        Expanded(
+          child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  TitleWidget(
+                    titleSize: 15,
+                    title: _news['Title'],
+                    color: Colors.black,
+                    maxSymbol: 70,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        //padding: EdgeInsets.only(top: 10),
+                        child: DateTimeWidget(
+                          dataTime: _news['Created'],
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Container(
+                              child: Row(
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.remove_red_eye,
+                                    size: 16,
+                                    color: Colors.grey,
+                                  ),
+                                  Text(
+                                    ' 12',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 10),
+                            ),
+                            Container(
+                              child: GestureDetector(
+                                child: Row(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.favorite_border,
+                                      size: 16,
+                                      color: Colors.grey,
+                                    ),
+                                    Text(
+                                      ' 1',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                onTap: (){
+                                  print('Запись понравилась');
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
+          ),
+        ),
+      ];
+    }
+
     return Container(
+      height: 200,
       color: Colors.white,
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: GestureDetector(
@@ -50,29 +152,27 @@ class NewsPortalItemsState extends State<NewsPortalItems> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          child: ListBody(
-            children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10.0,
-                      spreadRadius: 1,
-                      offset: Offset(
-                        1.0, // horizontal, move right 10
-                        1.0, // vertical, move down 10
-                      ),
-                    ),
-                  ],
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      color: Colors.white
+          child: Container(
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10.0,
+                  spreadRadius: 1,
+                  offset: Offset(
+                    1.0, // horizontal, move right 10
+                    1.0, // vertical, move down 10
                   ),
-                  height: _heightCard,
-                  child: GestureDetector(
+                ),
+              ],
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  color: Colors.white
+              ),
+              height: _heightCard,
+              child: GestureDetector(
 //                    onPanUpdate: (details){
 //
 //                        setState(() {
@@ -81,106 +181,14 @@ class NewsPortalItemsState extends State<NewsPortalItems> {
 //                        });
 //
 //                    },
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          //fit: FlexFit.tight,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10.0),
-                                bottomLeft: Radius.circular(10.0)
-                            ),
-                            child: ImageNetworkWidget(
-                                path: _news['slNewsCover'],
-                                index: _index
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.max,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: <Widget>[
-                                  TitleWidget(
-                                    titleSize: 15,
-                                    title: _news['Title'],
-                                    color: Colors.black,
-                                    maxSymbol: 70,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: <Widget>[
-                                      Container(
-                                        //padding: EdgeInsets.only(top: 10),
-                                        child: DateTimeWidget(
-                                          dataTime: _news['Created'],
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                      Container(
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: <Widget>[
-                                            Container(
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Icon(
-                                                    Icons.remove_red_eye,
-                                                    size: 16,
-                                                    color: Colors.grey,
-                                                  ),
-                                                  Text(
-                                                    ' 12',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.only(right: 10),
-                                            ),
-                                            Container(
-                                              child: GestureDetector(
-                                                child: Row(
-                                                  children: <Widget>[
-                                                    Icon(
-                                                      Icons.favorite_border,
-                                                      size: 16,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    Text(
-                                                      ' 1',
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                onTap: (){
-                                                  print('Запись понравилась');
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              )
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                child: widget.vertical == false ? Row(
+                  children: _childrenWidgets(),
+                )
+                    : Column(
+                  children: _childrenWidgets(),
+                )
               ),
-            ],
+            ),
           ),
         ),
       ),

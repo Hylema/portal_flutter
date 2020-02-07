@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/mainPage/main_page.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/newsPortal/news_portal_page.dart';
+import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_parametrs.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/profile/profile_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/bottomMainBarWidgets/action_button_navigation_bar_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/bottomMainBarWidgets/main_floating_action_button_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
@@ -26,17 +30,19 @@ class Page extends StatefulWidget {
 class PageState extends State<Page> {
   int _selectedTab = 0;
 
-  final _pageOptions = [
-    MainPage(),
-    NewsPortalPage(),
-    NewsPortalPage(),
-    NewsPortalPage(),
-  ];
-
   var _headerOptions;
+  var _pageOptions;
   @override
   void initState(){
     super.initState();
+
+    _pageOptions = [
+      MainPage(updateIndex: _updateIndex),
+      NewsPortalPage(),
+      ProfilePage(),
+      NewsPortalPage(),
+      BirthdayPage()
+    ];
 
     _headerOptions = [
       HeaderAppMainBar(
@@ -77,29 +83,32 @@ class PageState extends State<Page> {
           ),
         ],
       ),
-//    HeaderAppMainBar(
-//      titleText: 'Профиль',
-//    ),
-//    HeaderAppMainBar(
-//      titleText: 'Дни рождения',
-//      action: <Widget>[
-//        Padding(
-//          padding: EdgeInsets.only(
-//              right: 15.0,
-//              top: 7,
-//              bottom: 7
-//          ),
-//          child: IconButton(
-//              onPressed: (){
-//                Navigator.push(apiMethods.context, SlideRightRoute(page: BirthdayParametrs()));
-//              },
-//              icon: Image.asset(
-//                'assets/icons/change.png',
-//              )
-//          ),
-//        ),
-//      ],
-//    ),
+      HeaderAppMainBar(
+        titleText: 'Профиль',
+      ),
+      HeaderAppMainBar(
+        titleText: 'test',
+      ),
+      HeaderAppMainBar(
+        titleText: 'Дни рождения',
+        action: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+                right: 15.0,
+                top: 7,
+                bottom: 7
+            ),
+            child: IconButton(
+                onPressed: (){
+                Navigator.push(context, SlideRightRoute(page: BirthdayParametrs()));
+                },
+                icon: Image.asset(
+                  'assets/icons/change.png',
+                )
+            ),
+          ),
+        ],
+      ),
     ];
   }
 

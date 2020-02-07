@@ -6,11 +6,11 @@ abstract class NewsPortalEvent extends Equatable{
   NewsPortalEvent([List props = const <dynamic>[]]) : super(props);
 }
 
-class GetFirstNewsPortalBloc extends NewsPortalEvent {
+class GetNewsPortalFromNetworkBlocEvent extends NewsPortalEvent {
   final skip;
   final top;
 
-  GetFirstNewsPortalBloc(this.skip, this.top) : super([skip, top]);
+  GetNewsPortalFromNetworkBlocEvent(this.skip, this.top) : super([skip, top]);
 }
 
 class GetNextNewsPortalBloc extends NewsPortalEvent {
@@ -26,4 +26,6 @@ class RefreshNewsPortalBloc extends NewsPortalEvent {
 
   RefreshNewsPortalBloc(this.skip, this.top) : super([skip, top]);
 }
+
+class GetNewsPortalFromCacheBlocEvent extends NewsPortalEvent {}
 

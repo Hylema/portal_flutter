@@ -12,6 +12,8 @@ class ActionButtonNavigationBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String path = 'assets/icons/';
+    final double _expandedHeight = 420.0;
+    final double _marginPanel = 20.0;
 
     final _bottomAppBarItem = [
       {
@@ -22,20 +24,19 @@ class ActionButtonNavigationBarWidget extends StatelessWidget {
         'iconData': '${path}news.png',
         'text': 'Новости',
       },
-    ];
-    final _expandedHeight = 520.0;
-    final _expandableAppBarItem = [
       {
-        'icon': '${path}profile.png',
+        'iconData': '${path}profile.png',
         'text': 'Профиль',
       },
       {
+        'iconData': '${path}polls.png',
+        'text': 'Опросы'
+      },
+    ];
+    final _expandableAppBarItem = [
+      {
         'icon': '${path}birthday.png',
         'text': 'Дни рождения'
-      },
-      {
-        'icon': '${path}polls.png',
-        'text': 'Опросы'
       },
       {
         'icon': '${path}videoGallery.png',
@@ -66,7 +67,7 @@ class ActionButtonNavigationBarWidget extends StatelessWidget {
     return BottomExpandableAppBar(
       //bottomOffset: 120,
       expandedHeight: _expandedHeight,
-      horizontalMargin: 0,
+      horizontalMargin: _marginPanel,
       shape: AutomaticNotchedShape(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(0.0),
@@ -82,7 +83,7 @@ class ActionButtonNavigationBarWidget extends StatelessWidget {
           slivers: <Widget>[
             SliverList(
               delegate: SliverChildBuilderDelegate((BuildContext context, int index){
-                int _indexForBar = index + 2;
+                int _indexForBar = index + _bottomAppBarItem.length;
 
                 return ListTile(
                   leading: Padding(

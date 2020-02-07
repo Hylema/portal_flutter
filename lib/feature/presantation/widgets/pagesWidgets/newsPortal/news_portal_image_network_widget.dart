@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/token.dart';
 import 'package:http/http.dart' as http;
 
@@ -84,17 +85,20 @@ class DownloadImageState extends State<DownloadImage> {
   bool _checkLoaded = false;
 
   image(){
-    return Image.network(
-      '${widget.imagePath}',
-      headers: {
-        'Authorization': 'Bearer ${widget.token}'
-      },
-      fit: BoxFit.cover,
-      height: 1000,
-      width: 1000,
-    );
+    try{
+      return Image.network(
+        '${widget.imagePath}',
+        headers: {
+          'Authorization': 'Bearer ${widget.token}'
+        },
+        fit: BoxFit.cover,
+        height: 1000,
+        width: 1000,
+      );
+    } on ServerException {
+      return noImage();
+    }
   }
-
   @override
   void initState() {
     super.initState();
@@ -124,17 +128,21 @@ class DownloadImageState extends State<DownloadImage> {
         ),
       );
     } else {
-      return Container(
-        color: Colors.grey[100],
-        child: Center(
-          child: Icon(
-            Icons.photo_camera,
-            color: Colors.grey[300],
-            size: 30,
-          ),
-        ),
-      );
+      return noImage();
     }
+  }
+
+  Widget noImage() {
+    return Container(
+      color: Colors.grey[100],
+      child: Center(
+        child: Icon(
+          Icons.photo_camera,
+          color: Colors.grey[300],
+          size: 30,
+        ),
+      ),
+    );
   }
 }
 

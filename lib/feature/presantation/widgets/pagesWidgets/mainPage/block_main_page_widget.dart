@@ -4,7 +4,16 @@ class BlockMainPageWidget extends StatelessWidget {
   final Widget child;
   final String title;
   final Color background;
-  BlockMainPageWidget({this.child, this.title, this.background = Colors.white});
+  final Function updateIndex;
+  final int index;
+
+  BlockMainPageWidget({
+    this.child,
+    this.title,
+    this.background = Colors.white,
+    this.updateIndex,
+    this.index
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +30,21 @@ class BlockMainPageWidget extends StatelessWidget {
                   title,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 22
+                      fontSize: 20
                   ),
                 ),
                 GestureDetector(
                   child: Text(
                       'смотреть все',
                     style: TextStyle(
-                      color: Colors.blue,
-                      fontSize: 18
+                      color: Color.fromRGBO(39, 131, 216, 1),
+                      fontSize: 16
                     ),
                   ),
                   onTap: () {
-                    print('смотреть все');
+                    print('Смеотреть все');
+                    print(updateIndex);
+                    updateIndex(index);
                   },
                 )
               ],

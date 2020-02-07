@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
-import 'package:flutter_architecture_project/feature/data/datasources/data_news_portal_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/models/news_portal_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_test/flutter_test.dart';

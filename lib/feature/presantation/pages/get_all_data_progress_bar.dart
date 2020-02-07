@@ -9,7 +9,7 @@ class Bla extends StatelessWidget {
 @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        builder: (context) => sl<NewsPortalBloc>(),
+        create: (context) => sl<NewsPortalBloc>(),
         child: GetAllDataProgressBar()
     );
   }
@@ -34,7 +34,7 @@ class GetAllDataProgressBarState extends State<GetAllDataProgressBar> with Singl
   void initState() {
     super.initState();
 
-    dispatchFirstNewsPortal();
+
 
     controller = AnimationController(
         duration: const Duration(seconds: 1), vsync: this);
@@ -43,10 +43,7 @@ class GetAllDataProgressBarState extends State<GetAllDataProgressBar> with Singl
     controller.forward();
   }
 
-  void dispatchFirstNewsPortal() {
-    BlocProvider.of<NewsPortalBloc>(context)
-        .dispatch(GetFirstNewsPortalBloc(0, 5));
-  }
+
 
   @override
   Widget build(BuildContext context) {

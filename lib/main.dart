@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app_page.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/get_all_data_progress_bar.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (BuildContext context) => Bla(),
+        '/': (BuildContext context) => AppPage(),
       },
       debugShowCheckedModeBanner: false,
     );
