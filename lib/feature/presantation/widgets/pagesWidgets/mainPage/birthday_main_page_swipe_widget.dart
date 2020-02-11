@@ -16,7 +16,7 @@ class BirthdayMainPageSwipeWidgetState extends State {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 150),
+      margin: EdgeInsets.only(bottom: 0),
       child: Swiper(
           autoplay: true,
           autoplayDelay: 4000,

@@ -17,8 +17,6 @@ class LoadedProfile extends ProfileState {
   final ProfileModel model;
 
   LoadedProfile({@required this.model}) : super([model]){
-    print('model === $model');
-    print('model.profile === ${model.profile}');
     GlobalData.profile = model.profile;
   }
 }

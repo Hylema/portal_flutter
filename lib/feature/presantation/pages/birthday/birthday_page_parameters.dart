@@ -65,13 +65,13 @@ class CustomPicker extends CommonPickerModel {
   }
 }
 
-class BirthdayParametrs extends StatefulWidget {
+class BirthdayPageParameters extends StatefulWidget {
 
   @override
-  BirthdayParametrsState createState() => BirthdayParametrsState();
+  BirthdayPageParametersState createState() => BirthdayPageParametersState();
 }
 
-class BirthdayParametrsState extends State<BirthdayParametrs> {
+class BirthdayPageParametersState extends State<BirthdayPageParameters> {
 
   @override
   void initState() {
@@ -119,9 +119,8 @@ class BirthdayParametrsState extends State<BirthdayParametrs> {
         date.clear();
       }
 
-      if(fio.text != '') disable = false;
-      else disable = true;
-      if(date.text != '') disable = false;
+      if(fio.text != ''
+      || date.text != '') disable = false;
       else disable = true;
     });
   }
@@ -169,76 +168,91 @@ class BirthdayParametrsState extends State<BirthdayParametrs> {
           slivers: <Widget>[
             SliverList(
                 delegate: SliverChildListDelegate([
-                  Padding(
-                    padding: EdgeInsets.all(15),
+                  Container(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        TextField(
-                          controller: fio,
-                          decoration: InputDecoration(
-                              labelText: "ФИО",
-                              suffixIcon: fio.text.length > 0
-                                  ? IconButton(
-                                onPressed: () {
-                                  fio.clear();
-                                  _check();
-                                },
-                                icon: Icon(
-                                  Icons.cancel,
-                                  size: 14,
-                                  color: Colors.grey[400],
+                        Padding(
+                          padding: EdgeInsets.all(15),
+                          child: Column(
+                            children: <Widget>[
+                              TextField(
+                                controller: fio,
+                                decoration: InputDecoration(
+                                    labelText: "ФИО",
+                                    suffixIcon: fio.text.length > 0
+                                        ? IconButton(
+                                      onPressed: () {
+                                        fio.clear();
+                                        _check();
+                                      },
+                                      icon: Icon(
+                                        Icons.cancel,
+                                        size: 14,
+                                        color: Colors.grey[400],
+                                      ),
+                                    )
+                                        : null
                                 ),
-                              )
-                                  : null
+                                onChanged: (value) {
+                                  _check(value: value);
+                                },
+                              ),
+                              TextField(
+                                controller: date,
+                                readOnly: true,
+                                onTap: () {
+                                  print('Дата пикер');
+                                  _datePicker(context);
+                                },
+                                decoration: InputDecoration(
+                                    labelText: "Дата",
+                                    suffixIcon: date.text.length > 0
+                                        ? IconButton(
+                                            onPressed: () {
+                                              date.clear();
+                                              _check();
+                                            },
+                                            icon: Icon(
+                                              Icons.cancel,
+                                              size: 14,
+                                              color: Colors.grey[400],
+                                            ),
+                                          )
+                                        : null
+                                ),
+                              ),
+                              TextField(
+                                decoration: InputDecoration(
+                                    labelText: "Период с"
+                                ),
+                              ),
+                              TextField(
+                                decoration: InputDecoration(
+                                    labelText: "Период по"
+                                ),
+                              ),
+                            ],
                           ),
-                          onChanged: (value) {
-                            _check(value: value);
+                        ),
+                        RoundedLoadingButton(
+                          child: Text('Показать', style: TextStyle(color: Colors.white)),
+                          controller: _btnController,
+                          onPressed: () async {
+                            await Future.delayed(Duration(seconds: 3), () async {
+                              _btnController.success();
+                            });
+                            await Future.delayed(Duration(milliseconds: 1000), () {});
+                            Navigator.of(context).pop();
                           },
-                        ),
-                        TextField(
-                          controller: date,
-                          readOnly: true,
-                          onTap: () {
-                            print('Дата пикер');
-                            _datePicker(context);
-                          },
-                          decoration: InputDecoration(
-                              labelText: "Дата"
-                          ),
-                        ),
-                        TextField(
-                          decoration: InputDecoration(
-                              labelText: "Период с"
-                          ),
-                        ),
-                        TextField(
-                          decoration: InputDecoration(
-                              labelText: "Период по"
-                          ),
-                        ),
+                          color: disable
+                              ? Color.fromRGBO(238, 0, 38, 0.48)
+                              : Color.fromRGBO(238, 0, 38, 1),
+                        )
                       ],
                     ),
+                    height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height/6,
                   ),
-                  RoundedLoadingButton(
-                    child: Text('Tap me!', style: TextStyle(color: Colors.white)),
-                    controller: _btnController,
-                    onPressed: () async {
-                      Flushbar(
-                          title:  "Hey Ninja",
-                          message:  "Lorem Ipsum is simply dummy text of the printing and typesetting industry",
-                          duration:  Duration(seconds: 3),
-                          flushbarPosition: FlushbarPosition.TOP
-                      )..show(context);
-                      await Future.delayed(Duration(seconds: 3), () async {
-                        _btnController.success();
-                      });
-                      await Future.delayed(Duration(milliseconds: 1000), () {});
-                      Navigator.of(context).pop();
-                    },
-                    color: disable
-                        ? Color.fromRGBO(238, 0, 38, 0.48)
-                        : Color.fromRGBO(238, 0, 38, 1),
-                  )
                 ])
             )
           ],
@@ -247,47 +261,3 @@ class BirthdayParametrsState extends State<BirthdayParametrs> {
     );
   }
 }
-
-
-
-
-
-//LoadingButton(
-//decoration: BoxDecoration(
-//borderRadius: BorderRadius.circular(30),
-//color: Colors.white
-//),
-//onPressed: (){
-//setState(() {
-//disable = !disable;
-//});
-//if(!disable){
-//print('Ищу...');
-//}
-//},
-//isLoading: !disable,
-//child: Container(
-//padding: EdgeInsets.only(
-//left: 75.0,
-//right: 75.0,
-//top: 16.0,
-//bottom: 16.0
-//),
-//decoration: BoxDecoration(
-//borderRadius: BorderRadius.circular(30),
-//color: disable
-//? Color.fromRGBO(238, 0, 38, 0.48)
-//: Color.fromRGBO(238, 0, 38, 1),
-//),
-//width: MediaQuery.of(context).size.width,
-//child: Center(
-//child: Text(
-//"Показать",
-//style: TextStyle(
-//color: Colors.white,
-//fontSize: 18.0
-//),
-//),
-//)
-//)
-//),

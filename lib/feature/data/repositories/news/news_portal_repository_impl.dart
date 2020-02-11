@@ -50,6 +50,8 @@ class NewsPortalRepositoryImpl implements NewsPortalRepository {
         return Right(remoteNewsPortal);
       } on AuthFailure {
         return Left(AuthFailure());
+      } on ServerException {
+        return Left(ServerFailure());
       }
     } else {
       return Left(NetworkFailure());

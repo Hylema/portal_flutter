@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class BirthdayShimmer extends StatelessWidget {
+class BirthdayPageShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int offset = 0;

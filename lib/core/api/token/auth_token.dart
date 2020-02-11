@@ -19,7 +19,6 @@ class AuthToken {
 
   Future getTokenFromFile() async {
     var file = await this.readFile();
-    print('file[token]--------------------------------------------------------------------- === ${file['token']}');
 
     Token.authToken = file['token'];
   }

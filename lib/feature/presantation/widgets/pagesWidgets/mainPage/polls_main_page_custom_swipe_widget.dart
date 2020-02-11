@@ -45,59 +45,145 @@ class PollsMainPageCustomSwipeWidget extends StatelessWidget {
             ),
           ),
           Container(
+            height: 100,
             width: MediaQuery.of(context).size.width / 1.3,
-            padding: EdgeInsets.only(left: 20),
+            padding: EdgeInsets.only(left: 20, bottom: 20, top: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12.withOpacity(0.005),
+                  blurRadius: 15.0,
+                  spreadRadius: 0.2,
+                  offset: Offset(
+                    10, // horizontal, move right 10
+                    10, // vertical, move down 10
+                  ),
+                ),
+              ],
+            ),
             child: Card(
               child: Wrap(
                 children: <Widget>[
                   ListTile(
-                    title: Text('Опрос о качестве нового портала'),
-                    subtitle: Text('Удобство использования'),
+                    title: Text(
+                      'Опрос о качестве нового портала',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      'Удобство использования',
+                      style: TextStyle(fontSize: 12),
+                    ),
                   )
                 ],
               ),
             ),
           ),
           Container(
+            height: 100,
             width: MediaQuery.of(context).size.width / 1.3,
-            padding: EdgeInsets.only(left: 20),
+            padding: EdgeInsets.only(left: 20, bottom: 20, top: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12.withOpacity(0.005),
+                  blurRadius: 15.0,
+                  spreadRadius: 0.2,
+                  offset: Offset(
+                    10, // horizontal, move right 10
+                    10, // vertical, move down 10
+                  ),
+                ),
+              ],
+            ),
             child: Card(
               child: Wrap(
                 children: <Widget>[
                   ListTile(
-                    title: Text('Опрос о качестве нового портала'),
-                    subtitle: Text('Удобство использования'),
+                    title: Text(
+                      'Опрос о качестве нового портала',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      'Удобство использования',
+                      style: TextStyle(fontSize: 12),
+                    ),
                   )
                 ],
               ),
             ),
           ),
           Container(
+            height: 100,
             width: MediaQuery.of(context).size.width / 1.3,
+            padding: EdgeInsets.only(left: 20, bottom: 20, top: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12.withOpacity(0.005),
+                  blurRadius: 15.0,
+                  spreadRadius: 0.2,
+                  offset: Offset(
+                    10, // horizontal, move right 10
+                    10, // vertical, move down 10
+                  ),
+                ),
+              ],
+            ),
             child: Card(
               child: Wrap(
                 children: <Widget>[
                   ListTile(
-                    title: Text('Опрос о качестве нового портала'),
-                    subtitle: Text('Удобство использования'),
+                    title: Text(
+                      'Опрос о качестве нового портала',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      'Удобство использования',
+                      style: TextStyle(fontSize: 12),
+                    ),
                   )
                 ],
               ),
             ),
           ),
           Container(
+            height: 100,
             width: MediaQuery.of(context).size.width / 1.3,
+            padding: EdgeInsets.only(left: 20, bottom: 20, top: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12.withOpacity(0.005),
+                  blurRadius: 15.0,
+                  spreadRadius: 0.2,
+                  offset: Offset(
+                    10, // horizontal, move right 10
+                    10, // vertical, move down 10
+                  ),
+                ),
+              ],
+            ),
             child: Card(
               child: Wrap(
                 children: <Widget>[
                   ListTile(
-                    title: Text('Опрос о качестве нового портала'),
-                    subtitle: Text('Удобство использования'),
+                    title: Text(
+                      'Опрос о качестве нового портала',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      'Удобство использования',
+                      style: TextStyle(fontSize: 12),
+                    ),
                   )
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

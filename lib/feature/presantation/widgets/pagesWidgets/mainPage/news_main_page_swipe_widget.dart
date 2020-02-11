@@ -8,7 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
+var _news;
+
 class NewsMainPageSwipeWidget extends StatelessWidget {
+
+  NewsMainPageSwipeWidget(news){
+    _news = news;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +32,6 @@ class NewsMainPageCarousel extends StatefulWidget {
 }
 
 class NewsMainPageCarouselState extends State<NewsMainPageCarousel> with AutomaticKeepAliveClientMixin<NewsMainPageCarousel>{
-  var _news;
   bool noData = false;
 
   @override
@@ -43,29 +48,27 @@ class NewsMainPageCarouselState extends State<NewsMainPageCarousel> with Automat
   Widget build(BuildContext context) {
     return BlocBuilder<NewsPortalBloc, NewsPortalState>(
       builder: (context, state) {
-        return Container();
-//        if (state is Empty) {
-//          _news = GlobalData.news;
-//          if(_news == null){
-//
-//            return Container();
-//          } else {
-//            return NewsMainPageSwipeWidgetBody(news: _news,);
-//          }
-//        } else if (state is Loading) {
-//          return Container();
-//        } else if (state is Loaded) {
-//          _news = state.model.news;
-//          return NewsMainPageSwipeWidgetBody(news: _news,);
-//        } else if (state is Error) {
-//          return Container(
-//            child: Center(
-//              child: Text(state.message),
-//            ),
-//          );
-//        } else {
-//          return Container();
-//        }
+        if (state is EmptyNewsPortal) {
+          _news = GlobalData.news;
+          if(_news == null){
+            return Container();
+          } else {
+            return NewsMainPageSwipeWidgetBody(news: _news,);
+          }
+        } else if (state is LoadingNewsPortal) {
+          return Container();
+        } else if (state is LoadedNewsPortal) {
+          _news = state.model.news;
+          return NewsMainPageSwipeWidgetBody(news: _news,);
+        } else if (state is ErrorNewsPortal) {
+          return Container(
+            child: Center(
+              child: Text(state.message),
+            ),
+          );
+        } else {
+          return Container();
+        }
       },
     );
   }

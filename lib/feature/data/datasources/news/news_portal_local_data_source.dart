@@ -5,10 +5,6 @@ import 'package:flutter_architecture_project/feature/data/models/news/news_porta
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class NewsPortalLocalDataSource {
-  /// Gets the cached [NumberTriviaModel] which was gotten the last time
-  /// the user had an internet connection.
-
-  /// Throws [NoLocalDataException] if no cached data is present.
   Future<NewsPortalModel> getLastNewsPortal();
 
   Future<void> cacheNewsPortal(NewsPortalModel triviaToCache);

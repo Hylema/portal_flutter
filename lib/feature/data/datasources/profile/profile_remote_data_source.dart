@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/api/token/token.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
+import 'package:flutter_architecture_project/core/error/status_code.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
 import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
 import 'package:http/http.dart' as http;
@@ -34,15 +35,13 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       },
     );
 
-    print('response.statusCode === ${response.statusCode}');
-    print('response.body === ${response.body}');
-
     if (response.statusCode == 200) {
       final profile = parser.parsData(response.body);
       return ProfileModel.fromJson(profile);
     } else if(response.statusCode == 401){
       throw AuthFailure();
     } else {
+      Status.code = response.statusCode;
       throw ServerException();
     }
   }

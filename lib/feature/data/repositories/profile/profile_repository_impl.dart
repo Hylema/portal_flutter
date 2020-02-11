@@ -4,7 +4,6 @@ import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/data/globalData/global_data.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/profile/profile_repository.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/profile/profile.dart';
 import 'package:meta/meta.dart';
@@ -29,6 +28,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
         return Right(remoteNewsPortal);
       } on AuthFailure {
         return Left(AuthFailure());
+      } on ServerException {
+        return Left(ServerFailure());
       }
     } else {
       return Left(NetworkFailure());

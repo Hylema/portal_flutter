@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-class NewsPortalShimmer extends StatelessWidget {
+class NewsPortalPageShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int offset = 0;

@@ -6,22 +6,22 @@ import 'package:flutter_architecture_project/feature/domain/repositories/news/ne
 import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 
-class GetNewsPortalFormNetwork implements UseCase<NewsPortal, Params>{
+class GetNewsPortalFormNetwork implements UseCase<NewsPortal, NewsParams>{
   final NewsPortalRepository repository;
 
   GetNewsPortalFormNetwork(this.repository);
 
   @override
-  Future<Either<Failure, NewsPortal>> call(Params params) async {
+  Future<Either<Failure, NewsPortal>> call(NewsParams params) async {
     return await repository.getNewsFromNetwork(params.skip, params.top);
   }
 }
 
-class Params extends Equatable {
+class NewsParams extends Equatable {
   final int skip;
   final int top;
 
-  Params({
+  NewsParams({
     @required this.skip,
     @required this.top,
   }) : super([skip, top]);

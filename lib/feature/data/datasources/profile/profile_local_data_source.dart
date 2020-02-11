@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
-import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

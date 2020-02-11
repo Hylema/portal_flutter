@@ -3,18 +3,12 @@ import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
+import 'package:flutter_architecture_project/core/error/messages.dart';
 import 'package:flutter_architecture_project/core/usecases/usecase.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/profile/profile.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/profile/get_profile_from_cache.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/profile/get_profile_from_network.dart';
 import './bloc.dart';
-
-const String SERVER_FAILURE_MESSAGE = 'Server Failure';
-const String CACHE_FAILURE_MESSAGE = 'Cache Failure';
-const String AUTH_FAILURE_MESSAGE = 'Auth Failuer';
-const String NETWORK_FAILURE_MESSAGE = 'Network Failure';
-const String INVALID_INPUT_FAILURE_MESSAGE =
-    'Invalid Input - The number must be a positive integer or zero.';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final GetProfileFormNetwork getProfileFormNetwork;
@@ -49,13 +43,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       yield modelOrFailure.fold(
             (failure){
           if(failure is AuthFailure){
-            print('нужно авторизация для профиля');
             return NeedAuthProfile();
           }
-          return ErrorProfile(message: _mapFailureToMessage(failure));
+          return ErrorProfile(message: mapFailureToMessage(failure));
         },
             (model){
-          print('все норм');
           return LoadedProfile(model: model);
         },
       );
@@ -79,11 +71,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }) async {
     return either.fold(
           (failure) async {
-            print('данных нет в кэшэ у профиля');
         return await _getProfileFromNetwork();
       },
           (model){
-            print('данные есть в кэшэ === $model');
         return Right(model);
       },
     );
@@ -95,31 +85,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     yield either.fold(
           (failure){
             if(failure is AuthFailure){
-              print('нужно авторизация для профиля');
               return NeedAuthProfile();
             }
-            return ErrorProfile(message: _mapFailureToMessage(failure));
+            return ErrorProfile(message: mapFailureToMessage(failure));
           },
           (model){
-            print('все норм');
             return LoadedProfile(model: model);
           },
     );
-  }
-
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure:
-        return SERVER_FAILURE_MESSAGE;
-      case CacheFailure:
-        return CACHE_FAILURE_MESSAGE;
-      case NetworkFailure:
-        return NETWORK_FAILURE_MESSAGE;
-      case AuthFailure:
-        return AUTH_FAILURE_MESSAGE;
-      default:
-        return 'Unexpected Error';
-    }
   }
 }
 

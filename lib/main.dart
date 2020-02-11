@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/welcome/welcome_page.dart';
 import 'injection_container.dart' as di;
 
 void main() async {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       routes: {
-        '/': (BuildContext context) => AppPage(),
+        '/': (BuildContext context) => WelcomePage(),
       },
       debugShowCheckedModeBanner: false,
     );

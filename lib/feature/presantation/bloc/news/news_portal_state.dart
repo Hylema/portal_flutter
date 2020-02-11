@@ -18,7 +18,6 @@ class LoadedNewsPortal extends NewsPortalState {
   final NewsPortal model;
 
   LoadedNewsPortal({@required this.model}) : super([model]){
-    print('model ==== $model');
     GlobalData.news = model.news;
   }
 }

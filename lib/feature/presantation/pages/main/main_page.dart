@@ -7,42 +7,58 @@ import 'package:flutter_architecture_project/feature/presantation/widgets/pagesW
 
 class MainPage extends StatelessWidget {
   final Function updateIndex;
-  MainPage({this.updateIndex}) {
+  final news;
+  final mainParams;
+
+  MainPage({this.updateIndex, this.news, this.mainParams}) {
     assert(updateIndex != null);
   }
 
   @override
   Widget build(BuildContext context) {
+    final pages = {
+      'Новости': BlockMainPageWidget(
+          child: NewsMainPageSwipeWidget(news),
+          title: 'Новости',
+          updateIndex: updateIndex,
+          index: 1
+      ),
+      'Опросы': BlockMainPageWidget(
+        child: PollsMainPageCustomSwipeWidget(),
+        title: 'Опросы',
+        background: Colors.grey[100],
+        updateIndex: updateIndex,
+      ),
+      'Видеогалерея': BlockMainPageWidget(
+        child: VideosMainPageSwipeStackWidget(),
+        title: 'Видео',
+      ),
+      'Дни рождения': BlockMainPageWidget(
+        child: BirthdayMainPageSwipeWidget(),
+        title: 'Дни рождения',
+        background: Colors.grey[100],
+        updateIndex: updateIndex,
+      ),
+      'Бронирование переговорных': BlockMainPageWidget(
+        child: Container(child: Center(child: Text('Для этой страницы ещё нету макета'),),),
+        title: 'Бронирование',
+        background: Colors.grey[100],
+        updateIndex: updateIndex,
+      ),
+    };
+
+    List<Widget> list = [];
+
+    for(final param in mainParams){
+      if(param['status'] == true){
+        list.add(pages[param['name']]);
+      }
+    }
 
     return CustomScrollView(
         slivers: <Widget>[
           SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                BlockMainPageWidget(
-                  child: NewsMainPageSwipeWidget(),
-                  title: 'Новости',
-                  updateIndex: updateIndex,
-                  index: 1
-                ),
-                BlockMainPageWidget(
-                  child: PollsMainPageCustomSwipeWidget(),
-                  title: 'Опросы',
-                  background: Colors.grey[100],
-                  updateIndex: updateIndex,
-                ),
-                BlockMainPageWidget(
-                  child: VideosMainPageSwipeStackWidget(),
-                  title: 'Видео',
-                ),
-                BlockMainPageWidget(
-                  child: BirthdayMainPageSwipeWidget(),
-                  title: 'Дни рождения',
-                  background: Colors.grey[100],
-                  updateIndex: updateIndex,
-                ),
-              ],
-            ),
+            delegate: SliverChildListDelegate(list),
           )
         ]
     );

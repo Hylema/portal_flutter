@@ -6,10 +6,7 @@ abstract class Failure extends Equatable {
   Failure([List properties = const <dynamic>[]]) : super(properties);
 }
 
-class ServerFailure extends Failure {
-  final statusCode;
-  ServerFailure({this.statusCode}) : super([statusCode]);
-}
+class ServerFailure extends Failure {}
 
 class NetworkFailure extends Failure {}
 
@@ -18,3 +15,5 @@ class CacheFailure extends Failure {}
 class ParserProfileFailure extends Failure {}
 
 class AuthFailure extends Failure {}
+
+class JsonFailure extends Failure {}

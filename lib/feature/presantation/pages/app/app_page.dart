@@ -1,16 +1,20 @@
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
 import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
+import 'package:flutter_architecture_project/core/mixins/flushbar.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/progress_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_parametrs.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page_parameters.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page_parameters.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/profile/profile_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/bottomMainBarWidgets/action_button_navigation_bar_widget.dart';
@@ -37,21 +41,13 @@ class AppPage extends StatelessWidget {
           BlocProvider<AppBloc>(
             create: (BuildContext context) => sl<AppBloc>(),
           ),
+          BlocProvider<MainBloc>(
+            create: (BuildContext context) => sl<MainBloc>(),
+          ),
         ],
         child: Page(),
       ),
     );
-  }
-}
-
-class BodyAppMain extends StatelessWidget {
-  final news;
-  BodyAppMain({this.news});
-
-  @override
-  Widget build(BuildContext context) {
-    print('Новостииииииииииииииииииииииииииии == $news');
-    return NewsPortalPage(news: this.news);
   }
 }
 
@@ -66,93 +62,18 @@ class PageState extends State<Page> {
   var _headerOptions;
   var _pageOptions;
 
-  var newsData;
-  var profileData;
+  var _news;
+  var _profile;
+  var _mainParams;
 
   @override
   void initState(){
     super.initState();
 
-    var _newsData = newsData;
+    dispatchGetProfileDataFromNetwork();
+    dispatchGetNewsDataFromNetwork();
+    dispatchGetMainParamsFromJson();
 
-    dispatchGetNewsDataFromCache();
-    dispatchGetProfileDataFromCache();
-
-    _pageOptions = [
-      MainPage(
-          updateIndex: _updateIndex,
-      ),
-      BodyAppMain(news: _newsData),
-      BirthdayPage()
-    ];
-
-
-    _headerOptions = [
-      HeaderAppMainBar(
-        titleText: 'Главная',
-        action: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-                right: 15.0,
-                top: 7,
-                bottom: 7
-            ),
-            child: IconButton(
-                onPressed: (){},
-                icon: Image.asset(
-                  'assets/icons/change.png',
-                )
-            ),
-          ),
-        ],
-      ),
-      HeaderAppMainBar(
-        titleText: 'Новости холдинга',
-        action: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-                right: 15.0,
-                top: 7,
-                bottom: 7
-            ),
-            child: IconButton(
-                onPressed: (){
-                  showModalSheet(context);
-                },
-                icon: Image.asset(
-                  'assets/icons/change.png',
-                )
-            ),
-          ),
-        ],
-      ),
-      HeaderAppMainBar(
-        titleText: 'Профиль',
-      ),
-      HeaderAppMainBar(
-        titleText: 'test',
-      ),
-      HeaderAppMainBar(
-        titleText: 'Дни рождения',
-        action: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-                right: 15.0,
-                top: 7,
-                bottom: 7
-            ),
-            child: IconButton(
-                onPressed: (){
-                Navigator.push(context, SlideRightRoute(page: BirthdayParametrs()));
-                },
-                icon: Image.asset(
-                  'assets/icons/change.png',
-                )
-            ),
-          ),
-        ],
-      ),
-    ];
   }
 
   var pages = {
@@ -172,12 +93,22 @@ class PageState extends State<Page> {
     });
   }
 
+  void dispatchGetNewsDataFromNetwork(){
+    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromNetworkBlocEvent(0 ,5));
+  }
+  void dispatchGetNewsDataFromCache(){
+    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromCacheBlocEvent(0 ,5));
+  }
+
+  void dispatchGetProfileDataFromNetwork(){
+    context.bloc<ProfileBloc>().add(GetProfileFromNetworkBlocEvent());
+  }
   void dispatchGetProfileDataFromCache(){
     context.bloc<ProfileBloc>().add(GetProfileFromCacheBlocEvent());
   }
 
-  void dispatchGetNewsDataFromCache(){
-    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromCacheBlocEvent(0 ,5));
+  void dispatchGetMainParamsFromJson(){
+    context.bloc<MainBloc>().add(GetParamsFromJsonForMainPageBlocEvent());
   }
 
   void dispatchNeedAuth(){
@@ -198,7 +129,10 @@ class PageState extends State<Page> {
             if(state is NeedAuthProfile){
               dispatchNeedAuth();
             } else if(state is LoadedProfile) {
-              profileData = state.model.profile;
+              _profile = state.model.profile;
+              _pageLoaded('profile');
+            } else if(state is ErrorProfile) {
+              flushbar(context, state.message);
               _pageLoaded('profile');
             }
           },
@@ -209,23 +143,27 @@ class PageState extends State<Page> {
             if(state is NeedAuthNews){
               dispatchNeedAuth();
             } else if(state is LoadedNewsPortal){
-              setState(() {
-                newsData = state.model.news;
-              });
+              _news = state.model.news;
               _pageLoaded('news');
+            } else if(state is ErrorNewsPortal) {
+              flushbar(context, state.message);
+              _pageLoaded('news');
+            }
+          },
+        ),
+        BlocListener<MainBloc, MainState>(
+          listener: (context, state) {
+            print('MainBloc state is $state');
+            if(state is LoadedMainState){
+              _mainParams = state.model.params;
             }
           },
         ),
         BlocListener<AppBloc, AppState>(
           listener: (context, state) {
-            print('state is $state');
-            if (state is Start){
-
-            } else if(state is NeedAuth){
-
-            } else if(state is LoadedNewsPortal){
-
-            }
+            if (state is Start){}
+            else if(state is NeedAuth){}
+            else if(state is LoadedNewsPortal){}
           },
         ),
       ],
@@ -239,7 +177,87 @@ class PageState extends State<Page> {
           } else if(state is NeedAuth){
             return AuthPage();
           } else if(state is Finish) {
-            print('newsDatanewsDatanewsDatanewsDatanewsDatanewsData === $newsData');
+            _headerOptions = [
+              HeaderAppMainBar(
+                titleText: 'Главная',
+                action: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(
+                        right: 15.0,
+                        top: 7,
+                        bottom: 7
+                    ),
+                    child: IconButton(
+                        onPressed: (){
+                          Navigator.push(context, SlideRightRoute(page: MainPageParameters()));
+                        },
+                        icon: Image.asset(
+                          'assets/icons/change.png',
+                        )
+                    ),
+                  ),
+                ],
+              ),
+              HeaderAppMainBar(
+                titleText: 'Новости холдинга',
+                action: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(
+                        right: 15.0,
+                        top: 7,
+                        bottom: 7
+                    ),
+                    child: IconButton(
+                        onPressed: (){
+                          showModalSheet(context);
+                        },
+                        icon: Image.asset(
+                          'assets/icons/change.png',
+                        )
+                    ),
+                  ),
+                ],
+              ),
+              HeaderAppMainBar(
+                titleText: 'Профиль',
+              ),
+              HeaderAppMainBar(
+                titleText: 'test',
+              ),
+              HeaderAppMainBar(
+                titleText: 'Дни рождения',
+                action: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(
+                        right: 15.0,
+                        top: 7,
+                        bottom: 7
+                    ),
+                    child: IconButton(
+                        onPressed: (){
+                          Navigator.push(context, SlideRightRoute(page: BirthdayPageParameters()));
+                        },
+                        icon: Image.asset(
+                          'assets/icons/change.png',
+                        )
+                    ),
+                  ),
+                ],
+              ),
+            ];
+
+            _pageOptions = [
+              MainPage(
+                updateIndex: _updateIndex,
+                news: _news,
+                mainParams: _mainParams,
+              ),
+              NewsPortalPage(_news),
+              ProfilePage(_profile),
+              ProfilePage(_profile),
+              BirthdayPage()
+            ];
+
             return SafeArea(
                 child: Container(
                   constraints: BoxConstraints(maxWidth: 100),

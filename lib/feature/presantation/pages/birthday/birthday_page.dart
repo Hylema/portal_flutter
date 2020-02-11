@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_shimmer.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page_shimmer.dart';
 
 class BirthdayPage extends StatefulWidget {
 
@@ -39,7 +39,7 @@ class BirthdayPageState extends State<BirthdayPage> {
     return Builder(
         builder: (BuildContext context){
           if(checker){
-            return BirthdayShimmer();
+            return BirthdayPageShimmer();
           }
 
           List data = [
