@@ -75,10 +75,10 @@ class MainParamsJsonDataSourceImpl implements MainParamsJsonDataSource {
 
   @override
   Future<MainParamsModel> getFromJson() async {
-    final json = await readFile();
+    final file = await readFile();
 
-    if (json != null) {
-      return Future.value(MainParamsModel.fromJson(json));
+    if (file != null) {
+      return Future.value(MainParamsModel.fromJson(file));
     } else {
       throw JsonException();
     }
@@ -87,8 +87,8 @@ class MainParamsJsonDataSourceImpl implements MainParamsJsonDataSource {
   @override
   setToJson(params) async {
     try {
-      await writeFile(params);
-      return true;
+      final file = await writeFile(params);
+      return Future.value(MainParamsModel.fromJson(file));
     } catch(e){
       throw JsonException();
     }

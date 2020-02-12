@@ -25,7 +25,7 @@ class MainParamsRepositoryImpl implements MainParamsRepository {
   }
 
   @override
-  setParamsToJson(params) async{
+  Future<Either<Failure, MainParams>> setParamsToJson(params) async{
     try {
       final data = await jsonDataSource.setToJson(params);
       return Right(data);

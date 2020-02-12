@@ -4,5 +4,5 @@ import 'package:flutter_architecture_project/feature/domain/entities/main/main_p
 
 abstract class MainParamsRepository {
   Future<Either<Failure, MainParams>> getParamsFromJson();
-  Future<Either> setParamsToJson(params);
+  Future<Either<Failure, MainParams>> setParamsToJson(params);
 }

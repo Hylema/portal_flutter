@@ -13,8 +13,8 @@ class VideosMainPageSwipeStackWidget extends StatelessWidget {
         autoplay: true,
         autoplayDelay: 7000,
         itemBuilder: (BuildContext context, int index) {
-          return new Image.network(
-            "https://on.notist.cloud/slides/deck2762/large-79.jpg",
+          return new Image.asset(
+            "assets/images/video_test.jpg",
             fit: BoxFit.fill,
           );
         },

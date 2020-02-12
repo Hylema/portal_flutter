@@ -3,6 +3,7 @@ import 'package:flutter_architecture_project/feature/data/globalData/global_data
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reorderables/reorderables.dart';
 
 class MainPageParameters extends StatelessWidget {
 
@@ -38,19 +39,16 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
 
     print('ИНИТ');
 
+
     _data = GlobalData.mainParams;
 
-    if(_data == null){
-      dispatchGetMainParamsFromJson();
-    } else {
-      _data.asMap().forEach((index, item){
-        if(item['status']){
-          _listStatusTrue.add(item);
-        } else {
-          _listStatusFalse.add(item);
-        }
-      });
-    }
+    _data.asMap().forEach((index, item){
+      if(item['status']){
+        _listStatusTrue.add(item);
+      } else {
+        _listStatusFalse.add(item);
+      }
+    });
   }
 
   @override
@@ -132,16 +130,6 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
         } else if(state is LoadedMainState){
           _data = state.model.params;
 
-           _listStatusTrue = [];
-           _listStatusFalse = [];
-
-          _data.asMap().forEach((index, item){
-            if(item['status']){
-              _listStatusTrue.add(item);
-            } else {
-              _listStatusFalse.add(item);
-            }
-          });
           return buildBody();
         } else {
           return Container();
@@ -153,6 +141,17 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
     );
   }
 
+  void updateJson(){
+    for(var i = 0; i < _listStatusTrue.length; i++){
+      _listStatusTrue[i]['status'] = true;
+    }
+    for(var i = 0; i < _listStatusFalse.length; i++){
+      _listStatusFalse[i]['status'] = false;
+    }
+
+
+    dispatchSetMainParamsToJson([..._listStatusTrue, ..._listStatusFalse]);
+  }
 
   Widget buildBody() {
     return Scaffold(
@@ -169,16 +168,8 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
             actions: [
               MaterialButton(
                   onPressed: () {
-                    for(var i = 0; i < _listStatusTrue.length; i++){
-                      _listStatusTrue[i]['status'] = true;
-                    }
-                    for(var i = 0; i < _listStatusFalse.length; i++){
-                      _listStatusFalse[i]['status'] = false;
-                    }
-
-
-                    dispatchSetMainParamsToJson([..._listStatusTrue, ..._listStatusFalse]);
-                    //Navigator.pop(context);
+                    updateJson();
+                    Navigator.pop(context);
                   },
                   child: Text('Готово', style: TextStyle(color: Colors.lightBlue, fontSize: 16),)
               ),
@@ -189,64 +180,56 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
             SliverList(
               delegate: SliverChildListDelegate([
                 Container(
-                  height: MediaQuery.of(context).size.height,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Container(
-                        color: Colors.grey[200],
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 15, top: 10, bottom: 10),
-                          child: Text(
-                            'Отображаемые',
-                            style: TextStyle(
-                                color: Color.fromRGBO(119, 134, 147, 1)
-                            ),
-                          ),
-                        ),
+                  color: Colors.grey[200],
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                    child: Text(
+                      'Отображаемые',
+                      style: TextStyle(
+                          color: Color.fromRGBO(119, 134, 147, 1)
                       ),
-                      Expanded(
-                        child: ReorderableListView(
-                          children: _listStatusTrue
-                              .asMap()
-                              .map((index, item) => MapEntry(index, getListTile(item, index, true)))
-                              .values
-                              .toList(),
-                          onReorder: (oldIndex, newIndex) {
-                            setState(() {
-                              if (newIndex > oldIndex) {
-                                newIndex -= 1;
-                              }
-                              final item = _listStatusTrue.removeAt(oldIndex);
-                              _listStatusTrue.insert(newIndex, item);
-                            });
-                          },
-                        ),
-                      ),
-                      Container(
-                        color: Colors.grey[200],
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 15, top: 10, bottom: 10),
-                          child: Text(
-                            'Скрытые',
-                            style: TextStyle(
-                                color: Color.fromRGBO(119, 134, 147, 1)
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                          child: ListView(
-                              children: _listStatusFalse
-                                  .asMap()
-                                  .map((index, item) => MapEntry(index, getListTile(item, index, false)))
-                                  .values
-                                  .toList(),
-                          )
-                      ),
-                    ],
+                    ),
                   ),
                 ),
+                ReorderableColumn(
+                  scrollController: ScrollController(),
+                  needsLongPressDraggable: false,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: _listStatusTrue
+                      .asMap()
+                      .map((index, item) => MapEntry(index, getListTile(item, index, true)))
+                      .values
+                      .toList(),
+                  onReorder: (oldIndex, newIndex) {
+                    setState(() {
+
+                      final item = _listStatusTrue.removeAt(oldIndex);
+                      _listStatusTrue.insert(newIndex, item);
+
+                      updateJson();
+                    });
+                  },
+                ),
+                Container(
+                  color: Colors.grey[200],
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                    child: Text(
+                      'Скрытые',
+                      style: TextStyle(
+                          color: Color.fromRGBO(119, 134, 147, 1)
+                      ),
+                    ),
+                  ),
+                ),
+                ListView(
+                  shrinkWrap: true,
+                  children: _listStatusFalse
+                      .asMap()
+                      .map((index, item) => MapEntry(index, getListTile(item, index, false)))
+                      .values
+                      .toList(),
+                )
               ]),
             ),
           ],

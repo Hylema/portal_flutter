@@ -57,6 +57,9 @@ dependencies:
   flushbar: ^1.9.1
   # The best swiper for flutter , with multiple layouts, infinite loop. Compatible with Android & iOS.
   flutter_swiper: ^1.1.6
+  # This package includes ReorderableSliverList, ReorderableTable, ReorderableWrap, ReorderableRow,
+  # and ReorderableColumn, which are reorderable versions of Flutter's SliverList, Table, Wrap, Row, and Column respectively.
+  reorderables: ^0.2.12
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
@@ -83,6 +86,7 @@ flutter:
     - assets/images/metInvestBackground.png
     - assets/images/metInvestIcon.png
     - assets/images/noPhoto.png
+    - assets/images/video_test.jpg
     - assets/icons/change.png
     - assets/icons/applications.png
     - assets/icons/birthday.png
