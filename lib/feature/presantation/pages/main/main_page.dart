@@ -34,6 +34,17 @@ class MainPageBuild extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MainBloc, MainState>(
+//      listenWhen: (previous, current) {
+//
+//      },
+      listener: (context, state) {
+
+      },
+      buildWhen: (previous, current) {
+        print('previous =========================== $previous');
+        print('current =========================== $current');
+        return true;
+      },
       builder: (context, state) {
         if(state is EmptyMainState){
           if(_mainParams == null){
@@ -46,9 +57,6 @@ class MainPageBuild extends StatelessWidget {
         } else {
           return Container();
         }
-      },
-      listener: (context, state) {
-        print('listener State is === $state');
       },
     );
   }

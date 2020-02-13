@@ -129,6 +129,7 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
           else return buildBody();
         } else if(state is LoadedMainState){
           _data = state.model.params;
+          print('СТЕЙТ ИЗ ПАРАМЕТРОВ === ${_data}');
 
           return buildBody();
         } else {

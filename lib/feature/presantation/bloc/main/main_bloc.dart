@@ -40,11 +40,8 @@ class MainBloc extends Bloc<MainEvent, MainState> {
      );
     } else if(event is SetParamsToJsonForMainPageBlocEvent){
       var saveOrFail = await setMainParamsToJson(Main(params: event.params));
-      print('Сохранил новую модель данных: $saveOrFail');
       //TODO нужна проверка
       var modelOrFailure = await getMainParamsFromJson(NoParams());
-
-      print('Получил новую модель данных: $modelOrFailure');
 
       yield modelOrFailure.fold(
             (failure){

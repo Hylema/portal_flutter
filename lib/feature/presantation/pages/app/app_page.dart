@@ -155,6 +155,7 @@ class PageState extends State<Page> {
           listener: (context, state) {
             print('MainBloc state is $state');
             if(state is LoadedMainState){
+              print('СТЕЙТ ИЗ ГЛАВНОЙ СТРАНИЦЫ === ${state.model.params}');
               _mainParams = state.model.params;
             }
           },
