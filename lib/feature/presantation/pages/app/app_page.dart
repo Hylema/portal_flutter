@@ -1,4 +1,3 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
 import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
@@ -21,7 +20,6 @@ import 'package:flutter_architecture_project/feature/presantation/widgets/bottom
 import 'package:flutter_architecture_project/feature/presantation/widgets/bottomMainBarWidgets/main_floating_action_button_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_model_sheet_widget.dart';
-import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppPage extends StatelessWidget {
@@ -30,23 +28,7 @@ class AppPage extends StatelessWidget {
     return DefaultBottomBarController(
       dragLength: 500,
       snap: true,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider<ProfileBloc>(
-            create: (BuildContext context) => sl<ProfileBloc>(),
-          ),
-          BlocProvider<NewsPortalBloc>(
-            create: (BuildContext context) => sl<NewsPortalBloc>(),
-          ),
-          BlocProvider<AppBloc>(
-            create: (BuildContext context) => sl<AppBloc>(),
-          ),
-          BlocProvider<MainBloc>(
-            create: (BuildContext context) => sl<MainBloc>(),
-          ),
-        ],
-        child: Page(),
-      ),
+      child: Page()
     );
   }
 }
@@ -56,15 +38,12 @@ class Page extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => PageState();
 }
+
+const String PROFILE_PAGE = 'profile';
+const String NEWS_PAGE = 'news';
+
 class PageState extends State<Page> {
   int _selectedTab = 0;
-
-  var _headerOptions;
-  var _pageOptions;
-
-  var _news;
-  var _profile;
-  var _mainParams;
 
   @override
   void initState(){
@@ -73,16 +52,19 @@ class PageState extends State<Page> {
     dispatchGetProfileDataFromNetwork();
     dispatchGetNewsDataFromNetwork();
     dispatchGetMainParamsFromJson();
-
   }
 
-  var pages = {
-    'profile': false,
-    'news': false,
+  var _pages = {
+    PROFILE_PAGE: false,
+    NEWS_PAGE: false,
   };
-  void _pageLoaded(String page){
-    pages[page] = true;
-    if(pages['profile'] == true && pages['news'] == true){
+  void _dataForPageLoaded(String page){
+    _pages[page] = true;
+
+    if(
+    _pages[PROFILE_PAGE] == true &&
+        _pages[NEWS_PAGE] == true
+    ){
       dispatchAllPageLoaded();
     }
   }
@@ -93,12 +75,14 @@ class PageState extends State<Page> {
     });
   }
 
+
   void dispatchGetNewsDataFromNetwork(){
-    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromNetworkBlocEvent(0 ,5));
+    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromNetworkBlocEvent(skip: 0 , top: 10));
   }
   void dispatchGetNewsDataFromCache(){
-    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromCacheBlocEvent(0 ,5));
+    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromCacheBlocEvent(0 ,10));
   }
+
 
   void dispatchGetProfileDataFromNetwork(){
     context.bloc<ProfileBloc>().add(GetProfileFromNetworkBlocEvent());
@@ -107,20 +91,101 @@ class PageState extends State<Page> {
     context.bloc<ProfileBloc>().add(GetProfileFromCacheBlocEvent());
   }
 
-  void dispatchGetMainParamsFromJson(){
-    context.bloc<MainBloc>().add(GetParamsFromJsonForMainPageBlocEvent());
-  }
 
   void dispatchNeedAuth(){
     context.bloc<AppBloc>().add(NeedAuthEvent());
   }
-
   void dispatchAllPageLoaded(){
     context.bloc<AppBloc>().add(LoadedEvent());
   }
 
+
+  void dispatchGetMainParamsFromJson(){
+    context.bloc<MainBloc>().add(GetParamsFromJsonForMainPageBlocEvent());
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    List<Widget> _headerOptions = [
+      HeaderAppMainBar(
+        titleText: 'Главная',
+        action: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+                right: 15.0,
+                top: 7,
+                bottom: 7
+            ),
+            child: IconButton(
+                onPressed: (){
+                  Navigator.push(context, SlideRightRoute(page: MainPageParameters()));
+                },
+                icon: Image.asset(
+                  'assets/icons/change.png',
+                )
+            ),
+          ),
+        ],
+      ),
+      HeaderAppMainBar(
+        titleText: 'Новости холдинга',
+        action: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+                right: 15.0,
+                top: 7,
+                bottom: 7
+            ),
+            child: IconButton(
+                onPressed: (){
+                  showModalSheet(context);
+                },
+                icon: Image.asset(
+                  'assets/icons/change.png',
+                )
+            ),
+          ),
+        ],
+      ),
+      HeaderAppMainBar(
+        titleText: 'Профиль',
+      ),
+      HeaderAppMainBar(
+        titleText: 'test',
+      ),
+      HeaderAppMainBar(
+        titleText: 'Дни рождения',
+        action: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+                right: 15.0,
+                top: 7,
+                bottom: 7
+            ),
+            child: IconButton(
+                onPressed: (){
+                  Navigator.push(context, SlideRightRoute(page: BirthdayPageParameters()));
+                },
+                icon: Image.asset(
+                  'assets/icons/change.png',
+                )
+            ),
+          ),
+        ],
+      ),
+    ];
+
+    List<Widget> _pageOptions = [
+      MainPage(
+        updateIndex: _updateIndex,
+      ),
+      NewsPortalPage(),
+      ProfilePage(),
+      ProfilePage(),
+      BirthdayPage()
+    ];
+
     return MultiBlocListener(
       listeners: [
         BlocListener<ProfileBloc, ProfileState>(
@@ -129,11 +194,10 @@ class PageState extends State<Page> {
             if(state is NeedAuthProfile){
               dispatchNeedAuth();
             } else if(state is LoadedProfile) {
-              _profile = state.model.profile;
-              _pageLoaded('profile');
+              _dataForPageLoaded(PROFILE_PAGE);
             } else if(state is ErrorProfile) {
               flushbar(context, state.message);
-              _pageLoaded('profile');
+              _dataForPageLoaded(PROFILE_PAGE);
             }
           },
         ),
@@ -143,25 +207,21 @@ class PageState extends State<Page> {
             if(state is NeedAuthNews){
               dispatchNeedAuth();
             } else if(state is LoadedNewsPortal){
-              _news = state.model.news;
-              _pageLoaded('news');
+              _dataForPageLoaded(NEWS_PAGE);
             } else if(state is ErrorNewsPortal) {
               flushbar(context, state.message);
-              _pageLoaded('news');
+              _dataForPageLoaded(NEWS_PAGE);
             }
           },
         ),
         BlocListener<MainBloc, MainState>(
           listener: (context, state) {
             print('MainBloc state is $state');
-            if(state is LoadedMainState){
-              print('СТЕЙТ ИЗ ГЛАВНОЙ СТРАНИЦЫ === ${state.model.params}');
-              _mainParams = state.model.params;
-            }
           },
         ),
         BlocListener<AppBloc, AppState>(
           listener: (context, state) {
+            print('AppBloc state is $state');
             if (state is Start){}
             else if(state is NeedAuth){}
             else if(state is LoadedNewsPortal){}
@@ -178,86 +238,6 @@ class PageState extends State<Page> {
           } else if(state is NeedAuth){
             return AuthPage();
           } else if(state is Finish) {
-            _headerOptions = [
-              HeaderAppMainBar(
-                titleText: 'Главная',
-                action: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: 15.0,
-                        top: 7,
-                        bottom: 7
-                    ),
-                    child: IconButton(
-                        onPressed: (){
-                          Navigator.push(context, SlideRightRoute(page: MainPageParameters()));
-                        },
-                        icon: Image.asset(
-                          'assets/icons/change.png',
-                        )
-                    ),
-                  ),
-                ],
-              ),
-              HeaderAppMainBar(
-                titleText: 'Новости холдинга',
-                action: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: 15.0,
-                        top: 7,
-                        bottom: 7
-                    ),
-                    child: IconButton(
-                        onPressed: (){
-                          showModalSheet(context);
-                        },
-                        icon: Image.asset(
-                          'assets/icons/change.png',
-                        )
-                    ),
-                  ),
-                ],
-              ),
-              HeaderAppMainBar(
-                titleText: 'Профиль',
-              ),
-              HeaderAppMainBar(
-                titleText: 'test',
-              ),
-              HeaderAppMainBar(
-                titleText: 'Дни рождения',
-                action: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                        right: 15.0,
-                        top: 7,
-                        bottom: 7
-                    ),
-                    child: IconButton(
-                        onPressed: (){
-                          Navigator.push(context, SlideRightRoute(page: BirthdayPageParameters()));
-                        },
-                        icon: Image.asset(
-                          'assets/icons/change.png',
-                        )
-                    ),
-                  ),
-                ],
-              ),
-            ];
-
-            _pageOptions = [
-              MainPage(
-                updateIndex: _updateIndex,
-                news: _news,
-                mainParams: _mainParams,
-              ),
-              NewsPortalPage(_news),
-              ProfilePage(_profile),
-              ProfilePage(_profile),
-              BirthdayPage()
-            ];
 
             return SafeArea(
                 child: Container(

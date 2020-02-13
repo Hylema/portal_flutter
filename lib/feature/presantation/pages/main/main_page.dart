@@ -1,26 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/data/globalData/global_data.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page_parameters.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/birthday_main_page_swipe_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/block_main_page_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/news_main_page_swipe_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/polls_main_page_custom_swipe_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/vidoes_main_page_swipe_stack_widget.dart';
-import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-var _news;
-var _updateIndex;
-var _mainParams;
+Function _updateIndex;
 
 class MainPage extends StatelessWidget {
 
   MainPage({updateIndex, news, mainParams}) {
     assert(updateIndex != null);
-    _news = news;
     _updateIndex = updateIndex;
-    _mainParams = mainParams;
   }
 
   @override
@@ -29,30 +22,27 @@ class MainPage extends StatelessWidget {
   }
 }
 
+const String NEWS_PAGE = 'Новости';
+const String POLLS_PAGE = 'Опросы';
+const String VIDEO_PAGE = 'Видеогалерея';
+const String BIRTHDAY_PAGE = 'Дни рождения';
+const String BOOKING_PAGE = 'Бронирование переговорных';
+
 class MainPageBuild extends StatelessWidget {
+
+  List _mainParams;
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<MainBloc, MainState>(
-//      listenWhen: (previous, current) {
-//
-//      },
-      listener: (context, state) {
-
-      },
-      buildWhen: (previous, current) {
-        print('previous =========================== $previous');
-        print('current =========================== $current');
-        return true;
-      },
+      listener: (context, state) {},
       builder: (context, state) {
         if(state is EmptyMainState){
-          if(_mainParams == null){
-            return Center(child: Text('загрузка'),);
-          }
-          else return buildBody();
+          return Center(child: Text('загрузка'),);
+
         } else if(state is LoadedMainState){
-          _mainParams = GlobalData.mainParams;
+          _mainParams = state.model.params;
+
           return buildBody();
         } else {
           return Container();
@@ -62,33 +52,56 @@ class MainPageBuild extends StatelessWidget {
   }
 
   Widget buildBody() {
+    Color grey = Colors.grey[100];
+    Color white = Colors.white;
+
+    int _news;
+    int _polls;
+    int _videos;
+    int _birthday;
+    int _booking;
+    int _counter = 0;
+    for(final param in _mainParams){
+      _counter++;
+
+      switch (param['name']){
+        case NEWS_PAGE: _news = _counter; break;
+        case POLLS_PAGE: _polls = _counter; break;
+        case VIDEO_PAGE: _videos = _counter; break;
+        case BIRTHDAY_PAGE: _birthday = _counter; break;
+        case BOOKING_PAGE: _booking = _counter; break;
+      }
+    }
+
     final pages = {
-      'Новости': BlockMainPageWidget(
-          child: NewsMainPageSwipeWidget(_news),
-          title: 'Новости',
-          updateIndex: _updateIndex,
-          index: 1
+      NEWS_PAGE: BlockMainPageWidget(
+        child: NewsMainPageSwipeWidget(),
+        title: 'Новости',
+        updateIndex: _updateIndex,
+        index: 1,
+        background: _news % 2 == 0 ? white : grey,
       ),
-      'Опросы': BlockMainPageWidget(
+      POLLS_PAGE: BlockMainPageWidget(
         child: PollsMainPageCustomSwipeWidget(),
         title: 'Опросы',
-        background: Colors.grey[100],
+        background: _polls % 2 == 0 ? white : grey,
         updateIndex: _updateIndex,
       ),
-      'Видеогалерея': BlockMainPageWidget(
+      VIDEO_PAGE: BlockMainPageWidget(
         child: VideosMainPageSwipeStackWidget(),
         title: 'Видео',
+        background: _videos % 2 == 0 ? white : grey,
       ),
-      'Дни рождения': BlockMainPageWidget(
+      BIRTHDAY_PAGE: BlockMainPageWidget(
         child: BirthdayMainPageSwipeWidget(),
         title: 'Дни рождения',
-        background: Colors.grey[100],
+        background: _birthday % 2 == 0 ? white : grey,
         updateIndex: _updateIndex,
       ),
-      'Бронирование переговорных': BlockMainPageWidget(
+      BOOKING_PAGE: BlockMainPageWidget(
         child: Container(child: Center(child: Text('Для этой страницы ещё нету макета'),),),
         title: 'Бронирование',
-        background: Colors.grey[100],
+        background: _booking % 2 == 0 ? white : grey,
         updateIndex: _updateIndex,
       ),
     };

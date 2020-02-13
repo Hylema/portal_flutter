@@ -8,31 +8,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
-var _news;
-
-class NewsMainPageSwipeWidget extends StatelessWidget {
-
-  NewsMainPageSwipeWidget(news){
-    _news = news;
-  }
+class NewsMainPageSwipeWidget extends StatefulWidget {
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) => sl<NewsPortalBloc>(),
-        child: NewsMainPageCarousel()
-    );
-  }
+  NewsMainPageSwipeWidgetState createState() => NewsMainPageSwipeWidgetState();
 }
 
-class NewsMainPageCarousel extends StatefulWidget {
-
-  @override
-  NewsMainPageCarouselState createState() => NewsMainPageCarouselState();
-}
-
-class NewsMainPageCarouselState extends State<NewsMainPageCarousel> with AutomaticKeepAliveClientMixin<NewsMainPageCarousel>{
-  bool noData = false;
+class NewsMainPageSwipeWidgetState extends State<NewsMainPageSwipeWidget> with AutomaticKeepAliveClientMixin<NewsMainPageSwipeWidget>{
 
   @override
   bool get wantKeepAlive => true;
@@ -42,24 +24,16 @@ class NewsMainPageCarouselState extends State<NewsMainPageCarousel> with Automat
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NewsPortalBloc, NewsPortalState>(
       builder: (context, state) {
         if (state is EmptyNewsPortal) {
-          _news = GlobalData.news;
-          if(_news == null){
-            return Container();
-          } else {
-            return NewsMainPageSwipeWidgetBody(news: _news,);
-          }
+          return Container();
         } else if (state is LoadingNewsPortal) {
           return Container();
         } else if (state is LoadedNewsPortal) {
-          _news = state.model.news;
-          return NewsMainPageSwipeWidgetBody(news: _news,);
+          return NewsMainPageSwipeWidgetBody(news: state.model.news,);
         } else if (state is ErrorNewsPortal) {
           return Container(
             child: Center(
@@ -82,7 +56,6 @@ class NewsMainPageSwipeWidgetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 250,
-      margin: EdgeInsets.only(bottom: 20),
       child: Swiper(
           autoplay: true,
           autoplayDelay: 5000,

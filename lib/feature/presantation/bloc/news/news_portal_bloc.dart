@@ -35,7 +35,11 @@ class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> {
       skiped = event.skip;
       top = event.top;
 
-      yield LoadingNewsPortal();
+      bool shimmer = event.shimmer;
+      if(shimmer){
+        yield LoadingNewsPortal();
+      }
+
       yield* _eitherLoadedOrErrorState(either: await _getNewsFromNetwork());
 
     } else if(event is GetNewsPortalFromCacheBlocEvent){

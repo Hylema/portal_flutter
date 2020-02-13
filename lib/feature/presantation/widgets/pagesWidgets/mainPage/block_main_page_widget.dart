@@ -51,6 +51,7 @@ class BlockMainPageWidget extends StatelessWidget {
             ),
           ),
           Container(
+              padding: EdgeInsets.only(bottom: 20),
             child: child
           ),
         ],

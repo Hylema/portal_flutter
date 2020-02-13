@@ -5,14 +5,14 @@ class PollsMainPageCustomSwipeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 140,
+      height: 100,
       child: ListView(
         scrollDirection: Axis.horizontal,
         children: <Widget>[
           Container(
             height: 100,
             width: MediaQuery.of(context).size.width / 1.3,
-            padding: EdgeInsets.only(left: 20, bottom: 20, top: 20),
+            padding: EdgeInsets.only(left: 20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               boxShadow: [

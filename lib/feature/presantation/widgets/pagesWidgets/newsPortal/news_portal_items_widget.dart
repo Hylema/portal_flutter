@@ -133,7 +133,6 @@ class NewsPortalItemsState extends State<NewsPortalItems> {
 
     return Container(
       height: 200,
-      color: Colors.white,
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: GestureDetector(
         onTap: (){

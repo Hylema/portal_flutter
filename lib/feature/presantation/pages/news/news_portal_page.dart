@@ -12,31 +12,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 var _news;
 
-int skipNews = 0;
-int top = 5;
+int _top = 10;
 
 bool _disableRefreshNews = false;
 bool _disableNextNews = false;
 bool _cupertinoIndicator = false;
 
-void disableOrEnable(bool trueOrFalse){
+int minutes;
+
+void disableOrEnable(bool trueOrFalse, bool cupertino){
   _disableRefreshNews = trueOrFalse;
   _disableNextNews = trueOrFalse;
-  _cupertinoIndicator = trueOrFalse;
+  _cupertinoIndicator = cupertino;
 }
 
 class NewsPortalPage extends StatelessWidget {
-  NewsPortalPage(news){
-    _news = news;
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider(
-          create: (context) => sl<NewsPortalBloc>(),
-          child: BuildPageNewsPortal()
-      ),
+      body: BuildPageNewsPortal()
     );
   }
 }
@@ -49,7 +44,7 @@ class BuildPageNewsPortal extends StatefulWidget {
 }
 class BuildPageNewsPortalState extends State<BuildPageNewsPortal> {
   void dispatchGetNewsDataFromCache(){
-    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromCacheBlocEvent(0 ,5));
+    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromCacheBlocEvent(0 ,_top));
   }
 
   @override
@@ -57,18 +52,19 @@ class BuildPageNewsPortalState extends State<BuildPageNewsPortal> {
     return BlocConsumer<NewsPortalBloc, NewsPortalState>(
       builder: (context, state) {
         if (state is EmptyNewsPortal) {
-          if(_news == null){
-            dispatchGetNewsDataFromCache();
-            return NewsPortalPageShimmer();
-          } else {
-            return NewsPortalBody();
-          }
+          dispatchGetNewsDataFromCache();
+          return NewsPortalPageShimmer();
+
         } else if (state is LoadingNewsPortal) {
           return NewsPortalPageShimmer();
+
         } else if (state is LoadedNewsPortal) {
+          disableOrEnable(false, false);
           _news = state.model.news;
           return NewsPortalBody();
+
         } else if (state is ErrorNewsPortal) {
+          dispatchGetNewsDataFromCache();
           return NewsPortalPageShimmer();
         } else {
           return Container();
@@ -77,7 +73,7 @@ class BuildPageNewsPortalState extends State<BuildPageNewsPortal> {
       listener: (context, state) {
         if(state is ErrorNewsPortal){
           flushbar(context, state.message);
-        }
+        } else if(state is LoadedNewsPortal){}
       },
     );
   }
@@ -92,6 +88,12 @@ class NewsPortalBodyState extends State<NewsPortalBody> {
   ScrollController _scrollController = new ScrollController();
   GlobalKey<RefreshIndicatorState> refreshKey;
 
+  void dispatchGetNewsDataFromNetwork({indicator = false}){
+    disableOrEnable(true, indicator);
+
+    context.bloc<NewsPortalBloc>().add(GetNewsPortalFromNetworkBlocEvent(skip: 0 ,top: _top));
+  }
+
   @override
   void dispose(){
     _scrollController.dispose();
@@ -105,7 +107,12 @@ class NewsPortalBodyState extends State<NewsPortalBody> {
     _scrollController.addListener(() {
       if (_scrollController.offset ==
           _scrollController.position.maxScrollExtent) {
-
+        if(!_disableNextNews){
+          setState(() {
+            _top += 10;
+            dispatchGetNewsDataFromNetwork(indicator: true);
+          });
+        }
       }
     });
   }
@@ -114,7 +121,11 @@ class NewsPortalBodyState extends State<NewsPortalBody> {
   Widget build(BuildContext context) {
     return Scrollbar(
       child: RefreshIndicator(
-        onRefresh: () async {},
+        onRefresh: () async {
+          if(!_disableRefreshNews){
+            dispatchGetNewsDataFromNetwork();
+          }
+        },
         key: refreshKey,
         child: CustomScrollView(
           controller: _scrollController,
@@ -139,7 +150,8 @@ class NewsPortalBodyState extends State<NewsPortalBody> {
             SliverList(
               delegate: SliverChildListDelegate(
                 [
-                  NewsPortalCupertinoIndicator(cupertinoIndicator: _cupertinoIndicator)
+                  NewsPortalCupertinoIndicator(cupertinoIndicator: _cupertinoIndicator),
+                  SizedBox(height: 50,)
                 ],
               ),
             )

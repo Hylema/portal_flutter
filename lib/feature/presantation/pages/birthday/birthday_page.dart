@@ -9,21 +9,6 @@ class BirthdayPage extends StatefulWidget {
 
 class BirthdayPageState extends State<BirthdayPage> {
 
-  bool checker = true;
-
-  DateTime selectedDate = DateTime.now();
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2020, 1),
-        lastDate: DateTime(2021, 1));
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -31,16 +16,9 @@ class BirthdayPageState extends State<BirthdayPage> {
 
   @override
   Widget build(BuildContext context) {
-    Future.delayed(Duration(seconds: 5)).then((onValue) {
-      setState(() {
-        checker = false;
-      });
-    });
     return Builder(
         builder: (BuildContext context){
-          if(checker){
-            return BirthdayPageShimmer();
-          }
+
 
           List data = [
             {
@@ -50,7 +28,6 @@ class BirthdayPageState extends State<BirthdayPage> {
               'photo': 'https://w-dog.ru/wallpapers/4/18/283656687472605/arnold-shvarcenegger-gubernator-cherno-belyj.jpg'
             },
           ];
-
           return SafeArea(
             child: CustomScrollView(
               slivers: <Widget>[

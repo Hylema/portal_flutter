@@ -25,6 +25,17 @@ class BirthdayMainPageSwipeWidgetState extends State {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10.0,
+                      spreadRadius: 0.5,
+                      offset: Offset(
+                        5.0, // horizontal, move right 10
+                        5.0, // vertical, move down 10
+                      ),
+                    )
+                  ],
                 ),
                 margin: EdgeInsets.all(10),
                 child: Column(

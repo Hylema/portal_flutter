@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/data/globalData/global_data.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
-import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reorderables/reorderables.dart';
 
@@ -10,10 +8,7 @@ class MainPageParameters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider(
-          create: (context) => sl<MainBloc>(),
-          child: BuildMainPageParameters()
-      ),
+      body: BuildMainPageParameters()
     );
   }
 }
@@ -33,22 +28,11 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
 
   final String path = 'assets/icons/';
 
+  get _params => [..._listStatusTrue, ..._listStatusFalse];
+
   @override
   void initState() {
     super.initState();
-
-    print('ИНИТ');
-
-
-    _data = GlobalData.mainParams;
-
-    _data.asMap().forEach((index, item){
-      if(item['status']){
-        _listStatusTrue.add(item);
-      } else {
-        _listStatusFalse.add(item);
-      }
-    });
   }
 
   @override
@@ -58,69 +42,84 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
 
   void removeItem(index){
     final item = _listStatusTrue.removeAt(index);
+    item['status'] = false;
     _listStatusFalse.add(item);
+
+    dispatchUpdateMainParams();
   }
 
   void addItem(index){
     final item = _listStatusFalse.removeAt(index);
+    item['status'] = true;
     _listStatusTrue.add(item);
+
+    dispatchUpdateMainParams();
   }
 
   void dispatchGetMainParamsFromJson(){
     context.bloc<MainBloc>().add(GetParamsFromJsonForMainPageBlocEvent());
   }
 
-  void dispatchSetMainParamsToJson(params){
-    context.bloc<MainBloc>().add(SetParamsToJsonForMainPageBlocEvent(params));
+  void dispatchSetMainParamsToJson(){
+    context.bloc<MainBloc>().add(SetParamsToJsonForMainPageBlocEvent(_params));
+  }
+
+  void dispatchUpdateMainParams(){
+    context.bloc<MainBloc>().add(UpdateMainParams(_params));
   }
 
   Widget getListTile(item, index, addOrRemove){
-    return ListTile(
-        key: ValueKey(item['name']),
-        title: Row(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: GestureDetector(
-                onTap: () {
-                  if(addOrRemove) removeItem(index);
-                  else addItem(index);
-
-                  setState(() {});
-                },
-                child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50.0),
-                        color: true == addOrRemove
-                            ? Color.fromRGBO(255, 59, 48, 1)
-                            : Color.fromRGBO(76, 217, 100, 1)
-                    ),
-                    width: 25,
-                    height: 25,
-                    child: true == addOrRemove
-                        ? Icon(Icons.remove, color: Colors.white, size: 15,)
-                        : Icon(Icons.add, color: Colors.white, size: 15,)
+    return Container(
+      padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
+      key: ValueKey(item['name']),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height/12,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: GestureDetector(
+                  onTap: () {
+                    if(addOrRemove) removeItem(index);
+                    else addItem(index);
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          color: true == addOrRemove
+                              ? Color.fromRGBO(255, 59, 48, 1)
+                              : Color.fromRGBO(76, 217, 100, 1)
+                      ),
+                      width: 25,
+                      height: 25,
+                      child: true == addOrRemove
+                          ? Icon(Icons.remove, color: Colors.white, size: 15,)
+                          : Icon(Icons.add, color: Colors.white, size: 15,)
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: 10),
-              child: Image.asset(item['icon'], width: 26, height: 26),
-            ),
-            Text(item['name']),
-          ],
-        ),
-        trailing: true == addOrRemove
-            ? Padding(
-          child: Image.asset('${path}iconDrag.png'),
-          padding: EdgeInsets.all(15),
-        ) : null
+              Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Image.asset(item['icon'], width: 26, height: 26),
+              ),
+              Text(item['name']),
+            ],
+          ),
+          Container(
+            padding: EdgeInsets.all((5)),
+            child: true == addOrRemove ? Image.asset('${path}iconDrag.png') : Container()
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<MainBloc, MainState>(
+    return BlocBuilder<MainBloc, MainState>(
       builder: (context, state) {
         if(state is EmptyMainState){
           if(_data == null){
@@ -129,36 +128,46 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
           else return buildBody();
         } else if(state is LoadedMainState){
           _data = state.model.params;
-          print('СТЕЙТ ИЗ ПАРАМЕТРОВ === ${_data}');
+
+          print('TRIGGERED === $_data');
+
+          _listStatusTrue = [];
+          _listStatusFalse = [];
+
+          _data.asMap().forEach((index, item){
+            if(item['status']){
+              _listStatusTrue.add(item);
+            } else {
+              _listStatusFalse.add(item);
+            }
+          });
 
           return buildBody();
         } else {
           return Container();
         }
       },
-      listener: (context, state) {
-
-      },
     );
   }
 
-  void updateJson(){
-    for(var i = 0; i < _listStatusTrue.length; i++){
-      _listStatusTrue[i]['status'] = true;
-    }
-    for(var i = 0; i < _listStatusFalse.length; i++){
-      _listStatusFalse[i]['status'] = false;
-    }
-
-
-    dispatchSetMainParamsToJson([..._listStatusTrue, ..._listStatusFalse]);
-  }
+//  updateParams(){
+//    for(var i = 0; i < _listStatusTrue.length; i++){
+//      _listStatusTrue[i]['status'] = true;
+//    }
+//    for(var i = 0; i < _listStatusFalse.length; i++){
+//      _listStatusFalse[i]['status'] = false;
+//    }
+//
+//    return [..._listStatusTrue, ..._listStatusFalse];
+//  }
 
   Widget buildBody() {
+    ScrollController _scrollController = PrimaryScrollController.of(context) ?? ScrollController();
     return Scaffold(
         appBar: AppBar(
             leading: GestureDetector(
               onTap: (){
+                dispatchGetMainParamsFromJson();
                 Navigator.pop(context);
               },
               child: Icon(Icons.close, color: Colors.black,),
@@ -169,7 +178,7 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
             actions: [
               MaterialButton(
                   onPressed: () {
-                    updateJson();
+                    dispatchSetMainParamsToJson();
                     Navigator.pop(context);
                   },
                   child: Text('Готово', style: TextStyle(color: Colors.lightBlue, fontSize: 16),)
@@ -193,7 +202,7 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
                   ),
                 ),
                 ReorderableColumn(
-                  scrollController: ScrollController(),
+                  scrollController: _scrollController,
                   needsLongPressDraggable: false,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: _listStatusTrue
@@ -202,13 +211,10 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
                       .values
                       .toList(),
                   onReorder: (oldIndex, newIndex) {
-                    setState(() {
+                    final item = _listStatusTrue.removeAt(oldIndex);
+                    _listStatusTrue.insert(newIndex, item);
 
-                      final item = _listStatusTrue.removeAt(oldIndex);
-                      _listStatusTrue.insert(newIndex, item);
-
-                      updateJson();
-                    });
+                    dispatchUpdateMainParams();
                   },
                 ),
                 Container(

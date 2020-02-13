@@ -18,9 +18,16 @@ class AuthToken {
   final String jsonPath = '/assets/token.json';
 
   Future getTokenFromFile() async {
-    var file = await this.readFile();
-
-    Token.authToken = file['token'];
+    try{
+      var file = await this.readFile();
+      Token.authToken = file['token'];
+    }catch(e){
+      await writeFile(jsonEncode({
+        'token': 123
+      }));
+      var file = await this.readFile();
+      Token.authToken = file['token'];
+    }
   }
 
   AuthToken(){
@@ -36,7 +43,9 @@ class AuthToken {
       final path = await _localPath;
       return File('$path/token.json');
     } catch(e){
-      await writeFile('123');
+      await writeFile(jsonEncode({
+        'token': 123
+      }));
 
       final path = await _localPath;
       return File('$path/token.json');

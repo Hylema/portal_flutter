@@ -9,8 +9,9 @@ abstract class NewsPortalEvent extends Equatable{
 class GetNewsPortalFromNetworkBlocEvent extends NewsPortalEvent {
   final skip;
   final top;
+  final shimmer;
 
-  GetNewsPortalFromNetworkBlocEvent(this.skip, this.top) : super([skip, top]);
+  GetNewsPortalFromNetworkBlocEvent({this.skip, this.top, this.shimmer = false}) : super([skip, top]);
 }
 
 class GetNextNewsPortalBloc extends NewsPortalEvent {

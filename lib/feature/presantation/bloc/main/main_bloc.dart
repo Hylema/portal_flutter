@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/messages.dart';
 import 'package:flutter_architecture_project/core/usecases/usecase.dart';
+import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/main/main_params.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/main/get_main_params_from_json.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/main/set_main_params_to_json.dart';
@@ -24,9 +25,9 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   MainState get initialState => EmptyMainState();
 
   @override
-  Stream<MainState> mapEventToState(
-    MainEvent event,
-  ) async* {
+  Stream<MainState> mapEventToState(MainEvent event) async* {
+    print('EVENT === $event');
+
     if(event is GetParamsFromJsonForMainPageBlocEvent){
      var modelOrFailure = await getMainParamsFromJson(NoParams());
 
@@ -52,7 +53,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           return LoadedMainState(model: model);
         },
       );
-
+    } else if(event is UpdateMainParams){
+      yield LoadedMainState(model: MainParamsModel.fromJson({
+        'params': event.params
+      }));
     }
   }
 }

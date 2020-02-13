@@ -7,6 +7,13 @@ abstract class MainEvent extends Equatable{
 }
 
 class GetParamsFromJsonForMainPageBlocEvent extends MainEvent {}
+
+class UpdateMainParams extends MainEvent {
+  final params;
+
+  UpdateMainParams(this.params) : super([params]);
+}
+
 class SetParamsToJsonForMainPageBlocEvent extends MainEvent {
   final params;
 

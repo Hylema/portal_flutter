@@ -8,7 +8,6 @@ class VideosMainPageSwipeStackWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 250,
-      margin: EdgeInsets.only(bottom: 20),
       child: Swiper(
         autoplay: true,
         autoplayDelay: 7000,

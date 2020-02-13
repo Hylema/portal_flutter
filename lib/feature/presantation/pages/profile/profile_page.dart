@@ -1,28 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
 import 'package:flutter_architecture_project/core/mixins/flushbar.dart';
-import 'package:flutter_architecture_project/feature/data/globalData/global_data.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/profile/profile_page_shimmer.dart';
-import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 var _profile;
 
 class ProfilePage extends StatelessWidget {
 
-  ProfilePage(profile){
-    _profile = profile;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider(
-          create: (context) => sl<ProfileBloc>(),
-          child: ProfilePageProvider()
-      ),
+      body: ProfilePageProvider()
     );
   }
 }
@@ -32,7 +21,6 @@ class ProfilePageProvider extends StatefulWidget {
 }
 
 class _ProfilePageProviderState extends State<ProfilePageProvider> {
-  bool noData = false;
 
   @override
   void initState(){
@@ -51,19 +39,17 @@ class _ProfilePageProviderState extends State<ProfilePageProvider> {
     return BlocConsumer<ProfileBloc, ProfileState>(
       builder: (context, state) {
         if (state is EmptyProfile) {
-          _profile = GlobalData.profile;
-          if(_profile == null){
-            dispatchGetProfileDataFromCache();
-            return ProfilePageShimmer();
-          } else {
-            return ProfilePageBody(data: _profile,);
-          }
+          dispatchGetProfileDataFromCache();
+          return ProfilePageShimmer();
+
         } else if (state is LoadingProfile) {
           return ProfilePageShimmer();
         } else if (state is LoadedProfile) {
           _profile = state.model.profile;
           return ProfilePageBody(data: _profile,);
         } else if (state is ErrorProfile) {
+
+          dispatchGetProfileDataFromCache();
           return ProfilePageShimmer();
         }
         return Container();
