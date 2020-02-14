@@ -4,7 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/profile/profile.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/profile/profile_repository.dart';
 class GetProfileFromCache extends UseCase<Profile, NoParams> {
-  final ProfileRepository repository;
+  final IProfileRepository repository;
 
   GetProfileFromCache(this.repository);
 

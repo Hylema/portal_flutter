@@ -36,20 +36,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } else if(event is GetProfileFromCacheBlocEvent){
       yield LoadingProfile();
 
-      var modelOrFailure = await _failureOrModelCache(
-        either: await _getProfileFromCache(),
-      );
-
-      yield modelOrFailure.fold(
-            (failure){
-          if(failure is AuthFailure){
-            return NeedAuthProfile();
-          }
-          return ErrorProfile(message: mapFailureToMessage(failure));
-        },
-            (model){
-          return LoadedProfile(model: model);
-        },
+      yield* _eitherLoadedOrErrorState(
+        either: await _eitherFailureOrModelCache(
+          either: await _getProfileFromCache(),
+        )
       );
     }
   }
@@ -66,7 +56,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     );
   }
 
-  _failureOrModelCache({
+  _eitherFailureOrModelCache({
     Either<Failure, Profile> either,
   }) async {
     return either.fold(
@@ -80,7 +70,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   }
 
   Stream<ProfileState> _eitherLoadedOrErrorState({
-    Either<Failure, Profile> either,
+    Either either,
   }) async* {
     yield either.fold(
           (failure){

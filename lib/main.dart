@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+//        theme: ThemeData(highlightColor: Color.fromRGBO(238, 0, 38, 0.1)),
         home: WelcomePage(),
         debugShowCheckedModeBanner: false,
       ),

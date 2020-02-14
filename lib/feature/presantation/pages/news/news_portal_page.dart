@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/mixins/flushbar.dart';
-import 'package:flutter_architecture_project/feature/data/globalData/global_data.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_cupertino_indicator_widget.dart';

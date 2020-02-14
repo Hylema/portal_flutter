@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 
 class SetMainParamsToJson implements UseCase<MainParams, Main>{
-  final MainParamsRepository repository;
+  final IMainParamsRepository repository;
 
   SetMainParamsToJson(this.repository);
 

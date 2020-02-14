@@ -4,7 +4,7 @@ import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-abstract class ProfileLocalDataSource {
+abstract class IProfileLocalDataSource {
 
   /// Throws [NoLocalDataException] if no cached data is present.
   Future<ProfileModel> getDataFromCache();
@@ -12,11 +12,11 @@ abstract class ProfileLocalDataSource {
   Future<void> saveDataToCache(ProfileModel modelToCache);
 }
 
-class ProfileLocalDataSourceImpl implements ProfileLocalDataSource {
+class ProfileLocalDataSource implements IProfileLocalDataSource {
   final SharedPreferences sharedPreferences;
   final String cachedName = 'CACHED_PROFILE';
 
-  ProfileLocalDataSourceImpl({@required this.sharedPreferences});
+  ProfileLocalDataSource({@required this.sharedPreferences});
 
   @override
   Future<ProfileModel> getDataFromCache() {

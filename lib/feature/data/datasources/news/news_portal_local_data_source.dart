@@ -4,17 +4,17 @@ import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-abstract class NewsPortalLocalDataSource {
+abstract class INewsPortalLocalDataSource {
   Future<NewsPortalModel> getLastNewsPortal();
 
   Future<void> cacheNewsPortal(NewsPortalModel triviaToCache);
 }
 
-class NewsPortalLocalDataSourceImpl implements NewsPortalLocalDataSource {
+class NewsPortalLocalDataSource implements INewsPortalLocalDataSource {
   final SharedPreferences sharedPreferences;
   final String cachedName = 'CACHED_NEWS_PORTAL';
 
-  NewsPortalLocalDataSourceImpl({@required this.sharedPreferences});
+  NewsPortalLocalDataSource({@required this.sharedPreferences});
 
   @override
   Future<NewsPortalModel> getLastNewsPortal() {

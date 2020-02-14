@@ -3,13 +3,13 @@ import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-abstract class MainParamsJsonDataSource {
+abstract class IMainParamsJsonDataSource {
 
   Future<MainParamsModel> getFromJson();
   setToJson(params);
 }
 
-class MainParamsJsonDataSourceImpl implements MainParamsJsonDataSource {
+class MainParamsJsonDataSource implements IMainParamsJsonDataSource {
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -23,6 +23,18 @@ class MainParamsJsonDataSourceImpl implements MainParamsJsonDataSource {
       final path = await _localPath;
       return File('$path/$fileName');
     } catch(e){
+
+      final localPath = await _localPath;
+      return File('$localPath/$fileName');
+    }
+  }
+
+  Future readFile() async {
+    try {
+      final file = await _localFile;
+
+      return jsonDecode(file.readAsStringSync());
+    } catch(e) {
       final String path = 'assets/icons/';
       final data = [
         {
@@ -54,15 +66,10 @@ class MainParamsJsonDataSourceImpl implements MainParamsJsonDataSource {
 
       await writeFile(data);
 
-      final localPath = await _localPath;
-      return File('$localPath/$fileName');
+      final file = await _localFile;
+
+      return jsonDecode(file.readAsStringSync());
     }
-  }
-
-  Future readFile() async {
-    final file = await _localFile;
-
-    return jsonDecode(file.readAsStringSync());
   }
 
   Future writeFile(json) async {

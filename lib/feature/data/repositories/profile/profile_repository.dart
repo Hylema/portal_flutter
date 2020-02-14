@@ -8,12 +8,12 @@ import 'package:flutter_architecture_project/feature/domain/repositories/profile
 import 'package:flutter_architecture_project/feature/domain/entities/profile/profile.dart';
 import 'package:meta/meta.dart';
 
-class ProfileRepositoryImpl implements ProfileRepository {
+class ProfileRepository implements IProfileRepository {
   final ProfileRemoteDataSource remoteDataSource;
   final ProfileLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
-  ProfileRepositoryImpl({
+  ProfileRepository({
     @required this.remoteDataSource,
     @required this.localDataSource,
     @required this.networkInfo,

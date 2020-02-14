@@ -7,17 +7,17 @@ import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
 import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
 import 'package:http/http.dart' as http;
 
-abstract class ProfileRemoteDataSource {
+abstract class IProfileRemoteDataSource {
 
   /// Throws a [ServerException] for all error codes.
   Future<ProfileModel> getProfile();
 }
 
-class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
+class ProfileRemoteDataSource implements IProfileRemoteDataSource {
   final http.Client client;
   final ProfileParser parser;
 
-  ProfileRemoteDataSourceImpl({
+  ProfileRemoteDataSource({
     @required this.client,
     @required this.parser,
   });

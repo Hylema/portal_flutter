@@ -7,9 +7,9 @@ import 'package:flutter_architecture_project/feature/data/datasources/news/news_
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository_impl.dart';
-import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository_impl.dart';
-import 'package:flutter_architecture_project/feature/data/repositories/profile/profile_repository_impl.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/profile/profile_repository.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/profile/profile_repository.dart';
@@ -65,52 +65,52 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SetMainParamsToJson(sl()));
 
   /// Repository
-  sl.registerLazySingleton<NewsPortalRepository>(
-        () => NewsPortalRepositoryImpl(
+  sl.registerLazySingleton<INewsPortalRepository>(
+        () => NewsPortalRepository(
       remoteDataSource: sl(),
       localDataSource: sl(),
       networkInfo: sl(),
     ),
   );
 
-  sl.registerLazySingleton<ProfileRepository>(
-        () => ProfileRepositoryImpl(
+  sl.registerLazySingleton<IProfileRepository>(
+        () => ProfileRepository(
       remoteDataSource: sl(),
       localDataSource: sl(),
       networkInfo: sl(),
     ),
   );
 
-  sl.registerLazySingleton<MainParamsRepository>(
-        () => MainParamsRepositoryImpl(
-          jsonDataSource: MainParamsJsonDataSourceImpl(),
+  sl.registerLazySingleton<IMainParamsRepository>(
+        () => MainParamsRepository(
+          jsonDataSource: sl(),
     ),
   );
 
   /// Data sources
   sl.registerLazySingleton<NewsPortalRemoteDataSource>(
-        () => NewsPortalRemoteDataSourceImpl(
+        () => NewsPortalRemoteDataSource(
             client: sl(),
         ),
   );
   sl.registerLazySingleton<NewsPortalLocalDataSource>(
-        () => NewsPortalLocalDataSourceImpl(sharedPreferences: sl()),
+        () => NewsPortalLocalDataSource(sharedPreferences: sl()),
   );
 
   sl.registerLazySingleton<ProfileRemoteDataSource>(
-        () => ProfileRemoteDataSourceImpl(
+        () => ProfileRemoteDataSource(
         client: sl(),
         parser: sl(),
     ),
   );
   sl.registerLazySingleton<ProfileLocalDataSource>(
-        () => ProfileLocalDataSourceImpl(
+        () => ProfileLocalDataSource(
           sharedPreferences: sl(),
         ),
   );
 
   sl.registerLazySingleton<MainParamsJsonDataSource>(
-        () => MainParamsJsonDataSourceImpl(),
+        () => MainParamsJsonDataSource(),
   );
 
   ///! Core

@@ -5,7 +5,7 @@ import 'package:flutter_architecture_project/feature/domain/repositories/profile
 import 'package:dartz/dartz.dart';
 
 class GetProfileFormNetwork implements UseCase<Profile, NoParams>{
-  final ProfileRepository repository;
+  final IProfileRepository repository;
 
   GetProfileFormNetwork(this.repository);
 

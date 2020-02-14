@@ -5,7 +5,7 @@ import 'package:flutter_architecture_project/feature/domain/entities/main/main_p
 import 'package:flutter_architecture_project/feature/domain/repositories/main/main_params_repository.dart';
 
 class GetMainParamsFromJson extends UseCase<MainParams, NoParams> {
-  final MainParamsRepository repository;
+  final IMainParamsRepository repository;
 
   GetMainParamsFromJson(this.repository);
 

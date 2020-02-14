@@ -5,7 +5,7 @@ import 'package:flutter_architecture_project/feature/domain/entities/news/news_p
 import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository.dart';
 
 class GetNewsPortalFromCache extends UseCase<NewsPortal, NoParams> {
-  final NewsPortalRepository repository;
+  final INewsPortalRepository repository;
 
   GetNewsPortalFromCache(this.repository);
 

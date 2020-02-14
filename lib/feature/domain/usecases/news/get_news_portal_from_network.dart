@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 
 class GetNewsPortalFormNetwork implements UseCase<NewsPortal, NewsParams>{
-  final NewsPortalRepository repository;
+  final INewsPortalRepository repository;
 
   GetNewsPortalFormNetwork(this.repository);
 

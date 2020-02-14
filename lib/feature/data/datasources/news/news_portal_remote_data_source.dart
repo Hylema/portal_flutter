@@ -8,16 +8,16 @@ import 'package:flutter_architecture_project/core/error/status_code.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:http/http.dart' as http;
 
-abstract class NewsPortalRemoteDataSource {
+abstract class INewsPortalRemoteDataSource {
 
   /// Throws a [ServerException] for all error codes.
   Future<NewsPortalModel> getNewsPortal(int skip, int top);
 }
 
-class NewsPortalRemoteDataSourceImpl implements NewsPortalRemoteDataSource {
+class NewsPortalRemoteDataSource implements INewsPortalRemoteDataSource {
   final http.Client client;
 
-  NewsPortalRemoteDataSourceImpl({
+  NewsPortalRemoteDataSource({
     @required this.client,
   });
 

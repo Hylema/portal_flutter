@@ -7,10 +7,10 @@ import 'package:flutter_architecture_project/feature/domain/repositories/main/ma
 
 import 'package:meta/meta.dart';
 
-class MainParamsRepositoryImpl implements MainParamsRepository {
-  final MainParamsJsonDataSourceImpl jsonDataSource;
+class MainParamsRepository implements IMainParamsRepository {
+  final MainParamsJsonDataSource jsonDataSource;
 
-  MainParamsRepositoryImpl({
+  MainParamsRepository({
     @required this.jsonDataSource,
   });
 

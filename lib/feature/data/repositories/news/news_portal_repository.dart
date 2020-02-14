@@ -11,12 +11,12 @@ import 'package:meta/meta.dart';
 
 typedef Future<NewsPortal> _ConcreteOrRandomChooser();
 
-class NewsPortalRepositoryImpl implements NewsPortalRepository {
+class NewsPortalRepository implements INewsPortalRepository {
   final NewsPortalRemoteDataSource remoteDataSource;
   final NewsPortalLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
-  NewsPortalRepositoryImpl({
+  NewsPortalRepository({
     @required this.remoteDataSource,
     @required this.localDataSource,
     @required this.networkInfo,

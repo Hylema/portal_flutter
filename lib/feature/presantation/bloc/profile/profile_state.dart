@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_architecture_project/feature/data/globalData/global_data.dart';
 import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
 import 'package:meta/meta.dart';
 
@@ -16,9 +15,7 @@ class NeedAuthProfile extends ProfileState {}
 class LoadedProfile extends ProfileState {
   final ProfileModel model;
 
-  LoadedProfile({@required this.model}) : super([model]){
-    GlobalData.profile = model.profile;
-  }
+  LoadedProfile({@required this.model}) : super([model]);
 }
 
 class ErrorProfile extends ProfileState {
