@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'dart:math';
 import 'package:simple_animations/simple_animations.dart';
@@ -131,14 +132,75 @@ class AnimatedBackground extends StatelessWidget {
   }
 }
 
-class CenteredText extends StatelessWidget {
+class CenteredText extends StatefulWidget {
   const CenteredText({
     Key key,
   }) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() => CenteredTextState();
+}
+
+class CenteredTextState extends State with TickerProviderStateMixin{
+
+  PageController _pageController;
+
+  AnimationController rippleController;
+  AnimationController scaleController;
+
+  Animation<double> rippleAnimation;
+  Animation<double> scaleAnimation;
+
+  RoundedLoadingButtonController _btnController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pageController = PageController(
+        initialPage: 0
+    );
+
+    rippleController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 1)
+    );
+
+    scaleController = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 1)
+    )..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AppPage()));
+      }
+    });
+
+    rippleAnimation = Tween<double>(
+        begin: 100.0,
+        end: 110.0
+    ).animate(rippleController)..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        rippleController.reverse();
+      } else if(status == AnimationStatus.dismissed) {
+        rippleController.forward();
+      }
+    });
+
+    _btnController = new RoundedLoadingButtonController();
+
+    scaleAnimation = Tween<double>(
+        begin: 1.0,
+        end: 30.0
+    ).animate(scaleController);
+
+    rippleController.forward();
+  }
+
+  bool check = false;
+
+  @override
   Widget build(BuildContext context) {
-    final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
+    if(check) scaleController.forward();
 
     return Scaffold(
         backgroundColor: Colors.transparent,
@@ -152,18 +214,35 @@ class CenteredText extends StatelessWidget {
               ),
             ),
             Align(
-              alignment: Alignment(0, 0.8),
-              child: RoundedLoadingButton(
-                  child: Text('Показать', style: TextStyle(color: Colors.white)),
-                  controller: _btnController,
-                  onPressed: () async {
-                    await Future.delayed(Duration(seconds: 3), () async {
-                      _btnController.success();
-                    });
-                    await Future.delayed(Duration(milliseconds: 1000), () {});
-                  },
-                  color: Color.fromRGBO(238, 0, 38, 1)
-              )
+                alignment: Alignment(0, 0.8),
+                child: AnimatedBuilder(
+                  animation: scaleAnimation,
+                  builder: (context, child) => Transform.scale(
+                    scale: scaleAnimation.value,
+                    child: check == false ? RoundedLoadingButton(
+                      child: Text('Показать', style: TextStyle(color: Colors.white)),
+                      controller: _btnController,
+                      onPressed: () async {
+                        await Future.delayed(Duration(seconds: 3), () async {
+                          _btnController.success();
+                        });
+                        await Future.delayed(Duration(milliseconds: 1000), () {});
+                        setState(() {
+                          check = true;
+                        });
+                      },
+                      color: Color.fromRGBO(238, 0, 38, 1),
+                    ) : Container(
+                      width: 100,
+                      height: 100,
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color.fromRGBO(238, 0, 38, 1),
+                      ),
+                    ),
+                  ),
+                )
             ),
           ],
         )
@@ -171,5 +250,3 @@ class CenteredText extends StatelessWidget {
   }
 }
 
-//https://blog.geekyants.com/flutter-login-animation-ab3e6ed4bd19
-//https://flutterawesome.com/bouncing-button-with-flutter/
