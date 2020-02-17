@@ -105,33 +105,6 @@ class CurvePainter extends CustomPainter {
   }
 }
 
-class AnimatedBackground extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final tween = MultiTrackTween([
-      Track("color1").add(Duration(seconds: 3),
-          ColorTween(begin: Color(0xffD38312), end: Colors.lightBlue.shade900)),
-      Track("color2").add(Duration(seconds: 3),
-          ColorTween(begin: Color(0xffA83279), end: Colors.blue.shade600))
-    ]);
-
-    return ControlledAnimation(
-      playback: Playback.MIRROR,
-      tween: tween,
-      duration: tween.duration,
-      builder: (context, animation) {
-        return Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [animation["color1"], animation["color2"]])),
-        );
-      },
-    );
-  }
-}
-
 class CenteredText extends StatefulWidget {
   const CenteredText({
     Key key,
@@ -143,28 +116,18 @@ class CenteredText extends StatefulWidget {
 
 class CenteredTextState extends State with TickerProviderStateMixin{
 
-  PageController _pageController;
-
-  AnimationController rippleController;
   AnimationController scaleController;
-
-  Animation<double> rippleAnimation;
   Animation<double> scaleAnimation;
-
   RoundedLoadingButtonController _btnController;
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   void initState() {
     super.initState();
-
-    _pageController = PageController(
-        initialPage: 0
-    );
-
-    rippleController = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: 1)
-    );
 
     scaleController = AnimationController(
         vsync: this,
@@ -172,17 +135,8 @@ class CenteredTextState extends State with TickerProviderStateMixin{
     )..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AppPage()));
-      }
-    });
-
-    rippleAnimation = Tween<double>(
-        begin: 100.0,
-        end: 110.0
-    ).animate(rippleController)..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        rippleController.reverse();
-      } else if(status == AnimationStatus.dismissed) {
-        rippleController.forward();
+        //scaleController.reverse();
+        check = false;
       }
     });
 
@@ -193,7 +147,6 @@ class CenteredTextState extends State with TickerProviderStateMixin{
         end: 30.0
     ).animate(scaleController);
 
-    rippleController.forward();
   }
 
   bool check = false;
@@ -220,7 +173,7 @@ class CenteredTextState extends State with TickerProviderStateMixin{
                   builder: (context, child) => Transform.scale(
                     scale: scaleAnimation.value,
                     child: check == false ? RoundedLoadingButton(
-                      child: Text('Показать', style: TextStyle(color: Colors.white)),
+                      child: Text('Начать', style: TextStyle(color: Colors.white)),
                       controller: _btnController,
                       onPressed: () async {
                         await Future.delayed(Duration(seconds: 3), () async {

@@ -5,7 +5,9 @@ import 'package:flutter_architecture_project/core/api/api.dart';
 import 'package:flutter_architecture_project/core/api/token/auth_token.dart';
 import 'package:flutter_architecture_project/core/api/token/token.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/welcome/welcome_page.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:page_transition/page_transition.dart';
 
 
 class AuthPage extends StatefulWidget {
@@ -72,6 +74,12 @@ class AuthPagebState extends State<AuthPage> {
         url: Api.AUTH_URL,
         appBar: AppBar(
           automaticallyImplyLeading: true,
+//          leading: GestureDetector(
+//            child: Icon(Icons.arrow_back),
+//            onTap: () {
+//              Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: WelcomePage()));
+//            },
+//          ),
           title: Text("Авторизация"),
           backgroundColor: Colors.red[800],
         )
