@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/news_popularity_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
@@ -31,6 +33,12 @@ class MyApp extends StatelessWidget {
         BlocProvider<MainBloc>(
           create: (BuildContext context) => di.sl<MainBloc>(),
         ),
+        BlocProvider<VideoGalleryBloc>(
+          create: (BuildContext context) => di.sl<VideoGalleryBloc>(),
+        ),
+        BlocProvider<NewsPopularityBloc>(
+          create: (BuildContext context) => di.sl<NewsPopularityBloc>(),
+        ),
       ],
       child: MaterialApp(
 //        theme: ThemeData(highlightColor: Color.fromRGBO(238, 0, 38, 0.1)),
@@ -40,3 +48,5 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+

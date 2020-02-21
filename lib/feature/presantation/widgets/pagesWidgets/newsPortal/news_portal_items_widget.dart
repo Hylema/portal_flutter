@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/animation/fade_animation.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/newsPortalCardInformation/news_portal_card_information_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/date_time_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_image_network_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_likes_seen_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/title_widget.dart';
+import 'package:flutter_architecture_project/injection_container.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class NewsPortalItems extends StatefulWidget {
@@ -22,115 +27,25 @@ class NewsPortalItems extends StatefulWidget {
   NewsPortalItemsState createState() => NewsPortalItemsState();
 }
 
-class NewsPortalItemsState extends State<NewsPortalItems> {
+class NewsPortalItemsState extends State<NewsPortalItems> with AutomaticKeepAliveClientMixin{
+
+  @override
+  bool get wantKeepAlive => true;
+
+  double _heightCard = 160;
+  var _news;
+  var _index;
+
+  @override
+  void initState() {
+    _news = widget.news;
+    _index = widget.index;
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final double _heightCard = 160;
-    final _news = widget.news;
-    final _index = widget.index;
-
-    _childrenWidgets(){
-      return <Widget>[
-        Expanded(
-          //fit: FlexFit.tight,
-          child: ClipRRect(
-            borderRadius: widget.vertical == false ? BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                bottomLeft: Radius.circular(10.0)
-            )
-                : BorderRadius.only(
-                topLeft: Radius.circular(10.0),
-                topRight: Radius.circular(10.0)
-            ),
-            child: ImageNetworkWidget(
-                path: _news['slNewsCover'],
-                index: _index
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  TitleWidget(
-                    titleSize: 15,
-                    title: _news['Title'],
-                    color: Colors.black,
-                    maxSymbol: 70,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        //padding: EdgeInsets.only(top: 10),
-                        child: DateTimeWidget(
-                          dataTime: _news['Created'],
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Container(
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.remove_red_eye,
-                                    size: 16,
-                                    color: Colors.grey,
-                                  ),
-                                  Text(
-                                    ' 12',
-                                    style: TextStyle(
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 10),
-                            ),
-                            Container(
-                              child: GestureDetector(
-                                child: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.favorite_border,
-                                      size: 16,
-                                      color: Colors.grey,
-                                    ),
-                                    Text(
-                                      ' 1',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                onTap: (){
-                                  print('Запись понравилась');
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              )
-          ),
-        ),
-      ];
-    }
-
     return Container(
       height: 200,
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
@@ -180,17 +95,70 @@ class NewsPortalItemsState extends State<NewsPortalItems> {
 //                        });
 //
 //                    },
-                child: widget.vertical == false ? Row(
-                  children: _childrenWidgets(),
-                )
-                    : Column(
-                  children: _childrenWidgets(),
-                )
+                  child: widget.vertical == false ? Row(
+                    children: _childrenWidgets(),
+                  )
+                      : Column(
+                    children: _childrenWidgets(),
+                  )
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  _childrenWidgets(){
+    return <Widget>[
+      Expanded(
+        //fit: FlexFit.tight,
+        child: ClipRRect(
+          borderRadius: widget.vertical == false ? BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              bottomLeft: Radius.circular(10.0)
+          )
+              : BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              topRight: Radius.circular(10.0)
+          ),
+          child: ImageNetworkWidget(
+              path: _news['slNewsCover'],
+              index: _index
+          ),
+        ),
+      ),
+      Expanded(
+        child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                TitleWidget(
+                  titleSize: 15,
+                  title: _news['Title'],
+                  color: Colors.black,
+                  maxSymbol: 70,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      //padding: EdgeInsets.only(top: 10),
+                      child: DateTimeWidget(
+                        dataTime: _news['Created'],
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    LikesSeen(id: _news['Id'])
+                  ],
+                ),
+              ],
+            )
+        ),
+      ),
+    ];
   }
 }

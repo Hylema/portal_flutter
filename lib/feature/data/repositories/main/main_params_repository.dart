@@ -3,7 +3,7 @@ import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/main/main_params.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/main/main_params_repository.dart';
+import 'package:flutter_architecture_project/feature/domain/repositories/main/main_params_repository_interface.dart';
 
 import 'package:meta/meta.dart';
 

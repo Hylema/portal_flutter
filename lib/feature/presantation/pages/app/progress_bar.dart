@@ -40,11 +40,9 @@ class ProgressBarState extends State<ProgressBar> with SingleTickerProviderState
                       height: 5,
                       width: 300,
                       child: LinearProgressIndicator(
-//                          value: test
-//                              ? animation.value
-//                              : 1.0,
-//                          backgroundColor: Colors.grey[300],
-                          valueColor: AlwaysStoppedAnimation<Color>(Color.fromRGBO(238, 0, 38, 1)),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Color.fromRGBO(238, 0, 38, 1)
+                          ),
                       ),
                     ),
                   ),

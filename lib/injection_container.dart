@@ -1,70 +1,149 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
-import 'package:flutter_architecture_project/core/api/token/auth_token.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/newsPopularity/news_popularity_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/newsPopularity/news_popularity_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/profile/profile_repository.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/main/main_params_repository.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/profile/profile_repository.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/videoGallery/video_gallery_repository.dart';
+import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
+import 'package:flutter_architecture_project/feature/domain/repositories/main/main_params_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositories/newsPopularity/news_popularity_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositories/profile/profile_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositories/videoGallery/video_gallery_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/main/get_main_params_from_json.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/main/set_main_params_to_json.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/news/get_news_portal_from_cache.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/news/get_news_portal_from_network.dart';
+import 'package:flutter_architecture_project/feature/domain/usecases/newsPopularity/get_news_popularity_by_id.dart';
+import 'package:flutter_architecture_project/feature/domain/usecases/newsPopularity/get_news_popularity_user_from_json.dart';
+import 'package:flutter_architecture_project/feature/domain/usecases/newsPopularity/loading_news_popularity_from_network.dart';
+import 'package:flutter_architecture_project/feature/domain/usecases/newsPopularity/set_user_liked_page_to_json.dart';
+import 'package:flutter_architecture_project/feature/domain/usecases/newsPopularity/set_user_see_page.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/profile/get_profile_from_cache.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/profile/get_profile_from_network.dart';
+import 'package:flutter_architecture_project/feature/domain/usecases/videoGallery/get_video_gallery_from_network.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  ///! Features - Number Trivia
+
+
+
+
+
+
+
+
+
+
+
+  ///! BLOCS
+
+  /// news portal
   sl.registerFactory(
         () => NewsPortalBloc(
-          getNewsFromNetwork: sl(),
-          getNewsFromCache: sl(),
+      getNewsFromNetwork: sl(),
+      getNewsFromCache: sl(),
     ),
   );
 
+  /// profile
   sl.registerFactory(
         () => ProfileBloc(
-          getProfileFormNetwork: sl(),
-          getProfileFromCache: sl()
+        getProfileFormNetwork: sl(),
+        getProfileFromCache: sl()
     ),
   );
 
+  /// main params page
   sl.registerFactory(
         () => MainBloc(
-            getMainParamsFromJson: sl(),
-          setMainParamsToJson: sl()
+        getMainParamsFromJson: sl(),
+        setMainParamsToJson: sl()
     ),
   );
 
+  /// likes/seen
+  sl.registerFactory(
+        () => NewsPopularityBloc(
+        getNewsPopularityById: sl(),
+        loadingNewsPopularityFromNetwork: sl(),
+        setUserSeePage: sl()
+    ),
+  );
+
+  /// app
   sl.registerFactory(() => AppBloc(),);
 
-  /// Use cases
+  ///video gallery
+  sl.registerFactory(
+        () => VideoGalleryBloc(
+        getVideoGalleryFromNetwork: sl()
+    ),
+  );
+
+
+
+
+
+
+
+
+  ///! USE CASES
+
+  /// news portal
   sl.registerLazySingleton(() => GetNewsPortalFormNetwork(sl()));
   sl.registerLazySingleton(() => GetNewsPortalFromCache(sl()));
 
+  /// profile
   sl.registerLazySingleton(() => GetProfileFormNetwork(sl()));
   sl.registerLazySingleton(() => GetProfileFromCache(sl()));
 
+  /// main params page
   sl.registerLazySingleton(() => GetMainParamsFromJson(sl()));
   sl.registerLazySingleton(() => SetMainParamsToJson(sl()));
 
-  /// Repository
+  /// likes/seen
+  sl.registerLazySingleton(() => LoadingNewsPopularityFromNetwork(sl()));
+  sl.registerLazySingleton(() => GetNewsPopularityById(sl()));
+  sl.registerLazySingleton(() => GetNewsPopularityUserFromJson(sl()));
+  sl.registerLazySingleton(() => SetUserLikedPageToJson(sl()));
+  sl.registerLazySingleton(() => SetUserSeePage(sl()));
+
+  ///video gallery
+  sl.registerLazySingleton(() => GetVideoGalleryFromNetwork(sl()));
+
+
+
+
+
+
+
+
+
+
+  ///! REPOSITORY
+
+  /// news portal
   sl.registerLazySingleton<INewsPortalRepository>(
         () => NewsPortalRepository(
       remoteDataSource: sl(),
@@ -73,6 +152,7 @@ Future<void> init() async {
     ),
   );
 
+  /// profile
   sl.registerLazySingleton<IProfileRepository>(
         () => ProfileRepository(
       remoteDataSource: sl(),
@@ -81,47 +161,105 @@ Future<void> init() async {
     ),
   );
 
+  /// main params page
   sl.registerLazySingleton<IMainParamsRepository>(
         () => MainParamsRepository(
-          jsonDataSource: sl(),
+      jsonDataSource: sl(),
     ),
   );
 
-  /// Data sources
+  /// likes/seen
+  sl.registerLazySingleton<INewsPopularityRepository>(
+        () => NewsPopularityRepository(
+        networkInfo: sl(),
+        remoteDataSource: sl()
+    ),
+  );
+
+  /// video gallery
+  sl.registerLazySingleton<IVideoGalleryRepository>(
+        () => VideoGalleryRepository(
+        networkInfo: sl(),
+        remoteDataSource: sl()
+    ),
+  );
+
+
+
+
+
+
+
+
+  ///! DATA SOURCE
+
+  /// news portal
   sl.registerLazySingleton<NewsPortalRemoteDataSource>(
         () => NewsPortalRemoteDataSource(
-            client: sl(),
-        ),
+        client: sl(),
+        storage: sl()
+    ),
   );
   sl.registerLazySingleton<NewsPortalLocalDataSource>(
         () => NewsPortalLocalDataSource(sharedPreferences: sl()),
   );
 
+  /// profile
   sl.registerLazySingleton<ProfileRemoteDataSource>(
         () => ProfileRemoteDataSource(
         client: sl(),
         parser: sl(),
+        storage: sl()
     ),
   );
   sl.registerLazySingleton<ProfileLocalDataSource>(
         () => ProfileLocalDataSource(
-          sharedPreferences: sl(),
-        ),
+      sharedPreferences: sl(),
+    ),
   );
 
+  /// main params page
   sl.registerLazySingleton<MainParamsJsonDataSource>(
         () => MainParamsJsonDataSource(),
   );
 
-  ///! Core
-  sl.registerLazySingleton<AuthToken>(() => AuthToken());
+  /// likes/seen
+  sl.registerLazySingleton<NewsPopularityRemoteDataSource>(
+        () => NewsPopularityRemoteDataSource(
+        client: sl(),
+        storage: sl()
+    ),
+  );
+  /// video gallery
+  sl.registerLazySingleton<VideoGalleryRemoteDataSource>(
+        () => VideoGalleryRemoteDataSource(
+        client: sl(),
+        storage: sl()
+    ),
+  );
+
+
+
+
+
+
+
+
+  ///! CORE
+  sl.registerLazySingleton<Storage>(() => Storage());
   sl.registerLazySingleton(() => ProfileParser());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
-  ///! External
+
+
+
+
+
+
+
+
+  ///! EXTERNAL
   final sharedPreferences = await SharedPreferences.getInstance();
-  final authToken = new AuthToken();
-  await authToken.getTokenFromFile();
   sl.registerLazySingleton(() => sharedPreferences);
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => DataConnectionChecker());

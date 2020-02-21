@@ -5,7 +5,7 @@ import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/news/news_portal.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository.dart';
+import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository_interface.dart';
 
 import 'package:meta/meta.dart';
 

@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/usecases/usecase.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/news/news_portal.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository.dart';
+import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository_interface.dart';
 import 'package:meta/meta.dart';
 import 'package:dartz/dartz.dart';
 

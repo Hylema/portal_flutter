@@ -17,3 +17,5 @@ class ParserProfileFailure extends Failure {}
 class AuthFailure extends Failure {}
 
 class JsonFailure extends Failure {}
+
+class UnknownErrorFailure extends Failure {}

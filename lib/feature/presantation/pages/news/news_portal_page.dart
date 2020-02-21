@@ -83,9 +83,14 @@ class NewsPortalBody extends StatefulWidget {
   @override
   NewsPortalBodyState createState() => NewsPortalBodyState();
 }
-class NewsPortalBodyState extends State<NewsPortalBody> {
+
+class NewsPortalBodyState extends State<NewsPortalBody> with AutomaticKeepAliveClientMixin{
   ScrollController _scrollController = new ScrollController();
+  BouncingScrollPhysics _bouncingScrollPhysics = BouncingScrollPhysics();
   GlobalKey<RefreshIndicatorState> refreshKey;
+
+  @override
+  bool get wantKeepAlive => true;
 
   void dispatchGetNewsDataFromNetwork({indicator = false}){
     disableOrEnable(true, indicator);
@@ -118,6 +123,7 @@ class NewsPortalBodyState extends State<NewsPortalBody> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scrollbar(
       child: RefreshIndicator(
         onRefresh: () async {
@@ -128,6 +134,7 @@ class NewsPortalBodyState extends State<NewsPortalBody> {
         key: refreshKey,
         child: CustomScrollView(
           controller: _scrollController,
+          physics: _bouncingScrollPhysics,
           slivers: <Widget>[
             SliverAppBar(
                 backgroundColor: Colors.black26,
