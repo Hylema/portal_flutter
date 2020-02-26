@@ -9,7 +9,6 @@ class VideosGalleryModel extends VideoGallery {
   );
 
   factory VideosGalleryModel.fromJson(json) {
-    print('resresersTTTTTTTTTTTTT=========================$json');
     return VideosGalleryModel(
       videos: json['data'],
     );

@@ -1,23 +1,26 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/animation/wave_animation.dart';
+import 'package:flutter_architecture_project/core/mixins/flushbar.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
-
-import 'dart:math';
-import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_event.dart';
-import 'package:flutter_architecture_project/core/mixins/flushbar.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -60,6 +63,7 @@ class WelcomePage extends StatelessWidget {
 const String PROFILE_PAGE = 'profile';
 const String NEWS_PAGE = 'news';
 const String VIDEO_GALLERY_PAGE = 'video';
+const String BIRTHDAY_PAGE = 'birthday';
 
 class BuildBody extends StatefulWidget {
   const BuildBody({
@@ -138,18 +142,32 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     context.bloc<VideoGalleryBloc>().add(GetVideos(pageSize: 15, pageIndex: 1));
   }
 
+  void dispatchGetBirthdayFromNetwork(){
+    context.bloc<BirthdayBloc>()
+        .add(GetBirthdayEvent(
+        monthNumber: DateTime.now().month,
+        dayNumber: DateTime.now().day,
+        pageIndex: 1,
+        pageSize: 15
+    ));
+  }
+
   var _pages = {
     PROFILE_PAGE: false,
     NEWS_PAGE: false,
     VIDEO_GALLERY_PAGE: false,
+    BIRTHDAY_PAGE: false,
   };
   void _dataForPageLoaded(String page){
     _pages[page] = true;
 
+    //print('PAGES =================== $_pages');
+
     if(
     _pages[PROFILE_PAGE] == true &&
         _pages[NEWS_PAGE] == true &&
-        _pages[VIDEO_GALLERY_PAGE] == true
+        _pages[VIDEO_GALLERY_PAGE] == true &&
+        _pages[BIRTHDAY_PAGE] == true
     ){
       dispatchAllPageLoaded();
     }
@@ -213,6 +231,17 @@ class BuildBodyState extends State with TickerProviderStateMixin{
             }
           },
         ),
+        BlocListener<BirthdayBloc, BirthdayState>(
+          listener: (context, state) {
+            print('BirthdayBloc state is $state');
+            if(state is ErrorBirthdayState){
+              _dataForPageLoaded(BIRTHDAY_PAGE);
+              flushbar(context, state.message);
+            } else if(state is LoadedBirthdayState){
+              _dataForPageLoaded(BIRTHDAY_PAGE);
+            }
+          },
+        ),
         BlocListener<AppBloc, AppState>(
           listener: (context, state) async {
             print('AppBloc state is $state');
@@ -254,12 +283,13 @@ class BuildBodyState extends State with TickerProviderStateMixin{
                       child: check == false ? CustomRoundedLoadingButton(
                         child: Text('Начать', style: TextStyle(color: Colors.white)),
                         controller: _btnController,
-                        onPressed: () async {
+                        onPressed: () {
                           dispatchGetProfileDataFromNetwork();
                           dispatchGetNewsDataFromNetwork();
                           dispatchGetMainParamsFromJson();
                           dispatchLoadingPopularity();
                           dispatchGetVideosFromNetwork();
+                          dispatchGetBirthdayFromNetwork();
                         },
                         color: Color.fromRGBO(238, 0, 38, 1),
                       ) : Container(

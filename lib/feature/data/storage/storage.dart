@@ -9,12 +9,12 @@ class Storage {
   }
 
   String token;
+  String secondToken;
   Map<String, dynamic> tokenDecode;
 
   getData() async {
     FlutterSecureStorage secureStorage = new FlutterSecureStorage();
     token = await secureStorage.read(key: JWT_TOKEN);
-
-    tokenDecode = Jwt.parseJwt(token);
+    secondToken = await secureStorage.read(key: JWT_TOKEN_SECOND);
   }
 }

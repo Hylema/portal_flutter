@@ -26,7 +26,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   @override
   Stream<MainState> mapEventToState(MainEvent event) async* {
-    print('EVENT === $event');
 
     if(event is GetParamsFromJsonForMainPageBlocEvent){
      var modelOrFailure = await getMainParamsFromJson(NoParams());
@@ -49,7 +48,6 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           return ErrorMainParams(message: mapFailureToMessage(failure));
         },
             (model){
-              print('model: $model');
           return LoadedMainState(model: model);
         },
       );

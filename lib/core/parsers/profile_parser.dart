@@ -30,9 +30,6 @@ class ProfileParser {
       profileData['position'] = data['Title'];
       profileData['pictureUrl'] = data['PictureUrl'];
 
-      debugPrint('Profile ============================= ${data['UserProfileProperties']}');
-      debugPrint('data ============================= $data');
-
       final userProfile = data['UserProfileProperties'];
       for (var element in userProfile) {
         switch(element['Key']){

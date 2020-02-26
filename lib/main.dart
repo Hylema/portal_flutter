@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/news_popularity_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<NewsPopularityBloc>(
           create: (BuildContext context) => di.sl<NewsPopularityBloc>(),
+        ),
+        BlocProvider<BirthdayBloc>(
+          create: (BuildContext context) => di.sl<BirthdayBloc>(),
         ),
       ],
       child: MaterialApp(

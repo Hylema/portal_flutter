@@ -78,13 +78,6 @@ class VideoGalleryItemsWidgetState extends State<VideoGalleryItemsWidget> with A
                             fit: BoxFit.cover,
                             width: MediaQuery.of(context).size.width
                         ),
-                        Center(
-                          child: Icon(
-                              Icons.play_arrow,
-                            size: 50,
-                            color: Colors.white,
-                          ),
-                        ),
                         Container(
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
@@ -98,6 +91,23 @@ class VideoGalleryItemsWidgetState extends State<VideoGalleryItemsWidget> with A
                             ),
                           ),
                         ),
+                        Center(
+                          child: Icon(
+                            Icons.play_arrow,
+                            size: 50,
+                            color: Colors.white,
+                          ),
+                        ),
+//                        Center(
+//                          child: IconButton(
+//                            icon: Icon(
+//                              Icons.play_arrow,
+//                              size: 50,
+//                              color: Colors.white,
+//                            ),
+//                            onPressed: (){},
+//                          ),
+//                        ),
                         Padding(
                           padding: EdgeInsets.all(15),
                           child: Column(

@@ -129,8 +129,6 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
         } else if(state is LoadedMainState){
           _data = state.model.params;
 
-          print('TRIGGERED === $_data');
-
           _listStatusTrue = [];
           _listStatusFalse = [];
 

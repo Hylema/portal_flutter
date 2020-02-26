@@ -102,8 +102,8 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> {
         String formatData = DateFormat('dd MM yyyy').format(result);
         String monthNumber = formatData.substring(3, 5);
         String monthDay = formatData.substring(0, 2);
-        String monthYaer = formatData.substring(6, 10);
-        date.text = '$monthDay ${month[int.parse(monthNumber) - 1]} $monthYaer';
+        String monthYear = formatData.substring(6, 10);
+        date.text = '$monthDay ${month[int.parse(monthNumber) - 1]} $monthYear';
         _check();
       },
 //      currentTime: DateTime.now(),
@@ -112,7 +112,7 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> {
     );
   }
 
-  _check({String value = '', bool throwData = false}){
+  _check({bool throwData = false}){
     setState(() {
       if(throwData){
         fio.clear();
@@ -195,7 +195,7 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> {
                                         : null
                                 ),
                                 onChanged: (value) {
-                                  _check(value: value);
+                                  _check();
                                 },
                               ),
                               TextField(

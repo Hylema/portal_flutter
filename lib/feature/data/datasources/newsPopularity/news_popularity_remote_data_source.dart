@@ -75,7 +75,6 @@ class NewsPopularityRemoteDataSource implements INewsPopularityRemoteDataSource 
 
 
     } catch(e){
-      print('ERRRRRRORRRRRR =========== $e');
       throw ServerException();
     }
 //    Firestore.instance.collection('books').snapshots();

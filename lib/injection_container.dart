@@ -1,6 +1,7 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
@@ -8,17 +9,20 @@ import 'package:flutter_architecture_project/feature/data/datasources/newsPopula
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/birthday/birthday_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/newsPopularity/news_popularity_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/profile/profile_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/videoGallery/video_gallery_repository.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
+import 'package:flutter_architecture_project/feature/domain/repositories/birthday/birthday_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/main/main_params_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/newsPopularity/news_popularity_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/profile/profile_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/videoGallery/video_gallery_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/usecases/birthday/get_birthday_from_network.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/main/get_main_params_from_json.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/main/set_main_params_to_json.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/news/get_news_portal_from_cache.dart';
@@ -32,6 +36,7 @@ import 'package:flutter_architecture_project/feature/domain/usecases/profile/get
 import 'package:flutter_architecture_project/feature/domain/usecases/profile/get_profile_from_network.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/videoGallery/get_video_gallery_from_network.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/bloc.dart';
@@ -94,13 +99,19 @@ Future<void> init() async {
   /// app
   sl.registerFactory(() => AppBloc(),);
 
-  ///video gallery
+  /// video gallery
   sl.registerFactory(
         () => VideoGalleryBloc(
         getVideoGalleryFromNetwork: sl()
     ),
   );
 
+  /// birthday
+  sl.registerFactory(
+        () => BirthdayBloc(
+          getBirthdayFromNetwork: sl()
+    ),
+  );
 
 
 
@@ -132,7 +143,8 @@ Future<void> init() async {
   ///video gallery
   sl.registerLazySingleton(() => GetVideoGalleryFromNetwork(sl()));
 
-
+  /// birthday
+  sl.registerLazySingleton(() => GetBirthdayFromNetwork(sl()));
 
 
 
@@ -184,8 +196,13 @@ Future<void> init() async {
     ),
   );
 
-
-
+  /// birthday
+  sl.registerLazySingleton<IBirthdayRepository>(
+        () => BirthdayRepository(
+        networkInfo: sl(),
+        remoteDataSource: sl()
+    ),
+  );
 
 
 
@@ -238,6 +255,13 @@ Future<void> init() async {
     ),
   );
 
+  /// birthday
+  sl.registerLazySingleton<BirthdayRemoteDataSource>(
+        () => BirthdayRemoteDataSource(
+        client: sl(),
+        storage: sl()
+    ),
+  );
 
 
 

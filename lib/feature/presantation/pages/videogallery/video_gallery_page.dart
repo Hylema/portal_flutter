@@ -8,6 +8,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 double lineValue = 0;
 
+bool loading = false;
+
 class VideoGalleryPage extends StatefulWidget {
   VideoGalleryPageState createState() => VideoGalleryPageState();
 }
@@ -20,16 +22,13 @@ class VideoGalleryPageState extends State<VideoGalleryPage> {
 
   }
 
-  void dispatchGetVideosFromNetwork(){
-    context.bloc<VideoGalleryBloc>().add(GetVideos(pageSize: 15, pageIndex: 1));
-  }
-
   Widget build(BuildContext context) {
     return BlocConsumer<VideoGalleryBloc, VideoGalleryState>(
       builder: (context, state) {
         if (state is EmptyVideoGalleryState) {}
         else if (state is LoadingVideoGalleryState) {}
         else if (state is LoadedVideoGalleryState) {
+          loading = false;
           return VideoGalleryPageBody(videos: state.model.videos);
         } else if (state is ErrorProfile) {}
         return Container();
@@ -52,21 +51,34 @@ class VideoGalleryPageBodyState extends State<VideoGalleryPageBody>{
   BouncingScrollPhysics _bouncingScrollPhysics = new BouncingScrollPhysics();
 
   var videos;
+  bool userScroll = false;
 
   @override
   void initState() {
     videos = widget.videos;
 
-    if (_scrollController.keepScrollOffset) {
-      print('1');
-      _scrollController.addListener(() {
+    _scrollController.addListener(() {
+      if (userScroll) {
         setState(() {
           lineValue = (-_scrollController.offset/130);
         });
-      });
-    }
+      }
+    });
+
 
     super.initState();
+  }
+
+  void dispatchGetVideosFromNetwork(){
+    context.bloc<VideoGalleryBloc>().add(GetVideos(pageSize: 15, pageIndex: 1));
+  }
+
+  _refreshVideos(){
+    setState(() {
+      loading = true;
+    });
+
+    dispatchGetVideosFromNetwork();
   }
 
   @override
@@ -77,36 +89,59 @@ class VideoGalleryPageBodyState extends State<VideoGalleryPageBody>{
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-        child: Stack(
-          children: <Widget>[
-            SizedBox(
-              height: 4,
-              child: LinearProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Color.fromRGBO(238, 0, 38, 1)
+    return NotificationListener(
+        child: Scrollbar(
+            child: Stack(
+              children: <Widget>[
+                SizedBox(
+                    height: 4,
+                    child: !loading ? LinearProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          lineValue < 1
+                              ? Color.fromRGBO(238, 0, 38, 0.4)
+                              : Color.fromRGBO(238, 0, 38, 1)
+                      ),
+                      value: lineValue,
+                      backgroundColor: Colors.white,
+                    ) : LinearProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          Color.fromRGBO(238, 0, 38, 1)
+                      ),
+                      backgroundColor: Colors.white,
+                    )
                 ),
-                value: lineValue,
-                backgroundColor: Colors.white,
-              ),
-            ),
-            CustomScrollView(
-              physics: _bouncingScrollPhysics,
-              controller: _scrollController,
-              slivers: <Widget>[
-                SliverList(
-                  delegate: SliverChildBuilderDelegate((BuildContext context, index){
-                    return BuildVideo(
-                        videoData: videos[index]
-                    );
-                  },
-                      childCount: videos.length
-                  ),
+                CustomScrollView(
+                  physics: _bouncingScrollPhysics,
+                  controller: _scrollController,
+                  slivers: <Widget>[
+                    SliverList(
+                      delegate: SliverChildBuilderDelegate((BuildContext context, index){
+                        return BuildVideo(
+                            videoData: videos[index]
+                        );
+                      },
+                          childCount: videos.length
+                      ),
+                    ),
+                  ],
                 ),
               ],
-            ),
-          ],
-        )
+            )
+        ),
+        onNotification: (notification){
+          if(notification is ScrollStartNotification) {
+            if(_scrollController.offset.ceil() == 0){
+              userScroll = true;
+            }
+          }
+          else if(notification is ScrollEndNotification) userScroll = false;
+          else if(notification is ScrollUpdateNotification) {
+            if(notification.dragDetails == null && lineValue >= 1){
+              _refreshVideos();
+            }
+          }
+          return true;
+        }
     );
   }
 }
