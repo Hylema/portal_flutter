@@ -22,7 +22,7 @@ class MainFloatingActionButtonWidgetState extends State<MainFloatingActionButton
 
     scaleController = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 1500)
+        duration: Duration(milliseconds: 500)
     )..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         setState(() {

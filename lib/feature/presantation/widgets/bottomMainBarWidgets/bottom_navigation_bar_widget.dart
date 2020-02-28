@@ -1,51 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_event.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BottomNavigationBarWidget extends StatefulWidget {
-  BottomNavigationBarWidget({
-    this.items,
-    this.centerItemText,
-    this.height: 50.0,
-    this.iconSize: 28.0,
-    this.backgroundColor,
-    this.color,
-    this.selectedColor,
-    this.notchedShape,
-    this.onTabSelected,
-    this.selectedIndex,
-  });
-
-  final int selectedIndex;
-  final List items;
-  final String centerItemText;
-  final double height;
-  final double iconSize;
-  final Color backgroundColor;
-  final Color color;
-  final Color selectedColor;
-  final NotchedShape notchedShape;
-  final ValueChanged<int> onTabSelected;
-
   @override
   State<StatefulWidget> createState() => BottomNavigationBarWidgetState();
 }
 
 class BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
-  _updateIndex(int index) {
-    widget.onTabSelected(index);
-  }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> items = List.generate(widget.items.length, (int index) {
+
+    return BlocConsumer<SelectedIndexBloc, SelectedIndexState>(
+      builder: (context, state) {
+        if(state is LoadedSelectedIndexState){
+          return BottomNavigationBarWidgetStateBuilder(selectedIndex: state.index);
+        } else {
+          return Container();
+        }
+      },
+      listener: (context, state) {},
+    );
+  }
+}
+
+class BottomNavigationBarWidgetStateBuilder extends StatelessWidget {
+  final selectedIndex;
+  BottomNavigationBarWidgetStateBuilder({this.selectedIndex});
+
+  final Color selectedColor = Color.fromRGBO(238, 0, 38, 1);
+  final Color defaultColor = Colors.grey;
+
+  @override
+  Widget build(BuildContext context) {
+
+    final String path = 'assets/icons/';
+
+    final _bottomAppBarItem = [
+      {
+        'iconData': '${path}home.png',
+        'text': 'Главная',
+      },
+      {
+        'iconData': '${path}news.png',
+        'text': 'Новости',
+      },
+      {
+        'iconData': '${path}profile.png',
+        'text': 'Профиль',
+      },
+      {
+        'iconData': '${path}polls.png',
+        'text': 'Опросы'
+      },
+    ];
+
+    void dispatchUpdateIndex(index){
+      context.bloc<SelectedIndexBloc>().add(UpdateIndexEvent(index: index));
+    }
+
+    List<Widget> items = List.generate(_bottomAppBarItem.length, (int index) {
       return _buildTabItem(
-        item: widget.items[index],
-        index: index,
-        onPressed: _updateIndex,
+          item: _bottomAppBarItem[index],
+          index: index,
+          dispatch: dispatchUpdateIndex
       );
     });
 
     return BottomAppBar(
-      shape: widget.notchedShape,
+      shape: CircularNotchedRectangle(),
       child: Container(
         child: Row(
           mainAxisSize: MainAxisSize.max,
@@ -53,25 +80,24 @@ class BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
           children: items,
         ),
       ),
-      color: widget.backgroundColor,
+      color: Colors.white,
     );
   }
-
 
   Widget _buildTabItem({
     item,
     int index,
-    ValueChanged<int> onPressed,
+    Function dispatch
   }) {
-    Color color = widget.selectedIndex == index ? widget.selectedColor : widget.color;
+    Color color = selectedIndex == index ? selectedColor : defaultColor;
     return Expanded(
       child: SizedBox(
-        height: widget.height,
+        height: BOTTOM_NAVIGATION_BAR_HEIGHT,
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
             onTap: (){
-              onPressed(index);
+              dispatch(index);
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -80,7 +106,7 @@ class BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
                 Image.asset(
                   item['iconData'],
                   color: color,
-                  height: widget.iconSize,
+                  height: 28.0,
                 ),
                 Text(
                   item['text'],

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class BirthdayMainPageSwipeWidget extends StatefulWidget {
@@ -15,12 +18,40 @@ class BirthdayMainPageSwipeWidgetState extends State {
 
   @override
   Widget build(BuildContext context) {
+
+    return BlocConsumer<BirthdayBloc, BirthdayState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        if(state is LoadedBirthdayState){
+          return BirthdayMainPageSwipeWidgetStateBuild(birthdays: state.model.birthdays,);
+        } else {
+          return Container();
+        }
+      },
+    );
+  }
+}
+
+class BirthdayMainPageSwipeWidgetStateBuild extends StatelessWidget {
+
+  final List birthdays;
+  BirthdayMainPageSwipeWidgetStateBuild({
+    @required this.birthdays
+  }) {
+    assert(birthdays != null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 0),
       child: Swiper(
           autoplay: true,
           autoplayDelay: 4000,
           itemBuilder: (BuildContext context, int index) {
+
+            Map data = birthdays[index];
+
             return Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
@@ -67,7 +98,9 @@ class BirthdayMainPageSwipeWidgetState extends State {
                       ),
                     ),
                     Text(
-                      'Шалайкин Глеб Николаевич',
+                      '${data['lastName']} ${data['firstName']} ${data['fatherName']}',
+                      overflow: TextOverflow.fade,
+                      maxLines: 2,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -85,7 +118,7 @@ class BirthdayMainPageSwipeWidgetState extends State {
                 )
             );
           },
-          itemCount: 10,
+          itemCount: birthdays.length,
           viewportFraction: 0.5
       ),
       height: 300,

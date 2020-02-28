@@ -8,7 +8,7 @@ class MainPageParameters extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BuildMainPageParameters()
+        body: BuildMainPageParameters()
     );
   }
 }
@@ -32,6 +32,9 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
 
   @override
   void initState() {
+
+    dispatchGetMainParamsFromJson();
+
     super.initState();
   }
 
@@ -109,8 +112,8 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
             ],
           ),
           Container(
-            padding: EdgeInsets.all((5)),
-            child: true == addOrRemove ? Image.asset('${path}iconDrag.png') : Container()
+              padding: EdgeInsets.all((5)),
+              child: true == addOrRemove ? Image.asset('${path}iconDrag.png') : Container()
           ),
         ],
       ),
@@ -165,7 +168,6 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
         appBar: AppBar(
             leading: GestureDetector(
               onTap: (){
-                dispatchGetMainParamsFromJson();
                 Navigator.pop(context);
               },
               child: Icon(Icons.close, color: Colors.black,),

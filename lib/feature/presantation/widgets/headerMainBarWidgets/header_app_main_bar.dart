@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/refreshIndicator/refresh_indicator_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/refreshIndicator/refresh_indicator_state.dart';
 
-class HeaderAppMainBar extends StatefulWidget with PreferredSizeWidget{
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class HeaderAppMainBar extends StatefulWidget{
 
   HeaderAppMainBar({
     this.titleColor = Colors.black54,
@@ -18,13 +23,12 @@ class HeaderAppMainBar extends StatefulWidget with PreferredSizeWidget{
   final bool automaticallyImplyLeading;
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
-
-  @override
   HeaderAppMainBarState createState() => HeaderAppMainBarState();
 }
 
 class HeaderAppMainBarState extends State<HeaderAppMainBar> {
+
+  double oldValue;
 
   @override
   Widget build(BuildContext context) {

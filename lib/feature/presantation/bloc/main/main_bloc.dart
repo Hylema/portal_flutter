@@ -52,9 +52,10 @@ class MainBloc extends Bloc<MainEvent, MainState> {
         },
       );
     } else if(event is UpdateMainParams){
-      yield LoadedMainState(model: MainParamsModel.fromJson({
-        'params': event.params
-      }));
+
+      print('event ==== ${event.params}');
+
+      yield LoadedMainState(model: MainParamsModel(params: event.params));
     }
   }
 }

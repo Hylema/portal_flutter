@@ -1,38 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_event.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/bottomMainBarWidgets/bottom_navigation_bar_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ActionButtonNavigationBarWidget extends StatelessWidget {
 
-  ActionButtonNavigationBarWidget({this.selectedIndex, this.updateIndex});
+  @override
+  Widget build(BuildContext context) {
+    final double _expandedHeight = 420.0;
+    final double _marginPanel = 20.0;
 
+    return BottomExpandableAppBar(
+      //bottomOffset: 120,
+      expandedHeight: _expandedHeight,
+      horizontalMargin: _marginPanel,
+      shape: AutomaticNotchedShape(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0.0),
+          ),
+          StadiumBorder(
+              side: BorderSide()
+          )
+      ),
+      expandedBackColor: Colors.white,
+      expandedBody: BlocConsumer<SelectedIndexBloc, SelectedIndexState>(
+        builder: (context, state) {
+          if(state is LoadedSelectedIndexState){
+            return BottomExpandableAppBarBuilder(selectedIndex: state.index);
+          } else {
+            return Container();
+          }
+        },
+        listener: (context, state) {},
+      ),
+      bottomAppBarBody: BottomNavigationBarWidget(),
+    );
+  }
+}
+
+class BottomExpandableAppBarBuilder extends StatelessWidget {
   final selectedIndex;
-  final updateIndex;
+  BottomExpandableAppBarBuilder({this.selectedIndex});
 
   @override
   Widget build(BuildContext context) {
     final String path = 'assets/icons/';
-    final double _expandedHeight = 420.0;
-    final double _marginPanel = 20.0;
 
-    final _bottomAppBarItem = [
-      {
-        'iconData': '${path}home.png',
-        'text': 'Главная',
-      },
-      {
-        'iconData': '${path}news.png',
-        'text': 'Новости',
-      },
-      {
-        'iconData': '${path}profile.png',
-        'text': 'Профиль',
-      },
-      {
-        'iconData': '${path}polls.png',
-        'text': 'Опросы'
-      },
-    ];
     final _expandableAppBarItem = [
       {
         'icon': '${path}birthday.png',
@@ -64,60 +80,42 @@ class ActionButtonNavigationBarWidget extends StatelessWidget {
       },
     ];
 
-    return BottomExpandableAppBar(
-      //bottomOffset: 120,
-      expandedHeight: _expandedHeight,
-      horizontalMargin: _marginPanel,
-      shape: AutomaticNotchedShape(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0.0),
-          ),
-          StadiumBorder(
-              side: BorderSide()
-          )
-      ),
-      expandedBackColor: Colors.white,
-      expandedBody: Padding(
-        padding: EdgeInsets.only(top: 30, bottom: 30),
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildBuilderDelegate((BuildContext context, int index){
-                int _indexForBar = index + _bottomAppBarItem.length;
+    void dispatchUpdateIndex(index){
+      context.bloc<SelectedIndexBloc>().add(UpdateIndexEvent(index: index));
+    }
 
-                return ListTile(
-                  leading: Padding(
-                    padding: EdgeInsets.all(15),
-                    child: Image.asset(
-                      _expandableAppBarItem[index]['icon'],
-                      color: _indexForBar == selectedIndex ? Color.fromRGBO(238, 0, 38, 1) : Colors.grey[800],
-                    ),
+    return Padding(
+      padding: EdgeInsets.only(top: 30, bottom: 30),
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildBuilderDelegate((BuildContext context, int index){
+              int _indexForBar = index + 4;
+
+              return ListTile(
+                leading: Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Image.asset(
+                    _expandableAppBarItem[index]['icon'],
+                    color: _indexForBar == selectedIndex ? Color.fromRGBO(238, 0, 38, 1) : Colors.grey[800],
                   ),
-                  title: Text(
-                      _expandableAppBarItem[index]['text'],
-                      style: TextStyle(
-                          color: _indexForBar == selectedIndex ? Color.fromRGBO(238, 0, 38, 1) : Colors.grey[800]
-                      )
-                  ),
-                  onTap: (){
-                    DefaultBottomBarController.of(context).swap();
-                    updateIndex(_indexForBar);
-                  },
-                );
-              },
-                childCount: _expandableAppBarItem.length,
-              ),
+                ),
+                title: Text(
+                    _expandableAppBarItem[index]['text'],
+                    style: TextStyle(
+                        color: _indexForBar == selectedIndex ? Color.fromRGBO(238, 0, 38, 1) : Colors.grey[800]
+                    )
+                ),
+                onTap: (){
+                  DefaultBottomBarController.of(context).swap();
+                  dispatchUpdateIndex(_indexForBar);
+                },
+              );
+            },
+              childCount: _expandableAppBarItem.length,
             ),
-          ],
-        ),
-      ),
-      bottomAppBarBody: BottomNavigationBarWidget(
-          color: Colors.grey,
-          selectedColor: Color.fromRGBO(238, 0, 38, 1),
-          notchedShape: CircularNotchedRectangle(),
-          items: _bottomAppBarItem,
-          onTabSelected: updateIndex,
-          selectedIndex: selectedIndex
+          ),
+        ],
       ),
     );
   }

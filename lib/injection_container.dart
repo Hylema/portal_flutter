@@ -41,6 +41,8 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/refreshIndicator/refresh_indicator_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,13 +52,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-
-
-
-
-
-
-
 
 
 
@@ -113,8 +108,11 @@ Future<void> init() async {
     ),
   );
 
+  /// selected index
+  sl.registerFactory(() => SelectedIndexBloc());
 
-
+  /// refresh indicator
+  sl.registerFactory(() => RefreshLineIndicatorBloc());
 
 
 

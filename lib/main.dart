@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/news_popularity_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/refreshIndicator/refresh_indicator_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
@@ -42,6 +44,12 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<BirthdayBloc>(
           create: (BuildContext context) => di.sl<BirthdayBloc>(),
+        ),
+        BlocProvider<SelectedIndexBloc>(
+          create: (BuildContext context) => di.sl<SelectedIndexBloc>(),
+        ),
+        BlocProvider<RefreshLineIndicatorBloc>(
+          create: (BuildContext context) => di.sl<RefreshLineIndicatorBloc>(),
         ),
       ],
       child: MaterialApp(

@@ -1,22 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_event.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BlockMainPageWidget extends StatelessWidget {
   final Widget child;
   final String title;
   final Color background;
-  final Function updateIndex;
   final int index;
 
   BlockMainPageWidget({
     this.child,
     this.title,
     this.background = Colors.white,
-    this.updateIndex,
-    this.index
-  });
+    @required this.index
+  }){
+    assert(index != null);
+  }
 
   @override
   Widget build(BuildContext context) {
+    void dispatchUpdateIndex(index){
+      context.bloc<SelectedIndexBloc>().add(UpdateIndexEvent(index: index));
+    }
+
     return Container(
       color: background,
       child: Column(
@@ -30,7 +37,7 @@ class BlockMainPageWidget extends StatelessWidget {
                   title,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 20
+                      fontSize: 18
                   ),
                 ),
                 GestureDetector(
@@ -42,9 +49,7 @@ class BlockMainPageWidget extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    print('Смеотреть все');
-                    print(updateIndex);
-                    updateIndex(index);
+                    dispatchUpdateIndex(index);
                   },
                 )
               ],

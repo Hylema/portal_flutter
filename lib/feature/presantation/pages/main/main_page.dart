@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/birthday_main_page_swipe_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/block_main_page_widget.dart';
@@ -7,19 +8,10 @@ import 'package:flutter_architecture_project/feature/presantation/widgets/pagesW
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/vidoes_main_page_swipe_stack_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-Function _updateIndex;
-
-class MainPage extends StatelessWidget {
-
-  MainPage({updateIndex, news, mainParams}) {
-    assert(updateIndex != null);
-    _updateIndex = updateIndex;
-  }
+class MainPage extends StatefulWidget {
 
   @override
-  Widget build(BuildContext context) {
-    return MainPageBuild();
-  }
+  State<StatefulWidget> createState() => MainPageState();
 }
 
 const String NEWS_PAGE = 'Новости';
@@ -28,12 +20,25 @@ const String VIDEO_PAGE = 'Видеогалерея';
 const String BIRTHDAY_PAGE = 'Дни рождения';
 const String BOOKING_PAGE = 'Бронирование переговорных';
 
-class MainPageBuild extends StatelessWidget {
+class MainPageState extends State<MainPage> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void dispatchGetMainParamsFromJson(){
+    context.bloc<MainBloc>().add(GetParamsFromJsonForMainPageBlocEvent());
+  }
 
   List _mainParams;
 
   @override
   Widget build(BuildContext context) {
+
+    dispatchGetMainParamsFromJson();
+
     return BlocConsumer<MainBloc, MainState>(
       listener: (context, state) {},
       builder: (context, state) {
@@ -42,7 +47,6 @@ class MainPageBuild extends StatelessWidget {
 
         } else if(state is LoadedMainState){
           _mainParams = state.model.params;
-
           return buildBody();
         } else {
           return Container();
@@ -61,6 +65,7 @@ class MainPageBuild extends StatelessWidget {
     int _birthday;
     int _booking;
     int _counter = 0;
+
     for(final param in _mainParams){
       _counter++;
 
@@ -76,33 +81,33 @@ class MainPageBuild extends StatelessWidget {
     final pages = {
       NEWS_PAGE: BlockMainPageWidget(
         child: NewsMainPageSwipeWidget(),
-        title: 'Новости',
-        updateIndex: _updateIndex,
-        index: 1,
+        title: NEWS_PAGE,
+        index: NEWS_PAGE_NUMBER,
         background: _news % 2 == 0 ? white : grey,
       ),
       POLLS_PAGE: BlockMainPageWidget(
         child: PollsMainPageCustomSwipeWidget(),
-        title: 'Опросы',
+        title: POLLS_PAGE,
+        index: NEWS_PAGE_NUMBER,
         background: _polls % 2 == 0 ? white : grey,
-        updateIndex: _updateIndex,
       ),
       VIDEO_PAGE: BlockMainPageWidget(
         child: VideosMainPageSwipeStackWidget(),
-        title: 'Видео',
+        title: VIDEO_PAGE,
+        index: NEWS_PAGE_NUMBER,
         background: _videos % 2 == 0 ? white : grey,
       ),
       BIRTHDAY_PAGE: BlockMainPageWidget(
         child: BirthdayMainPageSwipeWidget(),
-        title: 'Дни рождения',
+        title: BIRTHDAY_PAGE,
+        index: NEWS_PAGE_NUMBER,
         background: _birthday % 2 == 0 ? white : grey,
-        updateIndex: _updateIndex,
       ),
       BOOKING_PAGE: BlockMainPageWidget(
         child: Container(child: Center(child: Text('Для этой страницы ещё нету макета'),),),
-        title: 'Бронирование',
+        title: BOOKING_PAGE,
+        index: NEWS_PAGE_NUMBER,
         background: _booking % 2 == 0 ? white : grey,
-        updateIndex: _updateIndex,
       ),
     };
 
@@ -122,12 +127,10 @@ class MainPageBuild extends StatelessWidget {
       );
     }
 
-    return CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate(list..add(SizedBox(height: 80,))),
-          )
-        ]
+    return Container(
+      child: Column(
+        children: list,
+      ),
     );
   }
 }
