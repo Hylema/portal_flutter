@@ -35,7 +35,7 @@ class MainBloc extends Bloc<MainEvent, MainState> {
          return ErrorMainParams(message: mapFailureToMessage(failure));
        },
            (model){
-         return LoadedMainState(model: model);
+         return LoadedMainParams(model: model);
        },
      );
     } else if(event is SetParamsToJsonForMainPageBlocEvent){
@@ -48,14 +48,14 @@ class MainBloc extends Bloc<MainEvent, MainState> {
           return ErrorMainParams(message: mapFailureToMessage(failure));
         },
             (model){
-          return LoadedMainState(model: model);
+          return LoadedMainParams(model: model);
         },
       );
     } else if(event is UpdateMainParams){
 
       print('event ==== ${event.params}');
 
-      yield LoadedMainState(model: MainParamsModel(params: event.params));
+      yield LoadedMainParams(model: MainParamsModel(params: event.params));
     }
   }
 }

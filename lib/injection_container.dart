@@ -37,11 +37,11 @@ import 'package:flutter_architecture_project/feature/domain/usecases/profile/get
 import 'package:flutter_architecture_project/feature/domain/usecases/videoGallery/get_video_gallery_from_network.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/blocsResponses/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/refreshIndicator/refresh_indicator_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -111,8 +111,7 @@ Future<void> init() async {
   /// selected index
   sl.registerFactory(() => SelectedIndexBloc());
 
-  /// refresh indicator
-  sl.registerFactory(() => RefreshLineIndicatorBloc());
+  sl.registerFactory(() => ResponsesBloc());
 
 
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
-
+import 'dart:math' as math;
 class MainFloatingActionButtonWidget extends StatefulWidget {
 
   @override
@@ -50,11 +50,12 @@ class MainFloatingActionButtonWidgetState extends State<MainFloatingActionButton
     return GestureDetector(
       onVerticalDragUpdate: DefaultBottomBarController.of(context).onDrag,
       onVerticalDragEnd: DefaultBottomBarController.of(context).onDragEnd,
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(50.0),
-            color: Color.fromRGBO(238, 0, 38, 1)
-        ),
+      //child: Icon(Icons.minimize, color: Colors.red, size: 50,)
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(50.0),
+              color: Color.fromRGBO(238, 0, 38, 1)
+          ),
           child: AnimatedBuilder(
             animation: scaleAnimation,
             builder: (context, child) => Transform.scale(
@@ -77,7 +78,49 @@ class MainFloatingActionButtonWidgetState extends State<MainFloatingActionButton
               ),
             ),
           ),
-      ),
+        )
     );
   }
 }
+
+
+
+//class MyArc extends StatelessWidget {
+//  final double diameter;
+//
+//  const MyArc({Key key, this.diameter = 200}) : super(key: key);
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return CustomPaint(
+//      painter: MyPainter(),
+//      size: Size(diameter, diameter),
+//    );
+//  }
+//}
+//
+//// This is the Painter class
+//class MyPainter extends CustomPainter {
+//
+//  @override
+//  void paint(Canvas canvas, Size size) {
+//    Paint paint = Paint()..color = Color.fromRGBO(238, 0, 38, 1);
+//
+//    canvas.drawArc(
+//      Rect.fromCenter(
+//        center: Offset(size.width / 2, size.height / 2),
+//        height: size.height,
+//        width: size.width,
+//      ),
+//
+//      -math.pi,
+//      -math.pi,
+//      false,
+//      paint,
+//    );
+//
+//  }
+//
+//  @override
+//  bool shouldRepaint(CustomPainter oldDelegate) => false;
+//}

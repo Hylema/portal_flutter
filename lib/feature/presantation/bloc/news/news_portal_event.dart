@@ -7,31 +7,22 @@ abstract class NewsPortalEvent extends Equatable{
 }
 
 class GetNewsPortalFromNetworkBlocEvent extends NewsPortalEvent {
-  final skip;
-  final top;
-  final shimmer;
+  final int skip;
+  final int top;
+  final bool shimmer;
 
-  GetNewsPortalFromNetworkBlocEvent({this.skip, this.top, this.shimmer = false}) : super([skip, top]);
-}
-
-class GetNextNewsPortalBloc extends NewsPortalEvent {
-  final skip;
-  final top;
-
-  GetNextNewsPortalBloc(this.skip, this.top) : super([skip, top]);
-}
-
-class RefreshNewsPortalBloc extends NewsPortalEvent {
-  final skip;
-  final top;
-
-  RefreshNewsPortalBloc(this.skip, this.top) : super([skip, top]);
+  GetNewsPortalFromNetworkBlocEvent({
+    @required this.skip,
+    @required this.top,
+    this.shimmer = false
+  }) : super([skip, top]);
 }
 
 class GetNewsPortalFromCacheBlocEvent extends NewsPortalEvent {
-  final skip;
-  final top;
+  final bool shimmer;
 
-  GetNewsPortalFromCacheBlocEvent(this.skip, this.top) : super([skip, top]);
+  GetNewsPortalFromCacheBlocEvent({
+    this.shimmer = false
+  }) : super([]);
 }
 

@@ -55,6 +55,10 @@ class BottomExpandableAppBarBuilder extends StatelessWidget {
         'text': 'Дни рождения'
       },
       {
+        'icon': '${path}polls.png',
+        'text': 'Опросы'
+      },
+      {
         'icon': '${path}videoGallery.png',
         'text': 'Видеогалерея'
       },
@@ -90,7 +94,7 @@ class BottomExpandableAppBarBuilder extends StatelessWidget {
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildBuilderDelegate((BuildContext context, int index){
-              int _indexForBar = index + 4;
+              int _indexForBar = index + 3;
 
               return ListTile(
                 leading: Padding(

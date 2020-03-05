@@ -129,7 +129,7 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
             return Center(child: Text('загрузка'),);
           }
           else return buildBody();
-        } else if(state is LoadedMainState){
+        } else if(state is LoadedMainParams){
           _data = state.model.params;
 
           _listStatusTrue = [];

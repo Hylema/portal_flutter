@@ -11,7 +11,7 @@ abstract class NewsPortalState extends Equatable{
 class EmptyNewsPortal extends NewsPortalState {}
 class LoadingNewsPortal extends NewsPortalState {}
 class AuthNewsPortal extends NewsPortalState {}
-class NeedAuthNews extends NewsPortalState {}
+class NeedAuthNewsPortal extends NewsPortalState {}
 
 class LoadedNewsPortal extends NewsPortalState {
   final NewsPortal model;

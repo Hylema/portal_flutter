@@ -9,7 +9,6 @@ import 'package:flutter_architecture_project/feature/presantation/pages/news/new
 import 'package:flutter_architecture_project/feature/presantation/pages/profile/profile_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/video_gallery_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class BodyAppWidget extends StatelessWidget {
 
@@ -17,36 +16,26 @@ class BodyAppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Map _pageOptions = {
       MAIN_PAGE_NUMBER: {
-        PAGE: MainPage(),
-        UPDATE_HEADER: true,
-        UPDATE_FOOTER: false,
+        CURRENT_PAGE: MainPage(),
       },
       NEWS_PAGE_NUMBER: {
-        PAGE: NewsPortalPage(),
-        UPDATE_HEADER: true,
-        UPDATE_FOOTER: false,
+        CURRENT_PAGE: NewsPortalPage(),
       },
       PROFILE_PAGE_NUMBER: {
-        PAGE: ProfilePage(),
-        UPDATE_HEADER: true,
-        UPDATE_FOOTER: false,
+        CURRENT_PAGE: ProfilePage(),
       },
       BIRTHDAY_PAGE_NUMBER: {
-        PAGE: BirthdayPage(),
-        UPDATE_HEADER: true,
-        UPDATE_FOOTER: false,
+        CURRENT_PAGE: BirthdayPage(),
       },
       VIDEO_PAGE_NUMBER: {
-        PAGE: VideoGalleryPage(),
-        UPDATE_HEADER: true,
-        UPDATE_FOOTER: false,
+        CURRENT_PAGE: VideoGalleryPage(),
       },
     };
 
     return BlocConsumer<SelectedIndexBloc, SelectedIndexState>(
       builder: (context, state) {
         if (state is LoadedSelectedIndexState) {
-          return BodyAppWidgetBuild(page: _pageOptions[state.index]);
+          return BodyAppWidgetBuild(pages: _pageOptions[state.index]);
         } else {
           return Container(
             child: Center(
@@ -62,40 +51,23 @@ class BodyAppWidget extends StatelessWidget {
 
 class BodyAppWidgetBuild extends StatelessWidget {
 
-  final Map page;
-  BodyAppWidgetBuild({@required this.page}){
-    assert(page != null);
+  final Map pages;
+  BodyAppWidgetBuild({@required this.pages}) {
+    assert(pages != null);
   }
-
-  RefreshController _refreshController = new RefreshController();
 
   @override
   Widget build(BuildContext context) {
-
-    print('page ============= $page');
-
-    return SmartRefresher(
-        enablePullUp: page[UPDATE_FOOTER],
-        enablePullDown: page[UPDATE_HEADER],
-        header: WaterDropMaterialHeader(
-          backgroundColor: Color.fromRGBO(238, 0, 38, 1),
-          color: Colors.white,
-          distance: 30,
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: pages[CURRENT_PAGE],
         ),
-        footer: ClassicFooter(),
-        controller: _refreshController,
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-              delegate: SliverChildListDelegate([
-                page[PAGE],
-                SizedBox(
-                  height: BOTTOM_NAVIGATION_BAR_HEIGHT,
-                )
-              ]),
-            )
-          ],
-        )
+        Container(
+          height: BOTTOM_NAVIGATION_BAR_HEIGHT + 10,
+        ),
+      ],
     );
   }
 }
+//);

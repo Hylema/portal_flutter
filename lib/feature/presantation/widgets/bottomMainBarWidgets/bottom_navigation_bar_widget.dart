@@ -53,10 +53,6 @@ class BottomNavigationBarWidgetStateBuilder extends StatelessWidget {
         'iconData': '${path}profile.png',
         'text': 'Профиль',
       },
-      {
-        'iconData': '${path}polls.png',
-        'text': 'Опросы'
-      },
     ];
 
     void dispatchUpdateIndex(index){
@@ -77,7 +73,7 @@ class BottomNavigationBarWidgetStateBuilder extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: items,
+          children: items..add(Expanded(child: Container(margin: EdgeInsets.only(right: MediaQuery.of(context).size.width / 10),),)),
         ),
       ),
       color: Colors.white,

@@ -1,7 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
-import 'package:flutter_architecture_project/core/error/status_code.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/videoGallery/video_gallery.dart';
@@ -30,8 +29,6 @@ class VideoGalleryRepository implements IVideoGalleryRepository {
       } on ServerException {
         return Left(ServerFailure());
       } catch(e){
-        ///TODO придумать альтернативу этому
-        Status.message = e;
         return Left(UnknownErrorFailure());
       }
     } else {

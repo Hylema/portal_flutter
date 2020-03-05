@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BirthdayPageShimmer extends StatelessWidget {
@@ -7,7 +9,10 @@ class BirthdayPageShimmer extends StatelessWidget {
     int offset = 0;
     int time = 800;
 
-    return SafeArea(
+    return SmartRefresherWidget(
+      enableControlRefresh: true,
+      enableControlLoad: false,
+      pageKey: BIRTHDAY_PAGE_SHIMMER,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

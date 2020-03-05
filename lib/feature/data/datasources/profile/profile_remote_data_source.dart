@@ -3,7 +3,6 @@ import 'package:flutter_architecture_project/core/api/api.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
-import 'package:flutter_architecture_project/core/error/status_code.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
 import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
@@ -47,7 +46,6 @@ class ProfileRemoteDataSource implements IProfileRemoteDataSource {
     } else if(response.statusCode == 401){
       throw AuthFailure();
     } else {
-      Status.code = response.statusCode;
       throw ServerException();
     }
   }

@@ -60,9 +60,6 @@ class HeaderAppWidget extends StatelessWidget with PreferredSizeWidget{
         titleText: 'Профиль',
       ),
       HeaderAppMainBar(
-        titleText: 'test',
-      ),
-      HeaderAppMainBar(
         titleText: 'Дни рождения',
         action: <Widget>[
           Padding(
@@ -81,6 +78,9 @@ class HeaderAppWidget extends StatelessWidget with PreferredSizeWidget{
             ),
           ),
         ],
+      ),
+      HeaderAppMainBar(
+        titleText: 'test',
       ),
       HeaderAppMainBar(
         titleText: 'Видеогалерея',

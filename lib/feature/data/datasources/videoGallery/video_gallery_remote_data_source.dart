@@ -4,8 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/api/api.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
-import 'package:flutter_architecture_project/core/error/status_code.dart';
-import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
 import 'package:flutter_architecture_project/feature/data/models/videoGallery/video_gallery_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
 import 'package:http/http.dart' as http;
@@ -42,7 +40,6 @@ class VideoGalleryRemoteDataSource implements IVideoGalleryRemoteDataSource {
     } else if(response.statusCode == 401){
       throw AuthFailure();
     } else {
-      Status.code = response.statusCode;
       throw ServerException();
     }
   }

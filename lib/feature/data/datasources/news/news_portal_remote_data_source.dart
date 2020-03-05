@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
-import 'package:flutter_architecture_project/core/error/status_code.dart';
 
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
@@ -44,7 +43,6 @@ class NewsPortalRemoteDataSource implements INewsPortalRemoteDataSource {
     } else if(response.statusCode == 401){
       throw AuthFailure();
     } else {
-      Status.code = response.statusCode;
       throw ServerException();
     }
   }

@@ -43,8 +43,6 @@ class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> {
       yield* _eitherLoadedOrErrorState(either: await _getNewsFromNetwork());
 
     } else if(event is GetNewsPortalFromCacheBlocEvent){
-      skiped = event.skip;
-      top = event.top;
       yield LoadingNewsPortal();
 
       var modelOrFailure = await _failureOrModelCache(
@@ -54,7 +52,7 @@ class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> {
       yield modelOrFailure.fold(
             (failure){
           if(failure is AuthFailure){
-            return NeedAuthNews();
+            return NeedAuthNewsPortal();
           }
           return ErrorNewsPortal(message: mapFailureToMessage(failure));
         },
@@ -83,7 +81,7 @@ class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> {
     yield either.fold(
           (failure){
         if(failure is AuthFailure){
-          return NeedAuthNews();
+          return NeedAuthNewsPortal();
         }
         return ErrorNewsPortal(message: mapFailureToMessage(failure));
       },

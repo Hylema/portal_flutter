@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 class NewsPortalPageShimmer extends StatelessWidget {
@@ -9,26 +11,30 @@ class NewsPortalPageShimmer extends StatelessWidget {
     int offset = 0;
     int time = 800;
 
-    return Column(
-      children: <Widget>[
-        Shimmer.fromColors(
-          highlightColor: Colors.white,
-          baseColor: Colors.grey[300],
-          child: Container(
-            height: 260,
-            width: MediaQuery.of(context).size.width,
-            color: Colors.grey,
+    return SmartRefresherWidget(
+      enableControlRefresh: true,
+      enableControlLoad: false,
+      pageKey: NEWS_PAGE_SHIMMER,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate([
+              Shimmer.fromColors(
+                highlightColor: Colors.white,
+                baseColor: Colors.grey[300],
+                child: Container(
+                  height: 260,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.grey,
+                ),
+                period: Duration(milliseconds: time),
+              ),
+            ]),
           ),
-          period: Duration(milliseconds: time),
-        ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: 5,
-            itemBuilder: (BuildContext context, int index) {
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
               offset += 5;
               time = 800 + offset;
-
-              print(time);
 
               return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
@@ -38,13 +44,14 @@ class NewsPortalPageShimmer extends StatelessWidget {
                     child: ShimmerLayout(),
                     period: Duration(milliseconds: time),
                   ));
-            },
-          ),
-        ),
-      ],
+            }, childCount: 5),
+          )
+        ],
+      ),
     );
   }
 }
+
 
 class ShimmerLayout extends StatelessWidget {
   @override

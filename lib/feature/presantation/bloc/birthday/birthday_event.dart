@@ -16,3 +16,5 @@ class GetBirthdayEvent extends BirthdayEvent {
     @required this.pageSize,
   });
 }
+
+class GetBirthdayFromCache extends BirthdayEvent {}

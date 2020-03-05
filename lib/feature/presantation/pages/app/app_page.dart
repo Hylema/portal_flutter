@@ -33,19 +33,23 @@ class PageState extends State<Page> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO когда токен кончается, страница пропадает
     return BlocBuilder<AppBloc, AppState>(
-      builder: (context, state) {
+      builder: (BuildContext context, AppState state) {
         if(state is Finish) {
           return Scaffold(
             extendBody: true,
             appBar: HeaderAppWidget(),
             body: BodyAppWidget(),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+            floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
             floatingActionButton: MainFloatingActionButtonWidget(),
             bottomNavigationBar: ActionButtonNavigationBarWidget(),
           );
+        } else if(state is NeedAuth){
+          return Container(child: Center(child: Text('auth'),),);
+        } else {
+          return Container(child: Center(child: Text('Что-то пошло не так'),),);
         }
-        return Container(child: Center(child: Text('Что-то пошло не так'),),);
       },
     );
   }

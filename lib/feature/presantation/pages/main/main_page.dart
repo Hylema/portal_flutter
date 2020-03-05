@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/birthday_main_page_swipe_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/block_main_page_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/news_main_page_swipe_widget.dart';
@@ -45,7 +46,7 @@ class MainPageState extends State<MainPage> {
         if(state is EmptyMainState){
           return Center(child: Text('загрузка'),);
 
-        } else if(state is LoadedMainState){
+        } else if(state is LoadedMainParams){
           _mainParams = state.model.params;
           return buildBody();
         } else {
@@ -127,9 +128,16 @@ class MainPageState extends State<MainPage> {
       );
     }
 
-    return Container(
-      child: Column(
-        children: list,
+    return SmartRefresherWidget(
+      enableControlRefresh: true,
+      enableControlLoad: false,
+      pageKey: MAIN_PAGE,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate(list),
+          )
+        ],
       ),
     );
   }

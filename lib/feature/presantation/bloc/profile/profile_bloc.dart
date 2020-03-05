@@ -30,8 +30,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       ProfileEvent event,
       ) async* {
     if (event is GetProfileFromNetworkBlocEvent) {
-      yield LoadingProfile();
-
       yield* _eitherLoadedOrErrorState(either: await _getProfileFromNetwork());
     } else if(event is GetProfileFromCacheBlocEvent){
       yield LoadingProfile();
@@ -80,6 +78,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             return ErrorProfile(message: mapFailureToMessage(failure));
           },
           (model){
+            print('dispatch прошел111');
             return LoadedProfile(model: model);
           },
     );
