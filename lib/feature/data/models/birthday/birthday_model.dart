@@ -2,13 +2,13 @@ import 'package:flutter_architecture_project/feature/data/models/model.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/birthday/birthday.dart';
 import 'package:meta/meta.dart';
 
-class BirthdayModel extends Birthday {
+class BirthdayModel extends Model {
   List birthdays;
 
   BirthdayModel({
     @required this.birthdays,
   }) : super(
-    birthdays: birthdays,
+    model: BirthdayModel,
   );
 
   Map<String, dynamic> toJson() {

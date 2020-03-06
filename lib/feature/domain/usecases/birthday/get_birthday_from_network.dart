@@ -3,21 +3,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
+import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/birthday/birthday.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/birthday/birthday_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 
-class GetBirthdayFromNetwork implements UseCase<Birthday, BirthdayParams>{
+class GetBirthdayFromNetwork implements UseCase<BirthdayModel, BirthdayParams>{
   final IBirthdayRepository repository;
 
   GetBirthdayFromNetwork(this.repository);
 
   @override
-  Future<Either<Failure, Birthday>> call(BirthdayParams params) async {
-    return await repository.getBirthdayFromNetwork(
+  Future<Either<Failure, BirthdayModel>> call(BirthdayParams params) async {
+    return await repository.getBirthday(
         monthNumber: params.monthNumber,
         dayNumber: params.dayNumber,
-        pageIndex: params.pageIndex,
         pageSize: params.pageSize
     );
   }

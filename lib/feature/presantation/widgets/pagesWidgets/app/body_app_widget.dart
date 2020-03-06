@@ -61,7 +61,7 @@ class BodyAppWidgetBuild extends StatelessWidget {
     return Column(
       children: <Widget>[
         Expanded(
-          child: pages[CURRENT_PAGE],
+            child: pages[CURRENT_PAGE]
         ),
         Container(
           height: BOTTOM_NAVIGATION_BAR_HEIGHT + 10,

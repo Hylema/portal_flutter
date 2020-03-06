@@ -27,14 +27,15 @@ class RemoteDataSource<Type> implements IRemoteDataSource{
     @required token,
     @required Model model
   }) async {
-
-    final response = await client.get(
+    final response = await http.get(
       url,
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       },
     );
+
+    print('response.statusCode================== ${response.statusCode}');
 
     switch(response.statusCode){
       case 200 : return model.fromJson(jsonDecode(utf8.decode(response.bodyBytes))) ;break;

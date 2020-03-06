@@ -6,15 +6,15 @@ abstract class BirthdayEvent {}
 class GetBirthdayEvent extends BirthdayEvent {
   final int monthNumber;
   final int dayNumber;
-  final int pageIndex;
   final int pageSize;
+  final int pageIndex;
 
   GetBirthdayEvent({
     @required this.monthNumber,
     @required this.dayNumber,
-    @required this.pageIndex,
     @required this.pageSize,
+    @required this.pageIndex,
   });
 }
 
-class GetBirthdayFromCache extends BirthdayEvent {}
+class UpdateBirthdayNetwork extends BirthdayEvent {}

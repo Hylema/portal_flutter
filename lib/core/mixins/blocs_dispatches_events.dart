@@ -86,6 +86,7 @@ class Dispatch {
 
   ///Дни рождения
   void dispatchGetBirthdayFromNetwork(){
+    _pageIndex = 1;
     blocs.birthdayBloc.add(GetBirthdayEvent(
         monthNumber: DateTime.now().month,
         dayNumber: DateTime.now().day,

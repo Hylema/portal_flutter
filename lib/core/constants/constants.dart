@@ -31,4 +31,7 @@ const String CURRENT_PAGE = 'current_page';
 
 const double BOTTOM_NAVIGATION_BAR_HEIGHT = 50.0;
 
+///Cache
+const String CACHE_BIRTHDAY = 'cache_birthday';
+
 

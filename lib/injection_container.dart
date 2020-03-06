@@ -1,19 +1,24 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/newsPopularity/news_popularity_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/birthday/birthday_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/newsPopularity/news_popularity_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/profile/profile_repository.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/videoGallery/video_gallery_repository.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/birthday/birthday_repository_interface.dart';
@@ -196,8 +201,9 @@ Future<void> init() async {
   /// birthday
   sl.registerLazySingleton<IBirthdayRepository>(
         () => BirthdayRepository(
-        networkInfo: sl(),
-        remoteDataSource: sl()
+        remoteDataSource: sl(),
+        localDataSource: sl(),
+        networkInfo: sl()
     ),
   );
 
@@ -255,8 +261,13 @@ Future<void> init() async {
   /// birthday
   sl.registerLazySingleton<BirthdayRemoteDataSource>(
         () => BirthdayRemoteDataSource(
-        client: sl(),
         storage: sl()
+    ),
+  );
+  sl.registerLazySingleton<BirthdayLocalDataSource>(
+        () => BirthdayLocalDataSource(
+          cachedName: CACHE_BIRTHDAY,
+          sharedPreferences: sl()
     ),
   );
 

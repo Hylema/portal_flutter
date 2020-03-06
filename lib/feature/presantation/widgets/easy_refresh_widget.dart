@@ -268,6 +268,7 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatc
         footer: ClassicFooter(
           loadingText: 'Загрузка...',
           canLoadingText: 'Загрузить ещё',
+          noDataText: 'Дней рождений на сегодня больше нет',
           loadingIcon: CircularProgressIndicator(
             strokeWidth: 2.0,
             valueColor: AlwaysStoppedAnimation(

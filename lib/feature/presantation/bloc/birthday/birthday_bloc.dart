@@ -5,7 +5,7 @@ import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/birthday/get_birthday_from_network.dart';
 import './bloc.dart';
 
-class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper {
+class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper<BirthdayState> {
   final GetBirthdayFromNetwork _getBirthdayFromNetwork;
 
   BirthdayBloc({
@@ -28,7 +28,7 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper {
         pageSize: event.pageSize
     );
 
-    if(event is GetBirthdayFromCache) yield* _getBirthdayCache();
+    if(event is UpdateBirthdayNetwork) yield* _updateBirthdayNetwork();
   }
 
   Stream<BirthdayState> _getBirthdayNetwork({
@@ -37,20 +37,25 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper {
     @required pageIndex,
     @required pageSize,
   }) async* {
+
+    var res = await _getBirthdayFromNetwork(
+        BirthdayParams(
+            monthNumber: monthNumber,
+            dayNumber: dayNumber,
+            pageIndex: pageIndex,
+            pageSize: pageSize
+        )
+    );
+
+    print('Че получилось ==== $res');
+
     yield await eitherLoadedOrErrorState(
-        either: await _getBirthdayFromNetwork(
-            BirthdayParams(
-                monthNumber: monthNumber,
-                dayNumber: dayNumber,
-                pageIndex: pageIndex,
-                pageSize: pageSize
-            )
-        ),
+      either: res,
       ifNeedAuth: NeedAuthBirthday,
-      ifLoaded: LoadedBirthdayState,
+      ifLoaded:  LoadedBirthdayState,
       ifError: ErrorBirthdayState,
     );
   }
 
-  Stream<BirthdayState> _getBirthdayCache() async* {}
+  Stream<BirthdayState> _updateBirthdayNetwork() async* {}
 }
