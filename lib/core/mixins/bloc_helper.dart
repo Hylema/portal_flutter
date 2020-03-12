@@ -1,30 +1,64 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/error/messages.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 
 class BlocHelper<Type> {
-  Future eitherLoadedOrErrorState({
+  Future<Type> eitherLoadedOrErrorState({
     @required Either either,
      ifNeedAuth,
     @required  ifError,
     @required  ifLoaded,
   }) async {
-    try{
-      return await either.fold(
-            (failure){
-          if(failure is AuthFailure){
-            return NeedAuthBirthday();
-          }
-          return ErrorBirthdayState(message: mapFailureToMessage(failure));
-        },
-            (model){
-          return LoadedBirthdayState(model: model);
-        },
-      );
-    } catch(e){
-      print(' = = = = = = = = = = =   =    = == ==== $e');
+    return await either.fold(
+          (failure){
+        if(failure is AuthFailure){
+          return ifNeedAuth;
+        }
+        return ifError(message: mapFailureToMessage(failure));
+      },
+          (model){
+        return ifLoaded(model: model);
+      },
+    );
+  }
+
+  String mapFailureToMessage(failure) {
+    if(failure is ServerFailure)
+      return SERVER_FAILURE_MESSAGE;
+
+    else if(failure is UnknownErrorFailure)
+      return UNKNOWN_ERROR_FAILURE;
+
+    else if(failure is CacheFailure)
+      return CACHE_FAILURE_MESSAGE;
+
+    else if(failure is NetworkFailure)
+      return NETWORK_FAILURE_MESSAGE;
+
+    else if(failure is JsonFailure)
+      return JSON_FAILURE_MESSAGE;
+
+    else if(failure is BadRequestFailure)
+      return BAD_REQUEST_MESSAGE;
+
+    else if(failure is ProgrammerFailure){
+      ///TypeError errorMessage;
+      return '${failure.errorMessage}';
     }
+  }
+
+  Map<String, String> removeParamsWithNull({@required Map map}){
+    Map params = {};
+
+    map.forEach((key, value) {
+      if (value != null) params[key] = '$value';
+    });
+
+    print('params ============= $params');
+
+    return Map<String, String>.from(params);
   }
 }

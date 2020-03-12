@@ -14,7 +14,6 @@ class NewsPortalPageShimmer extends StatelessWidget {
     return SmartRefresherWidget(
       enableControlRefresh: true,
       enableControlLoad: false,
-      pageKey: NEWS_PAGE_SHIMMER,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

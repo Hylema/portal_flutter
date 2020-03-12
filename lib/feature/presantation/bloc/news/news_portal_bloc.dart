@@ -4,13 +4,14 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/error/messages.dart';
+import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
 import 'package:flutter_architecture_project/core/usecases/usecase.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/news/news_portal.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/news/get_news_portal_from_cache.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/news/get_news_portal_from_network.dart';
 import './bloc.dart';
 
-class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> {
+class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> with BlocHelper<NewsPortalState>{
   final GetNewsPortalFormNetwork getNewsFromNetwork;
   final GetNewsPortalFromCache getNewsFromCache;
   int skiped;

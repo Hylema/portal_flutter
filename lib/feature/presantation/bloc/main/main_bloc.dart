@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/messages.dart';
+import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
 import 'package:flutter_architecture_project/core/usecases/usecase.dart';
 import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/main/main_params.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_architecture_project/feature/domain/usecases/main/get_ma
 import 'package:flutter_architecture_project/feature/domain/usecases/main/set_main_params_to_json.dart';
 import './bloc.dart';
 
-class MainBloc extends Bloc<MainEvent, MainState> {
+class MainBloc extends Bloc<MainEvent, MainState> with BlocHelper<MainState>{
   final GetMainParamsFromJson getMainParamsFromJson;
   final SetMainParamsToJson setMainParamsToJson;
 

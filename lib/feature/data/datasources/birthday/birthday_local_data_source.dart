@@ -1,11 +1,8 @@
 import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_architecture_project/core/constants/constants.dart';
-import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
-import 'package:flutter_architecture_project/feature/data/models/model.dart';
-import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class IBirthdayLocalDataSource {
@@ -14,7 +11,7 @@ abstract class IBirthdayLocalDataSource {
   Future<void> setBirthdayToCache({@required BirthdayModel model});
 }
 
-class BirthdayLocalDataSource extends LocalDataSource<BirthdayModel> implements IBirthdayLocalDataSource {
+class BirthdayLocalDataSource implements IBirthdayLocalDataSource {
   final SharedPreferences sharedPreferences;
   final cachedName;
 
@@ -24,20 +21,15 @@ class BirthdayLocalDataSource extends LocalDataSource<BirthdayModel> implements 
   });
 
   @override
-  BirthdayModel getBirthdayFromCache() =>
-      getDataFromCache(
-        cachedName: cachedName,
-        model: Model(
-          model: BirthdayModel
-        )
-      );
+  BirthdayModel getBirthdayFromCache() {
+    final jsonString = sharedPreferences.getString(cachedName);
+    return BirthdayModel.fromJson(json: json.decode(jsonString));
+  }
 
   @override
   Future<void> setBirthdayToCache({@required BirthdayModel model}) =>
-      setDataToCache(
-          cachedName: cachedName,
-          model: Model(
-              model: model
-          )
+      sharedPreferences.setString(
+        cachedName,
+        json.encode(model),
       );
 }

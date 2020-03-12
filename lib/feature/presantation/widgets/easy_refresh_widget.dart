@@ -1,3 +1,4 @@
+import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
@@ -162,21 +163,24 @@ class SmartRefresherWidget extends StatefulWidget {
   final Widget child;
   final bool enableControlRefresh;
   final bool enableControlLoad;
-  final String pageKey;
+  final Function onRefresh;
+  final Function onLoading;
 
   SmartRefresherWidget({
     @required this.child,
     @required this.enableControlRefresh,
     @required this.enableControlLoad,
-    @required this.pageKey,
+    this.onRefresh,
+    this.onLoading,
   }){
     assert(child != null);
-    assert(pageKey != null);
   }
 
   @override
   State<StatefulWidget> createState() => SmartRefresherWidgetState();
 }
+
+String loadMessage;
 
 class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatch{
 
@@ -186,6 +190,24 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatc
   void initState() {
     super.initState();
     _refreshController = new RefreshController();
+
+    DataConnectionChecker().onStatusChange.listen((status) {
+      switch (status) {
+        case DataConnectionStatus.connected:
+          _refreshController.resetNoData();
+          break;
+        case DataConnectionStatus.disconnected:
+          _refreshController.loadNoData();
+          print('Отключение от сети');
+          setState(() {
+            loadMessage = '''
+            Нет доступа к сети.
+            Ожидание подключения...
+            ''';
+          });
+          break;
+      }
+    });
   }
 
   @override
@@ -194,47 +216,47 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatc
     _refreshController.dispose();
   }
 
-  _refreshDispatches(){
-    Map _refreshDispatches = {
-      ///Main Page
-      MAIN_PAGE: dispatchGetMainParamsFromJson,
-
-      ///News Page
-      NEWS_PAGE: dispatchGetNewsDataFromNetwork,
-      NEWS_PAGE_SHIMMER: dispatchGetNewsDataFromNetwork,
-
-      ///Profile Page
-      PROFILE_PAGE: dispatchGetProfileDataFromNetwork,
-      PROFILE_PAGE_SHIMMER: dispatchGetProfileDataFromNetwork,
-
-      ///Birthday Page
-      BIRTHDAY_PAGE: dispatchGetBirthdayFromNetwork,
-      BIRTHDAY_PAGE_SHIMMER: dispatchGetBirthdayFromNetwork,
-
-      ///Polls Page
-      POLLS_PAGE: dispatchGetMainParamsFromJson,
-
-      ///Video Page
-      VIDEO_PAGE: dispatchGetVideosFromNetwork,
-    };
-
-    return _refreshDispatches[widget.pageKey]();
-  }
-
-  _loadDispatches(){
-    Map _refreshDispatches = {
-      ///News Page
-      NEWS_PAGE: dispatchLoadMoreNewsDataFromNetwork,
-
-      ///Video Page
-      VIDEO_PAGE: dispatchLoadMoreVideosFromNetwork,
-
-      ///Birthday Page
-      BIRTHDAY_PAGE: dispatchLoadMoreBirthdayFromNetwork,
-    };
-
-    return _refreshDispatches[widget.pageKey]();
-  }
+//  _refreshDispatches(){
+//    Map _refreshDispatches = {
+//      ///Main Page
+//      MAIN_PAGE: dispatchGetMainParamsFromJson,
+//
+//      ///News Page
+//      NEWS_PAGE: dispatchGetNewsDataFromNetwork,
+//      NEWS_PAGE_SHIMMER: dispatchGetNewsDataFromNetwork,
+//
+//      ///Profile Page
+//      PROFILE_PAGE: dispatchGetProfileDataFromNetwork,
+//      PROFILE_PAGE_SHIMMER: dispatchGetProfileDataFromNetwork,
+//
+//      ///Birthday Page
+//      BIRTHDAY_PAGE: dispatchUpdateBirthdayFromNetwork,
+//      BIRTHDAY_PAGE_SHIMMER: dispatchUpdateBirthdayFromNetwork,
+//
+//      ///Polls Page
+//      POLLS_PAGE: dispatchGetMainParamsFromJson,
+//
+//      ///Video Page
+//      VIDEO_PAGE: dispatchGetVideosFromNetwork,
+//    };
+//
+//    return _refreshDispatches[widget.pageKey]();
+//  }
+//
+//  _loadDispatches(){
+//    Map _refreshDispatches = {
+//      ///News Page
+//      NEWS_PAGE: dispatchLoadMoreNewsDataFromNetwork,
+//
+//      ///Video Page
+//      VIDEO_PAGE: dispatchLoadMoreVideosFromNetwork,
+//
+//      ///Birthday Page
+//      BIRTHDAY_PAGE: dispatchLoadMoreBirthdayFromNetwork,
+//    };
+//
+//    return _refreshDispatches[widget.pageKey]();
+//  }
 
   @override
   Widget build(BuildContext context) {
@@ -246,10 +268,16 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatc
           _refreshController.loadComplete();
 
           var _successState = state.state;
+
+          print('Главный стейт изменился  =========================== $_successState');
+
           if(_successState is LoadedBirthdayState){
-            if(_successState.model.birthdays.length == 0){
+            if(_successState.model.noDataMore == true){
               _refreshController.loadNoData();
-            }
+              setState(() {
+                loadMessage = 'Дней рождений сегодня больше нету';
+              });
+            } else _refreshController.resetNoData();
           }
         }
         if(state is ResponseErrorState) {
@@ -268,7 +296,7 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatc
         footer: ClassicFooter(
           loadingText: 'Загрузка...',
           canLoadingText: 'Загрузить ещё',
-          noDataText: 'Дней рождений на сегодня больше нет',
+          noDataText: loadMessage,
           loadingIcon: CircularProgressIndicator(
             strokeWidth: 2.0,
             valueColor: AlwaysStoppedAnimation(
@@ -278,8 +306,8 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatc
         ),
         controller: _refreshController,
         child: widget.child,
-        onRefresh: () => _refreshDispatches(),
-        onLoading: () => _loadDispatches(),
+        onRefresh: widget.onRefresh(),
+        onLoading: widget.onLoading(),
       )
     );
   }

@@ -61,7 +61,6 @@ class VideoGalleryPageBodyState extends State<VideoGalleryPageBody>{
     return SmartRefresherWidget(
       enableControlLoad: true,
       enableControlRefresh: true,
-      pageKey: VIDEO_PAGE,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

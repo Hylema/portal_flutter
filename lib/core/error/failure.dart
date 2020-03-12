@@ -10,7 +10,11 @@ abstract class Failure extends Equatable {
 class ServerFailure extends Failure {}
 class ClientFailure extends Failure {}
 
-class NetworkFailure extends Failure {}
+class NetworkFailure extends Failure {
+  final modelFromCache;
+
+  NetworkFailure({this.modelFromCache});
+}
 
 class CacheFailure extends Failure {}
 
@@ -24,7 +28,7 @@ class UnknownErrorFailure extends Failure {}
 class BadRequestFailure extends Failure {}
 
 class ProgrammerFailure extends Failure {
-  final TypeError errorMessage;
+  final errorMessage;
 
   ProgrammerFailure({@required this.errorMessage}) : super([errorMessage]);
 }

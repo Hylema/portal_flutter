@@ -131,7 +131,6 @@ class MainPageState extends State<MainPage> {
     return SmartRefresherWidget(
       enableControlRefresh: true,
       enableControlLoad: false,
-      pageKey: MAIN_PAGE,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

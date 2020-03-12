@@ -3,20 +3,31 @@ import 'package:flutter_architecture_project/feature/data/models/birthday/birthd
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class BirthdayState extends Equatable{
-  BirthdayState([List props = const <dynamic>[]]) : super(props);
-}
+abstract class BirthdayState {}
 
 class EmptyBirthdayState extends BirthdayState {}
+
 class NeedAuthBirthday extends BirthdayState {}
+
+class NetworkFailLoadedCache extends BirthdayState {
+  final BirthdayModel model;
+  NetworkFailLoadedCache({@required this.model});
+}
+
 class LoadingBirthdayState extends BirthdayState {}
+
 class LoadedBirthdayState extends BirthdayState {
   final BirthdayModel model;
+  LoadedBirthdayState({@required this.model});
 
-  LoadedBirthdayState({@required this.model}) : super([model]);
+  static LoadedBirthdayState getInstance({@required BirthdayModel model}) =>
+      LoadedBirthdayState(model: model);
 }
+
 class ErrorBirthdayState extends BirthdayState {
   final String message;
+  ErrorBirthdayState({@required this.message});
 
-  ErrorBirthdayState({@required this.message}) : super([message]);
+  static ErrorBirthdayState getInstance({@required String message}) =>
+      ErrorBirthdayState(message: message);
 }

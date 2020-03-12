@@ -81,7 +81,6 @@ class NewsPortalBodyState extends State<NewsPortalBody> with AutomaticKeepAliveC
     return SmartRefresherWidget(
       enableControlLoad: true,
       enableControlRefresh: true,
-      pageKey: NEWS_PAGE,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(

@@ -12,7 +12,6 @@ class BirthdayPageShimmer extends StatelessWidget {
     return SmartRefresherWidget(
       enableControlRefresh: true,
       enableControlLoad: false,
-      pageKey: BIRTHDAY_PAGE_SHIMMER,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

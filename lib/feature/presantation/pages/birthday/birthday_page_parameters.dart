@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/mixins/blocs_dispatches_events.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/parameters_widget.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -71,7 +73,9 @@ class BirthdayPageParameters extends StatefulWidget {
   BirthdayPageParametersState createState() => BirthdayPageParametersState();
 }
 
-class BirthdayPageParametersState extends State<BirthdayPageParameters> {
+class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dispatch {
+
+  List<Widget> fields;
 
   @override
   void initState() {
@@ -85,7 +89,7 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> {
 
   final month = [
     'Январь','Ферваль','Март',
-    'Апрель','Май','Июнь',
+    'Апреля','Май','Июнь',
     'Июль','Август','Сентябрь',
     'Октябрь','Ноябрь','Декабрь'
   ];
@@ -124,140 +128,91 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> {
       else disable = true;
     });
   }
-  final RoundedLoadingButtonController _btnController = new RoundedLoadingButtonController();
 
   bool disable = true;
   TextEditingController fio = TextEditingController();
   TextEditingController date = TextEditingController();
+  TextEditingController periodFrom = TextEditingController();
+  TextEditingController periodBy = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-            leading: GestureDetector(
-              onTap: (){
-                Navigator.pop(context);
+    fields = [
+      TextField(
+        controller: fio,
+        decoration: InputDecoration(
+            labelText: "ФИО",
+            suffixIcon: fio.text.length > 0
+                ? IconButton(
+              onPressed: () {
+                fio.clear();
+                //_check();
               },
-              child: Icon(Icons.close, color: Colors.black,),
-            ),
-            backgroundColor: Colors.white,
-            title: Text('Параметры', style: TextStyle(color: Colors.black),),
-            centerTitle: true,
-            actions: [
-              MaterialButton(
-                onPressed: () {
-                  setState(() {
-                    _check(throwData: true);
-                  });
-                },
-                child: Text('Сбросить', style: TextStyle(color: Colors.lightBlue, fontSize: 16),)
+              icon: Icon(
+                Icons.cancel,
+                size: 14,
+                color: Colors.grey[400],
               ),
-//              GestureDetector(
-//                onTap: (){
-//                  print('Сбросить');
-//                },
-//                child: Padding(
-//                  padding: EdgeInsets.only(right: 15),
-//                  child: Icon(Icons.close),
-//                )
-//              ),
-            ]
-        ),
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-                delegate: SliverChildListDelegate([
-                  Container(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(15),
-                          child: Column(
-                            children: <Widget>[
-                              TextField(
-                                controller: fio,
-                                decoration: InputDecoration(
-                                    labelText: "ФИО",
-                                    suffixIcon: fio.text.length > 0
-                                        ? IconButton(
-                                      onPressed: () {
-                                        fio.clear();
-                                        _check();
-                                      },
-                                      icon: Icon(
-                                        Icons.cancel,
-                                        size: 14,
-                                        color: Colors.grey[400],
-                                      ),
-                                    )
-                                        : null
-                                ),
-                                onChanged: (value) {
-                                  _check();
-                                },
-                              ),
-                              TextField(
-                                controller: date,
-                                readOnly: true,
-                                onTap: () {
-                                  print('Дата пикер');
-                                  _datePicker(context);
-                                },
-                                decoration: InputDecoration(
-                                    labelText: "Дата",
-                                    suffixIcon: date.text.length > 0
-                                        ? IconButton(
-                                            onPressed: () {
-                                              date.clear();
-                                              _check();
-                                            },
-                                            icon: Icon(
-                                              Icons.cancel,
-                                              size: 14,
-                                              color: Colors.grey[400],
-                                            ),
-                                          )
-                                        : null
-                                ),
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                    labelText: "Период с"
-                                ),
-                              ),
-                              TextField(
-                                decoration: InputDecoration(
-                                    labelText: "Период по"
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        RoundedLoadingButton(
-                          child: Text('Показать', style: TextStyle(color: Colors.white)),
-                          controller: _btnController,
-                          onPressed: () async {
-                            await Future.delayed(Duration(seconds: 3), () async {
-                              _btnController.success();
-                            });
-                            await Future.delayed(Duration(milliseconds: 1000), () {});
-                            Navigator.of(context).pop();
-                          },
-                          color: disable
-                              ? Color.fromRGBO(238, 0, 38, 0.48)
-                              : Color.fromRGBO(238, 0, 38, 1),
-                        )
-                      ],
-                    ),
-                    height: MediaQuery.of(context).size.height - MediaQuery.of(context).size.height/6,
-                  ),
-                ])
             )
-          ],
+                : null
+        ),
+        onSubmitted: (value) {
+          print('value ============== $value');
+          print('fio ============== $fio');
+          print('fio.text ============== ${fio.text}');
+          setState(() {});
+        },
+      ),
+      TextField(
+        controller: date,
+        readOnly: true,
+        onTap: () {
+          print('Дата пикер');
+          _datePicker(context);
+        },
+        decoration: InputDecoration(
+            labelText: "Дата",
+            suffixIcon: date.text.length > 0
+                ? IconButton(
+              onPressed: () {
+                date.clear();
+                _check();
+              },
+              icon: Icon(
+                Icons.cancel,
+                size: 14,
+                color: Colors.grey[400],
+              ),
+            )
+                : null
         ),
       ),
+      TextField(
+        decoration: InputDecoration(
+            labelText: "Период с"
+        ),
+      ),
+      TextField(
+        decoration: InputDecoration(
+            labelText: "Период по"
+        ),
+      ),
+    ];
+
+    return ParametersWidget(
+        title: 'Параметры',
+        textButton: 'Показать',
+        fields: fields,
+        show: () {
+          print('show trigger');
+        },
+        throwData: () {
+          fio.clear();
+          date.clear();
+          periodFrom.clear();
+          periodBy.clear();
+        }
     );
   }
 }

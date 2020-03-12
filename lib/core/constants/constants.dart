@@ -35,3 +35,13 @@ const double BOTTOM_NAVIGATION_BAR_HEIGHT = 50.0;
 const String CACHE_BIRTHDAY = 'cache_birthday';
 
 
+const int BIRTHDAY_PAGE_SIZE = 15;
+
+///Errors
+const String CACHE_FAILURE_MESSAGE = 'Ошибка при получении данных из кэша';
+const String JSON_FAILURE_MESSAGE = 'Ошибка при получении данных из json';
+const String NETWORK_FAILURE_MESSAGE = 'Ошибка при подключении к сети';
+const String SERVER_FAILURE_MESSAGE = 'Ошибка сервера, статус код: 500';
+const String BAD_REQUEST_MESSAGE = 'Ошибка, неверно переданы параметры';
+const String UNKNOWN_ERROR_FAILURE = 'Неизвестная ошибка';
+

@@ -56,6 +56,8 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
     item['status'] = true;
     _listStatusTrue.add(item);
 
+    print('_listStatusTrue ============== $_listStatusTrue');
+
     dispatchUpdateMainParams();
   }
 
@@ -131,6 +133,8 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
           else return buildBody();
         } else if(state is LoadedMainParams){
           _data = state.model.params;
+
+          print('Страница обновилась, новые данные === $_data');
 
           _listStatusTrue = [];
           _listStatusFalse = [];

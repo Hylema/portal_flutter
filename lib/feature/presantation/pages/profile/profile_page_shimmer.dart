@@ -16,7 +16,6 @@ class ProfilePageShimmer extends StatelessWidget {
     return SmartRefresherWidget(
       enableControlLoad: false,
       enableControlRefresh: true,
-      pageKey: PROFILE_PAGE_SHIMMER,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

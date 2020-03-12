@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/mixins/blocs.dart';
 import 'package:flutter_architecture_project/core/mixins/singleton.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_event.dart';
@@ -11,23 +12,20 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_event.dart';
 
+///State новостей
+int _downloadNews = 15;
+int _moreCountDownloadNews = 10;
+
+///State видео
+int _downloadVideo = 15;
+int _moreCountDownloadVideo = 10;
+
 class Dispatch {
 
-  Blocs blocs = Singleton.blocsClass;
-
-
-  ///State новостей
-  int _downloadNews = 15;
-  int _moreCountDownloadNews = 10;
-
-  ///State видео
-  int _downloadVideo = 15;
-  int _moreCountDownloadVideo = 10;
-
   ///State дней рождения
-  int _pageIndex = 1;
-  int _pageSize = 45;
+  static int _pageSize = 45;
 
+  Blocs blocs = Singleton.blocsClass;
 
   ///Новости
   void dispatchGetNewsDataFromNetwork(){
@@ -85,22 +83,38 @@ class Dispatch {
   }
 
   ///Дни рождения
-  void dispatchGetBirthdayFromNetwork(){
-    _pageIndex = 1;
-    blocs.birthdayBloc.add(GetBirthdayEvent(
-        monthNumber: DateTime.now().month,
-        dayNumber: DateTime.now().day,
-        pageSize: _pageSize,
-        pageIndex: _pageIndex
+  void dispatchLoadMoreBirthdayWithFilter({
+    @required int pageIndex,
+    @required bool update,
+    String fio,
+    int startDayNumber,
+    int endDayNumber,
+    int startMonthNumber,
+    int endMonthNumber,
+  }){
+    blocs.birthdayBloc.add(LoadMoreBirthdayWithFilterEvent(
+        fio: fio,
+        startDayNumber: startDayNumber,
+        endDayNumber: endDayNumber,
+        startMonthNumber: startMonthNumber,
+        endMonthNumber: endMonthNumber,
+        pageSize: BIRTHDAY_PAGE_SIZE,
+        pageIndex: pageIndex,
+        update: update
     ));
   }
-  void dispatchLoadMoreBirthdayFromNetwork(){
-    _pageIndex++;
-    blocs.birthdayBloc.add(GetBirthdayEvent(
-        monthNumber: DateTime.now().month,
-        dayNumber: DateTime.now().day,
-        pageSize: _pageSize,
-        pageIndex: _pageIndex
+  void dispatchLoadMoreBirthdayWithConcreteDay({
+    @required int monthNumber,
+    @required int dayNumber,
+    @required int pageIndex,
+    @required bool update,
+  }){
+    blocs.birthdayBloc.add(LoadMoreBirthdayWithConcreteDayEvent(
+      monthNumber: monthNumber,
+      dayNumber: dayNumber,
+      pageSize: BIRTHDAY_PAGE_SIZE,
+      pageIndex: pageIndex,
+      update: update
     ));
   }
 

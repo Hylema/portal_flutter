@@ -4,13 +4,14 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/error/messages.dart';
+import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
 import 'package:flutter_architecture_project/core/usecases/usecase.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/profile/profile.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/profile/get_profile_from_cache.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/profile/get_profile_from_network.dart';
 import './bloc.dart';
 
-class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocHelper<ProfileState>{
   final GetProfileFormNetwork getProfileFormNetwork;
   final GetProfileFromCache getProfileFromCache;
 
@@ -78,7 +79,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             return ErrorProfile(message: mapFailureToMessage(failure));
           },
           (model){
-            print('dispatch прошел111');
             return LoadedProfile(model: model);
           },
     );

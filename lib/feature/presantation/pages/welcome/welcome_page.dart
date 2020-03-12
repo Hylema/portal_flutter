@@ -174,7 +174,7 @@ class BuildBodyState extends State with TickerProviderStateMixin, Dispatch{
                                 dispatchGetNewsDataFromNetwork();
                                 dispatchGetMainParamsFromJson();
                                 dispatchGetVideosFromNetwork();
-                                dispatchGetBirthdayFromNetwork();
+                                dispatchLoadMoreBirthdayWithConcreteDay(monthNumber: null, dayNumber: null, pageIndex: null, update: null);
                               },
                               color: Color.fromRGBO(238, 0, 38, 1),
                             ) : Container(

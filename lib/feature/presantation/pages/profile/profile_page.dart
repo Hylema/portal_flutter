@@ -83,7 +83,6 @@ class ProfilePageBody extends StatelessWidget {
     return SmartRefresherWidget(
       enableControlLoad: false,
       enableControlRefresh: true,
-      pageKey: PROFILE_PAGE,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

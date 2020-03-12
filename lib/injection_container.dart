@@ -4,21 +4,19 @@ import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/data/datasources/local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/newsPopularity/news_popularity_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/data/datasources/remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/birthday/birthday_repository.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/error_catcher.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/newsPopularity/news_popularity_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/profile/profile_repository.dart';
-import 'package:flutter_architecture_project/feature/data/repositories/repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/videoGallery/video_gallery_repository.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/birthday/birthday_repository_interface.dart';
@@ -27,7 +25,6 @@ import 'package:flutter_architecture_project/feature/domain/repositories/news/ne
 import 'package:flutter_architecture_project/feature/domain/repositories/newsPopularity/news_popularity_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/profile/profile_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/videoGallery/video_gallery_repository_interface.dart';
-import 'package:flutter_architecture_project/feature/domain/usecases/birthday/get_birthday_from_network.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/main/get_main_params_from_json.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/main/set_main_params_to_json.dart';
 import 'package:flutter_architecture_project/feature/domain/usecases/news/get_news_portal_from_cache.dart';
@@ -52,7 +49,6 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/videoGall
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 final sl = GetIt.instance;
 
@@ -109,7 +105,7 @@ Future<void> init() async {
   /// birthday
   sl.registerFactory(
         () => BirthdayBloc(
-          getBirthdayFromNetwork: sl()
+          repository: sl()
     ),
   );
 
@@ -145,8 +141,6 @@ Future<void> init() async {
   ///video gallery
   sl.registerLazySingleton(() => GetVideoGalleryFromNetwork(sl()));
 
-  /// birthday
-  sl.registerLazySingleton(() => GetBirthdayFromNetwork(sl()));
 
 
 
@@ -203,7 +197,7 @@ Future<void> init() async {
         () => BirthdayRepository(
         remoteDataSource: sl(),
         localDataSource: sl(),
-        networkInfo: sl()
+        errorCatcher: sl()
     ),
   );
 
@@ -261,7 +255,8 @@ Future<void> init() async {
   /// birthday
   sl.registerLazySingleton<BirthdayRemoteDataSource>(
         () => BirthdayRemoteDataSource(
-        storage: sl()
+        storage: sl(),
+        client: sl()
     ),
   );
   sl.registerLazySingleton<BirthdayLocalDataSource>(
@@ -279,9 +274,9 @@ Future<void> init() async {
 
   ///! CORE
   sl.registerLazySingleton<Storage>(() => Storage());
-  sl.registerLazySingleton(() => ProfileParser());
+  sl.registerLazySingleton<ProfileParser>(() => ProfileParser());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
-
+  sl.registerLazySingleton<ErrorCatcher>(() => ErrorCatcher(networkInfo: sl()));
 
 
 

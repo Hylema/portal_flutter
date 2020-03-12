@@ -6,9 +6,15 @@ import 'package:flutter_architecture_project/feature/data/models/model.dart';
 import 'package:flutter_architecture_project/feature/domain/entities/birthday/birthday.dart';
 
 abstract class IBirthdayRepository {
-  Future<Either<Failure, BirthdayModel>> getBirthday({
-    @required int monthNumber,
-    @required int dayNumber,
-    @required int pageSize
+  Future<Either<Failure, BirthdayModel>> getBirthdayWithConcreteDay({
+    @required params,
   });
+
+  Future<Either<Failure, BirthdayModel>> getBirthdayWithFilter({
+    @required params,
+  });
+
+  Future<Either<Failure, BirthdayModel>> getBirthdayFromCache();
+
+  Future<void> setBirthdayToCache();
 }
