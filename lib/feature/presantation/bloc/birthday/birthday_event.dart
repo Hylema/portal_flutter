@@ -3,40 +3,25 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class BirthdayEvent {}
 
-class LoadMoreBirthdayWithConcreteDayEvent extends BirthdayEvent {
-  final int monthNumber;
-  final int dayNumber;
-  final int pageSize;
-  final int pageIndex;
-  final bool update;
+class LoadMoreBirthdayEvent extends BirthdayEvent {}
+class UpdateBirthdayEvent extends BirthdayEvent {}
 
-  LoadMoreBirthdayWithConcreteDayEvent({
-    @required this.monthNumber,
-    @required this.dayNumber,
-    @required this.pageSize,
-    @required this.pageIndex,
-    @required this.update,
-  });
-}
+class SetFilterBirthdayEvent extends BirthdayEvent {
+  final fio;
+  final startDayNumber;
+  final endDayNumber;
+  final startMonthNumber;
+  final endMonthNumber;
+  final titleDate;
 
-class LoadMoreBirthdayWithFilterEvent extends BirthdayEvent {
-  final String fio;
-  final int startDayNumber;
-  final int endDayNumber;
-  final int startMonthNumber;
-  final int endMonthNumber;
-  final int pageSize;
-  final int pageIndex;
-  final bool update;
-
-  LoadMoreBirthdayWithFilterEvent({
-    @required this.pageSize,
-    @required this.pageIndex,
-    @required this.update,
+  SetFilterBirthdayEvent({
     this.fio,
     this.startDayNumber,
     this.endDayNumber,
     this.startMonthNumber,
     this.endMonthNumber,
+    this.titleDate,
   });
 }
+
+class ResetFilterBirthdayEvent extends BirthdayEvent{}

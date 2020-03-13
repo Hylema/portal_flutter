@@ -19,13 +19,17 @@ class BirthdayPageShimmer extends StatelessWidget {
               Container(
                 color: Colors.grey[200],
                 child: Padding(
-                  padding: EdgeInsets.only(left: 15, top: 10, bottom: 10),
-                  child: Text(
-                    'Сегодня',
-                    style: TextStyle(
-                        color: Color.fromRGBO(119, 134, 147, 1)
+                  padding: EdgeInsets.only(left: 15, top: 10, bottom: 10, right: 15),
+                  child: Shimmer.fromColors(
+                    highlightColor: Colors.white,
+                    baseColor: Colors.grey[300],
+                    child: Container(
+                      height: 10,
+                      color: Colors.white,
+                      width: MediaQuery.of(context).size.width,
                     ),
-                  ),
+                    period: Duration(milliseconds: time),
+                  )
                 ),
               ),
             ]),
@@ -55,12 +59,14 @@ class ShimmerLayout extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.all(10),
+      width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           border: Border(bottom: BorderSide(
             color: Colors.grey[400],
           ))
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
             height: 65,
@@ -68,22 +74,24 @@ class ShimmerLayout extends StatelessWidget {
             padding: EdgeInsets.only(right: 15),
             child: CircleAvatar(),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: 250,
-                height: 20,
-                color: Colors.grey,
-              ),
-              SizedBox(height: 10,),
-              Container(
-                width: 150,
-                height: 15,
-                color: Colors.grey,
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: 20,
+                  color: Colors.grey,
+                ),
+                SizedBox(height: 10,),
+                Container(
+                  width: MediaQuery.of(context).size.width / 2,
+                  height: 15,
+                  color: Colors.grey,
+                ),
+              ],
+            ),
           )
         ],
       ),

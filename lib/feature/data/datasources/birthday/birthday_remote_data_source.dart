@@ -33,7 +33,24 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
 }) async {
     String uri = Uri.http('mi-portal-mobile.westeurope.cloudapp.azure.com:8080', '/api/birthdays', params).toString();
 
-    print('uri ========= $uri');
+    final response = await http.get(
+      uri,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${storage.secondToken}',
+      },
+    );
+
+    return responseHandler(response: response, model: BirthdayModel.fromJson);
+  }
+
+  @override
+  Future<BirthdayModel> getBirthdayWithFilter({
+    @required params,
+  }) async {
+    String uri = Uri.http('mi-portal-mobile.westeurope.cloudapp.azure.com:8080', '/api/birthdays/filter', params).toString();
+
+    print('uri ========================= $uri');
 
     final response = await http.get(
       uri,
@@ -43,25 +60,7 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
       },
     );
 
-    print('response ============= $response');
-
-    return responseHandler(response: response, model: BirthdayModel.fromJson);
-  }
-
-  @override
-  Future<BirthdayModel> getBirthdayWithFilter({
-    @required params,
-  }) async {
-//    Uri uri = Uri.https('www.myurl.com', '/api/v1/test/${widget.pk}', queryParameters);
-//    final url = '${Api.HOST_URL}:8080/api/birthdays?monthNumber=$monthNumber&dayNumber=$dayNumber&pageIndex=$pageIndex&pageSize=$pageSize';
-
-    final response = await http.get(
-      '',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer ${storage.secondToken}',
-      },
-    );
+    print('response ========================= ${response.body}');
 
     return responseHandler(response: response, model: BirthdayModel.fromJson);
   }

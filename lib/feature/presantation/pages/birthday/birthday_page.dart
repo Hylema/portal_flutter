@@ -36,13 +36,15 @@ class BirthdayPageState extends State<BirthdayPage> with Dispatch{
     return BlocConsumer<BirthdayBloc, BirthdayState>(
       builder: (context, state) {
         if (state is EmptyBirthdayState) {
-
-        }else if (state is LoadedBirthdayState) {
-          return BirthdayPageBody(data: state.model.birthdays);
+          return BirthdayPageShimmer();
+        } else if (state is LoadingBirthdayState) {
+          return BirthdayPageShimmer();
+        } else if (state is LoadedBirthdayState) {
+          return BirthdayPageBody(data: state.model.birthdays, titleData: state.titleDate);
         } else if (state is ErrorBirthdayState) {
           return BirthdayPageShimmer();
         }
-        return Container();
+        return BirthdayPageShimmer();
       },
       listener: (context, state) {},
     );
@@ -51,9 +53,11 @@ class BirthdayPageState extends State<BirthdayPage> with Dispatch{
 
 class BirthdayPageBody extends StatelessWidget with Dispatch {
   final List data;
+  final String titleData;
 
   BirthdayPageBody({
     this.data,
+    this.titleData,
   });
 
   @override
@@ -61,12 +65,8 @@ class BirthdayPageBody extends StatelessWidget with Dispatch {
     return SmartRefresherWidget(
         enableControlLoad: true,
         enableControlRefresh: true,
-        onRefresh: () {
-          //dispatchUpdateBirthdayFromNetwork();
-        },
-        onLoading: () {
-          //dispatchLoadMoreBirthdayFromNetwork();
-        },
+        onRefresh: () => dispatchUpdateBirthday(),
+        onLoading: () => dispatchLoadMoreBirthday(),
         child: CustomScrollView(
           slivers: <Widget>[
             SliverList(
@@ -76,7 +76,7 @@ class BirthdayPageBody extends StatelessWidget with Dispatch {
                   child: Padding(
                     padding: EdgeInsets.only(left: 15, top: 10, bottom: 10),
                     child: Text(
-                      'Сегодня',
+                      titleData,
                       style: TextStyle(
                           color: Color.fromRGBO(119, 134, 147, 1)
                       ),

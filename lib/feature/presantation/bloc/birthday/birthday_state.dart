@@ -18,7 +18,10 @@ class LoadingBirthdayState extends BirthdayState {}
 
 class LoadedBirthdayState extends BirthdayState {
   final BirthdayModel model;
-  LoadedBirthdayState({@required this.model});
+  final bool noData;
+  final String titleDate;
+
+  LoadedBirthdayState({@required this.model, this.noData = false, this.titleDate});
 
   static LoadedBirthdayState getInstance({@required BirthdayModel model}) =>
       LoadedBirthdayState(model: model);

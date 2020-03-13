@@ -82,7 +82,7 @@ class ParametersWidgetState extends State<ParametersWidget> {
 //                            _btnController.success();
 //                          });
 //                          await Future.delayed(Duration(milliseconds: 1000), () {});
-//                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
                         },
                         color: disable
                             ? Color.fromRGBO(238, 0, 38, 0.48)

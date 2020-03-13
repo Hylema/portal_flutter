@@ -40,6 +40,7 @@ import 'package:flutter_architecture_project/feature/domain/usecases/videoGaller
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/blocsResponses/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/fields/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/bloc.dart';
@@ -112,9 +113,11 @@ Future<void> init() async {
   /// selected index
   sl.registerFactory(() => SelectedIndexBloc());
 
+  /// response
   sl.registerFactory(() => ResponsesBloc());
 
-
+  /// fields
+  sl.registerFactory(() => FieldsBloc());
 
 
   ///! USE CASES

@@ -50,14 +50,14 @@ class BlocHelper<Type> {
     }
   }
 
-  Map<String, String> removeParamsWithNull({@required Map map}){
+  Map<String, String> createParams({@required Map map}){
     Map params = {};
 
     map.forEach((key, value) {
-      if (value != null) params[key] = '$value';
+      print('key ====================== $key');
+      print('value ====================== $value');
+      if (value != null && value != '') params[key] = '$value';
     });
-
-    print('params ============= $params');
 
     return Map<String, String>.from(params);
   }

@@ -7,6 +7,7 @@ import 'package:flutter_architecture_project/core/mixins/singleton.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/blocsResponses/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/fields/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
@@ -83,39 +84,32 @@ class Dispatch {
   }
 
   ///Дни рождения
-  void dispatchLoadMoreBirthdayWithFilter({
-    @required int pageIndex,
-    @required bool update,
-    String fio,
-    int startDayNumber,
-    int endDayNumber,
-    int startMonthNumber,
-    int endMonthNumber,
+  void dispatchUpdateBirthday(){
+    blocs.birthdayBloc.add(UpdateBirthdayEvent());
+  }
+  void dispatchLoadMoreBirthday(){
+    blocs.birthdayBloc.add(LoadMoreBirthdayEvent());
+  }
+  void dispatchSetFilterBirthday({
+    @required titleDate,
+    fio,
+    startDayNumber,
+    endDayNumber,
+    startMonthNumber,
+    endMonthNumber,
   }){
-    blocs.birthdayBloc.add(LoadMoreBirthdayWithFilterEvent(
-        fio: fio,
-        startDayNumber: startDayNumber,
-        endDayNumber: endDayNumber,
-        startMonthNumber: startMonthNumber,
-        endMonthNumber: endMonthNumber,
-        pageSize: BIRTHDAY_PAGE_SIZE,
-        pageIndex: pageIndex,
-        update: update
+    print('dispatchSetFilterBirthday=======================dispatchSetFilterBirthday');
+    blocs.birthdayBloc.add(SetFilterBirthdayEvent(
+      fio: fio,
+      startDayNumber: startDayNumber,
+      endDayNumber: endDayNumber,
+      startMonthNumber: startMonthNumber,
+      endMonthNumber: endMonthNumber,
+        titleDate: titleDate
     ));
   }
-  void dispatchLoadMoreBirthdayWithConcreteDay({
-    @required int monthNumber,
-    @required int dayNumber,
-    @required int pageIndex,
-    @required bool update,
-  }){
-    blocs.birthdayBloc.add(LoadMoreBirthdayWithConcreteDayEvent(
-      monthNumber: monthNumber,
-      dayNumber: dayNumber,
-      pageSize: BIRTHDAY_PAGE_SIZE,
-      pageIndex: pageIndex,
-      update: update
-    ));
+  void dispatchResetFilterBirthday(){
+    blocs.birthdayBloc.add(ResetFilterBirthdayEvent());
   }
 
   ///Responses

@@ -8,6 +8,18 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
+TextEditingController fio = TextEditingController();
+TextEditingController date = TextEditingController();
+TextEditingController periodFrom = TextEditingController();
+TextEditingController periodBy = TextEditingController();
+
+String _concreteDay;
+String _concreteMonth;
+String _startDayNumber;
+String _endDayNumber;
+String _startMonthNumber;
+String _endMonthNumber;
+
 class CustomPicker extends CommonPickerModel {
   String digits(int value, int length) {
     return '${value + 1}'.padLeft(length, "0");
@@ -104,10 +116,10 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
       onConfirm: (result) {
         print('Дата в итоге $result');
         String formatData = DateFormat('dd MM yyyy').format(result);
-        String monthNumber = formatData.substring(3, 5);
-        String monthDay = formatData.substring(0, 2);
-        String monthYear = formatData.substring(6, 10);
-        date.text = '$monthDay ${month[int.parse(monthNumber) - 1]} $monthYear';
+        _concreteMonth = formatData.substring(3, 5);
+        _concreteDay = formatData.substring(0, 2);
+        //String year = formatData.substring(6, 10);
+        date.text = '$_concreteDay ${month[int.parse(_concreteMonth) - 1]}';
         _check();
       },
 //      currentTime: DateTime.now(),
@@ -130,11 +142,6 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
   }
 
   bool disable = true;
-  TextEditingController fio = TextEditingController();
-  TextEditingController date = TextEditingController();
-  TextEditingController periodFrom = TextEditingController();
-  TextEditingController periodBy = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -205,13 +212,32 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
         textButton: 'Показать',
         fields: fields,
         show: () {
-          print('show trigger');
+          if(date.text.length > 0){
+            dispatchSetFilterBirthday(
+                fio: fio.text,
+                startDayNumber: _concreteDay,
+                endDayNumber: _concreteDay,
+                startMonthNumber: _concreteMonth,
+                endMonthNumber: _concreteMonth,
+                titleDate: 'Конкретная дата: ${date.text}'
+            );
+          } else {
+            dispatchSetFilterBirthday(
+              fio: fio.text,
+              startDayNumber: _startDayNumber,
+              endDayNumber: _endDayNumber,
+              startMonthNumber: _startMonthNumber,
+              endMonthNumber: _endMonthNumber,
+                titleDate: ''
+            );
+          }
         },
         throwData: () {
           fio.clear();
           date.clear();
           periodFrom.clear();
           periodBy.clear();
+          dispatchResetFilterBirthday();
         }
     );
   }

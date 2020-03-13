@@ -272,10 +272,16 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatc
           print('Главный стейт изменился  =========================== $_successState');
 
           if(_successState is LoadedBirthdayState){
-            if(_successState.model.noDataMore == true){
+            if(_successState.noData){
               _refreshController.loadNoData();
               setState(() {
-                loadMessage = 'Дней рождений сегодня больше нету';
+                loadMessage = 'Данных больше нету';
+              });
+            } else if(_successState.model.birthdays.length < BIRTHDAY_PAGE_SIZE) {
+              ///Должно, но не работает :(
+              _refreshController.loadNoData();
+              setState(() {
+                loadMessage = 'Данных больше нету';
               });
             } else _refreshController.resetNoData();
           }
@@ -306,8 +312,8 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatc
         ),
         controller: _refreshController,
         child: widget.child,
-        onRefresh: widget.onRefresh(),
-        onLoading: widget.onLoading(),
+        onRefresh: widget.onRefresh,
+        onLoading: widget.onLoading,
       )
     );
   }

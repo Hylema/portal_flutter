@@ -10,6 +10,13 @@ class FieldsBloc extends Bloc<FieldsEvent, FieldsState> {
   Stream<FieldsState> mapEventToState(
     FieldsEvent event,
   ) async* {
-    // TODO: Add Logic
+    if(event is BirthdayParametersFilter){
+      if(event.concreteDataMonth != null && event.concreteDataDay != null){
+        print('concreteData =============== ${event.concreteDataDay}');
+        yield ParametersWithConcreteDayState();
+      } else {
+        yield ParametersWithFilterState();
+      }
+    }
   }
 }

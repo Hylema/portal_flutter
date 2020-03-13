@@ -4,3 +4,5 @@ import 'package:meta/meta.dart';
 abstract class FieldsState {}
 
 class InitialFieldsState extends FieldsState {}
+class ParametersWithConcreteDayState extends FieldsState {}
+class ParametersWithFilterState extends FieldsState {}

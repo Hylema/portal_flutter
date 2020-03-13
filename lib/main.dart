@@ -6,6 +6,7 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_s
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/blocsResponses/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/fields/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/news_popularity_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
@@ -49,6 +50,9 @@ class App extends StatelessWidget {
           BlocProvider<SelectedIndexBloc>(
             create: (BuildContext context) => di.sl<SelectedIndexBloc>(),
           ),
+          BlocProvider<FieldsBloc>(
+            create: (BuildContext context) => di.sl<FieldsBloc>(),
+          ),
 
           ///Bloc для загрузки первичныз данных. Если все данные загрузятся успешно,
           ///то пустит на главную или отправит на авторизацию
@@ -76,13 +80,14 @@ class MakeBlocs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Singleton.blocsClass = new Blocs(
-        appBloc: context.bloc<AppBloc>(),
-        profileBloc: context.bloc<ProfileBloc>(),
-        newsBloc: context.bloc<NewsPortalBloc>(),
-        mainBloc: context.bloc<MainBloc>(),
-        videoGalleryBloc: context.bloc<VideoGalleryBloc>(),
-        birthdayBloc: context.bloc<BirthdayBloc>(),
-        responsesBloc: context.bloc<ResponsesBloc>()
+      appBloc: context.bloc<AppBloc>(),
+      profileBloc: context.bloc<ProfileBloc>(),
+      newsBloc: context.bloc<NewsPortalBloc>(),
+      mainBloc: context.bloc<MainBloc>(),
+      videoGalleryBloc: context.bloc<VideoGalleryBloc>(),
+      birthdayBloc: context.bloc<BirthdayBloc>(),
+      responsesBloc: context.bloc<ResponsesBloc>(),
+      fieldsBloc: context.bloc<FieldsBloc>(),
     );
 
     return MakeBlocsListener();
