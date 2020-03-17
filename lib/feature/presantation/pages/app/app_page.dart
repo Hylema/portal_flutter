@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/bottomMainBarWidgets/action_button_navigation_bar_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/bottomMainBarWidgets/main_floating_action_button_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/app/body_app_widget.dart';
@@ -19,24 +20,12 @@ class AppPage extends StatelessWidget {
   }
 }
 
-class Page extends StatefulWidget {
-
-  @override
-  State<StatefulWidget> createState() => PageState();
-}
-
-class PageState extends State<Page> {
-  @override
-  void initState(){
-    super.initState();
-  }
-
+class Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //TODO когда токен кончается, страница пропадает
-    return BlocBuilder<AppBloc, AppState>(
-      builder: (BuildContext context, AppState state) {
-        if(state is Finish) {
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (BuildContext context, AuthState state) {
+        if(state is AuthCompletedState) {
           return Scaffold(
             extendBody: true,
             appBar: HeaderAppWidget(),
@@ -45,8 +34,8 @@ class PageState extends State<Page> {
             floatingActionButton: MainFloatingActionButtonWidget(),
             bottomNavigationBar: ActionButtonNavigationBarWidget(),
           );
-        } else if(state is NeedAuth){
-          return Container(child: Center(child: Text('auth'),),);
+        } else if(state is NeedAuthState){
+          return AuthPage();
         } else {
           return Container(child: Center(child: Text('Что-то пошло не так'),),);
         }

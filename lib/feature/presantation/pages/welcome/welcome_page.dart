@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/animation/wave_animation.dart';
-import 'package:flutter_architecture_project/core/mixins/blocs_dispatches_events.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
@@ -54,7 +55,7 @@ class BuildBody extends StatefulWidget {
   State<StatefulWidget> createState() => BuildBodyState();
 }
 
-class BuildBodyState extends State with TickerProviderStateMixin, Dispatch{
+class BuildBodyState extends State with TickerProviderStateMixin{
   AnimationController _rippleController;
   AnimationController _scaleController;
 
@@ -75,7 +76,8 @@ class BuildBodyState extends State with TickerProviderStateMixin, Dispatch{
         duration: Duration(milliseconds: 500)
     )..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AppPage()));
+        Navigator.pushNamed(context, '/app');
+        //Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AppPage()));
       }
     });
     _scaleAnimation = Tween<double>(
@@ -134,10 +136,10 @@ class BuildBodyState extends State with TickerProviderStateMixin, Dispatch{
   Widget build(BuildContext context) {
     if(_moveNextPage) _scaleController.forward();
 
-    return BlocListener<AppBloc, AppState>(
-      listener: (BuildContext context, AppState state) async {
-        if(state is NeedAuth) await _auth(context: context);
-        else if (state is Finish) await _finish();
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (BuildContext context, AuthState state) async {
+        if(state is NeedAuthState) await _auth(context: context);
+        else if (state is AuthCompletedState) await _finish();
       },
       child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -168,14 +170,10 @@ class BuildBodyState extends State with TickerProviderStateMixin, Dispatch{
                             scale: _scaleAnimation.value,
                             child: _moveNextPage == false ? CustomRoundedLoadingButton(
                               child: Text('Начать', style: TextStyle(color: Colors.white)),
-                              controller: _btnController,
                               onPressed: () {
-                                dispatchGetProfileDataFromNetwork();
-                                dispatchGetNewsDataFromNetwork();
-                                dispatchGetMainParamsFromJson();
-                                dispatchGetVideosFromNetwork();
-                                dispatchResetFilterBirthday();
+                                BlocProvider.of<ProfileBloc>(context).add()
                               },
+                              controller: _btnController,
                               color: Color.fromRGBO(238, 0, 38, 1),
                             ) : Container(
                               width: 100,

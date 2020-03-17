@@ -1,7 +1,6 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/core/mixins/blocs_dispatches_events.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -172,7 +171,7 @@ class SmartRefresherWidget extends StatefulWidget {
 
 String loadMessage;
 
-class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatch{
+class SmartRefresherWidgetState extends State<SmartRefresherWidget> {
 
   RefreshController _refreshController;
 

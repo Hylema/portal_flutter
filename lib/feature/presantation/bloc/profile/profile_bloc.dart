@@ -31,6 +31,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with BlocHelper<Profi
       ProfileEvent event,
       ) async* {
     if (event is GetProfileFromNetworkBlocEvent) {
+      print('сработало');
       yield* _eitherLoadedOrErrorState(either: await _getProfileFromNetwork());
     } else if(event is GetProfileFromCacheBlocEvent){
       yield LoadingProfile();

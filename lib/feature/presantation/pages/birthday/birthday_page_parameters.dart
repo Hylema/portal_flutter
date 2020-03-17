@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/core/mixins/blocs_dispatches_events.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/parameters_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pickersModels/date_picker_birthday_model.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -27,7 +26,7 @@ class BirthdayPageParameters extends StatefulWidget {
   BirthdayPageParametersState createState() => BirthdayPageParametersState();
 }
 
-class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dispatch {
+class BirthdayPageParametersState extends State<BirthdayPageParameters> {
 
   List<Widget> fields;
 
@@ -139,23 +138,23 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
         fields: fields,
         show: () {
           if(date.text.length > 0){
-            dispatchSetFilterBirthday(
-                fio: null,
-                startDayNumber: _concreteDay,
-                endDayNumber: _concreteDay,
-                startMonthNumber: _concreteMonth,
-                endMonthNumber: _concreteMonth,
-                title: 'Конкретная дата: ${date.text}'
-            );
-          } else {
-            dispatchSetFilterBirthday(
-                fio: null,
-                startDayNumber: _startDayNumber,
-                endDayNumber: _endDayNumber,
-                startMonthNumber: _startMonthNumber,
-                endMonthNumber: _endMonthNumber,
-                title: ''
-            );
+//            dispatchSetFilterBirthday(
+//                fio: null,
+//                startDayNumber: _concreteDay,
+//                endDayNumber: _concreteDay,
+//                startMonthNumber: _concreteMonth,
+//                endMonthNumber: _concreteMonth,
+//                title: 'Конкретная дата: ${date.text}'
+//            );
+//          } else {
+//            dispatchSetFilterBirthday(
+//                fio: null,
+//                startDayNumber: _startDayNumber,
+//                endDayNumber: _endDayNumber,
+//                startMonthNumber: _startMonthNumber,
+//                endMonthNumber: _endMonthNumber,
+//                title: ''
+//            );
           }
         },
         throwData: () {
@@ -163,7 +162,7 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
           date.clear();
           periodFrom.clear();
           periodBy.clear();
-          dispatchResetFilterBirthday();
+//          dispatchResetFilterBirthday();
         }
     );
   }

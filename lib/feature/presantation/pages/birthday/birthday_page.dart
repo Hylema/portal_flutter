@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
-import 'package:flutter_architecture_project/core/mixins/blocs_dispatches_events.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
@@ -15,7 +14,7 @@ class BirthdayPage extends StatefulWidget {
   BirthdayPageState createState() => BirthdayPageState();
 }
 
-class BirthdayPageState extends State<BirthdayPage> with Dispatch{
+class BirthdayPageState extends State<BirthdayPage> {
 
   @override
   void initState() {
@@ -41,7 +40,7 @@ class BirthdayPageState extends State<BirthdayPage> with Dispatch{
   }
 }
 
-class BirthdayPageBody extends StatelessWidget with Dispatch {
+class BirthdayPageBody extends StatelessWidget {
   final List<BirthdayModel> listModel;
   final String title;
   final bool hasReachedMax;
@@ -57,8 +56,8 @@ class BirthdayPageBody extends StatelessWidget with Dispatch {
     return RefreshLoadedWidget.smartRefresh(
         enableControlLoad: true,
         enableControlRefresh: true,
-        onRefresh: () => dispatchUpdateBirthday(),
-        onLoading: () => dispatchLoadMoreBirthday(),
+//        onRefresh: () => dispatchUpdateBirthday(),
+//        onLoading: () => dispatchLoadMoreBirthday(),
         child: CustomScrollView(
           slivers: <Widget>[
             SliverList(
