@@ -23,7 +23,7 @@ class BirthdayLocalDataSource implements IBirthdayLocalDataSource {
   @override
   BirthdayModel getBirthdayFromCache() {
     final jsonString = sharedPreferences.getString(cachedName);
-    return BirthdayModel.fromJson(json: json.decode(jsonString));
+    return BirthdayModel.fromJson(json.decode(jsonString));
   }
 
   @override

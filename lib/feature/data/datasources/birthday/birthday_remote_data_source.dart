@@ -1,20 +1,18 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_architecture_project/core/api/api.dart';
-import 'package:flutter_architecture_project/feature/data/datasources/remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/response_handler.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
-import 'package:flutter_architecture_project/feature/data/models/model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:http/http.dart' as http;
 
 abstract class IBirthdayRemoteDataSource {
 
-  Future<BirthdayModel> getBirthdayWithConcreteDay({
-    @required Map params
+  Future<List<BirthdayModel>> getBirthdayWithConcreteDay({
+    @required BirthdayParams params
   });
 
-  Future<BirthdayModel> getBirthdayWithFilter({
-    @required Map params
+  Future<List<BirthdayModel>> getBirthdayWithFilter({
+    @required BirthdayParams birthdayParams
   });
 }
 
@@ -28,10 +26,10 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
   });
 
   @override
-  Future<BirthdayModel> getBirthdayWithConcreteDay({
-    @required Map params
+  Future<List<BirthdayModel>> getBirthdayWithConcreteDay({
+    @required BirthdayParams params
 }) async {
-    String uri = Uri.http('mi-portal-mobile.westeurope.cloudapp.azure.com:8080', '/api/birthdays', params).toString();
+    String uri = Uri.http('mi-portal-mobile.westeurope.cloudapp.azure.com:8080', '/api/birthdays', {}).toString();
 
     final response = await http.get(
       uri,
@@ -45,10 +43,19 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
   }
 
   @override
-  Future<BirthdayModel> getBirthdayWithFilter({
-    @required params,
+  Future<List<BirthdayModel>> getBirthdayWithFilter({
+    @required BirthdayParams birthdayParams,
   }) async {
-    String uri = Uri.http('mi-portal-mobile.westeurope.cloudapp.azure.com:8080', '/api/birthdays/filter', params).toString();
+    print('дошел = 2');
+    String uri = Uri.http('mi-portal-mobile.westeurope.cloudapp.azure.com:8080', '/api/birthdays/filter', createParams(map: {
+      'pageIndex': birthdayParams.pageIndex.toString(),
+      'pageSize': birthdayParams.pageSize.toString(),
+      'startDayNumber': birthdayParams.startDayNumber.toString(),
+      'endDayNumber': birthdayParams.endDayNumber.toString(),
+      'startMonthNumber': birthdayParams.startMonthNumber.toString(),
+      'endMonthNumber': birthdayParams.endMonthNumber.toString(),
+      'searchString': birthdayParams.searchString,
+    })).toString();
 
     print('uri ========================= $uri');
 
@@ -61,7 +68,10 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
     );
 
     print('response ========================= ${response.body}');
+    List<BirthdayModel> res = responseHandler(response: response, model: BirthdayModel.fromJson);
+    print('res ========================= ${res}');
+    print('res ========================= ${res.runtimeType}');
 
-    return responseHandler(response: response, model: BirthdayModel.fromJson);
+    return res;
   }
 }

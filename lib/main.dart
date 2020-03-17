@@ -5,8 +5,6 @@ import 'package:flutter_architecture_project/core/mixins/singleton.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/blocsResponses/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/fields/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/news_popularity_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
@@ -50,9 +48,6 @@ class App extends StatelessWidget {
           BlocProvider<SelectedIndexBloc>(
             create: (BuildContext context) => di.sl<SelectedIndexBloc>(),
           ),
-          BlocProvider<FieldsBloc>(
-            create: (BuildContext context) => di.sl<FieldsBloc>(),
-          ),
 
           ///Bloc для загрузки первичныз данных. Если все данные загрузятся успешно,
           ///то пустит на главную или отправит на авторизацию
@@ -60,9 +55,6 @@ class App extends StatelessWidget {
             create: (BuildContext context) => di.sl<AppBloc>(),
           ),
           ///Bloc для возврата ответа все остальных Blocs
-          BlocProvider<ResponsesBloc>(
-            create: (BuildContext context) => di.sl<ResponsesBloc>(),
-          ),
         ],
       child: WidgetsApp(
         color: Colors.red,
@@ -86,8 +78,6 @@ class MakeBlocs extends StatelessWidget {
       mainBloc: context.bloc<MainBloc>(),
       videoGalleryBloc: context.bloc<VideoGalleryBloc>(),
       birthdayBloc: context.bloc<BirthdayBloc>(),
-      responsesBloc: context.bloc<ResponsesBloc>(),
-      fieldsBloc: context.bloc<FieldsBloc>(),
     );
 
     return MakeBlocsListener();
@@ -130,11 +120,9 @@ class MakeBlocsListener extends StatelessWidget with Dispatch {
       listeners: [
         BlocListener<ProfileBloc, ProfileState>(
           listener: (BuildContext context, ProfileState state) {
-            if(state is LoadedProfile) dispatchResponseSuccessBloc(state: state);
-            else if(state is NeedAuthProfile) dispatchNeedAuth();
+            if(state is NeedAuthProfile) dispatchNeedAuth();
             else if (state is ErrorProfile) {
               _showSnackBar(context: context, message: state.message);
-              dispatchResponseErrorBloc(state: state);
               dispatchGetProfileDataFromCache();
             }
 
@@ -143,24 +131,18 @@ class MakeBlocsListener extends StatelessWidget with Dispatch {
         ),
         BlocListener<NewsPortalBloc, NewsPortalState>(
           listener: (BuildContext context, NewsPortalState state) {
-            if(state is LoadedNewsPortal) dispatchResponseSuccessBloc(state: state);
-            else if(state is NeedAuthNewsPortal) dispatchNeedAuth();
+            if(state is NeedAuthNewsPortal) dispatchNeedAuth();
             else if (state is ErrorNewsPortal) {
               _showSnackBar(context: context, message: state.message);
-              dispatchResponseErrorBloc(state: state);
               dispatchGetNewsDataFromCache();
             }
 
             _processIsOver(state: state.runtimeType);
           },
         ),
-//          BlocListener<NewsPopularityBloc, NewsPopularityState>(
-//            listener: (context, state) {},
-//          ),
         BlocListener<VideoGalleryBloc, VideoGalleryState>(
           listener: (BuildContext context, VideoGalleryState state) {
-            if(state is LoadedVideoGalleryState) dispatchResponseSuccessBloc(state: state);
-            else if(state is NeedAuthVideoGalleryState) dispatchNeedAuth();
+            if(state is NeedAuthVideoGalleryState) dispatchNeedAuth();
             else if (state is ErrorVideoGalleryState) _showSnackBar(context: context, message: state.message);
 
             _processIsOver(state: state.runtimeType);
@@ -168,8 +150,7 @@ class MakeBlocsListener extends StatelessWidget with Dispatch {
         ),
         BlocListener<BirthdayBloc, BirthdayState>(
           listener: (BuildContext context, BirthdayState state) {
-            if(state is LoadedBirthdayState) dispatchResponseSuccessBloc(state: state);
-            else if(state is NeedAuthBirthday) dispatchNeedAuth();
+            if(state is NeedAuthBirthday) dispatchNeedAuth();
             else if (state is ErrorBirthdayState) _showSnackBar(context: context, message: state.message);
 
             _processIsOver(state: state.runtimeType);
@@ -185,8 +166,7 @@ class MakeBlocsListener extends StatelessWidget with Dispatch {
         ),
         BlocListener<MainBloc, MainState>(
           listener: (BuildContext context, MainState state) {
-            if(state is LoadedMainParams) dispatchResponseSuccessBloc(state: state);
-            else if (state is ErrorMainParams) _showSnackBar(context: context, message: state.message);
+            if (state is ErrorMainParams) _showSnackBar(context: context, message: state.message);
           },
         ),
       ],

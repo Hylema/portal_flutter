@@ -6,6 +6,7 @@ import 'package:flutter_architecture_project/feature/data/datasources/birthday/b
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/error_catcher.dart';
 import 'package:flutter_architecture_project/feature/domain/repositories/birthday/birthday_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:meta/meta.dart';
 
 class BirthdayRepository implements IBirthdayRepository{
@@ -20,7 +21,7 @@ class BirthdayRepository implements IBirthdayRepository{
   });
 
   @override
-  Future<Either<Failure, BirthdayModel>> getBirthdayWithConcreteDay({
+  Future<Either<Failure, List<BirthdayModel>>> getBirthdayWithConcreteDay({
     @required params,
   }) async => await errorCatcher.getDataFromNetwork<BirthdayModel>(
       remoteMethod: () => remoteDataSource.getBirthdayWithConcreteDay(
@@ -28,11 +29,11 @@ class BirthdayRepository implements IBirthdayRepository{
       ));
 
   @override
-  Future<Either<Failure, BirthdayModel>> getBirthdayWithFilter({
-    @required params,
+  Future<Either<Failure, List<BirthdayModel>>> getBirthdayWithFilter({
+    @required BirthdayParams params,
   }) async => await errorCatcher.getDataFromNetwork<BirthdayModel>(
       remoteMethod: () => remoteDataSource.getBirthdayWithFilter(
-        params: params
+          birthdayParams: params
   ));
 
   @override

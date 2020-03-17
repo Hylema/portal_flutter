@@ -1,9 +1,10 @@
 import 'dart:async';
-
+import 'package:meta/meta.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/mixins/blocs_dispatches_events.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/parameters_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/pickersModels/date_picker_birthday_model.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -13,71 +14,12 @@ TextEditingController date = TextEditingController();
 TextEditingController periodFrom = TextEditingController();
 TextEditingController periodBy = TextEditingController();
 
-String _concreteDay;
-String _concreteMonth;
-String _startDayNumber;
-String _endDayNumber;
-String _startMonthNumber;
-String _endMonthNumber;
-
-class CustomPicker extends CommonPickerModel {
-  String digits(int value, int length) {
-    return '${value + 1}'.padLeft(length, "0");
-  }
-
-  CustomPicker({DateTime currentTime, LocaleType locale}) : super(locale: locale) {
-    this.currentTime = DateTime.now();
-    this.setLeftIndex(this.currentTime.year);
-    this.setMiddleIndex(this.currentTime.day);
-    this.setRightIndex(this.currentTime.month);
-  }
-
-  final month = [
-    'Января','Ферваля','Марта',
-    'Апреля','Мая','Июня',
-    'Июля','Августа','Сентября',
-    'Октября','Ноября','Декабря'
-  ];
-
-  @override
-  String middleStringAtIndex(int index) {
-    if (index >= 0 && index < 31) {
-      return this.digits(index, 2);
-    } else {
-      return null;
-    }
-  }
-
-  @override
-  String rightStringAtIndex(int index) {
-    if (index >= 0 && index < 12) {
-      if(index < 12){
-        return month[index];
-      }
-      return this.digits(index, 2);
-    } else {
-      return null;
-    }
-  }
-
-  @override
-  List<int> layoutProportions() {
-    return [0, 1, 3];
-  }
-
-  @override
-  DateTime finalTime() {
-    print('YEAR === ${currentTime.year}');
-    print('MONTH === ${currentTime.month}');
-    print('DAY === ${currentTime.day}');
-
-    return DateTime.utc(
-      currentTime.year,
-      1 + this.currentRightIndex(),
-      1 + this.currentMiddleIndex(),
-    );
-  }
-}
+int _concreteDay;
+int _concreteMonth;
+int _startDayNumber;
+int _endDayNumber;
+int _startMonthNumber;
+int _endMonthNumber;
 
 class BirthdayPageParameters extends StatefulWidget {
 
@@ -100,10 +42,10 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
   }
 
   final month = [
-    'Январь','Ферваль','Март',
-    'Апреля','Май','Июнь',
-    'Июль','Август','Сентябрь',
-    'Октябрь','Ноябрь','Декабрь'
+    'Января','Ферваля','Марта',
+    'Апреля','Мая','Июня',
+    'Июля','Августа','Сентября',
+    'Октября','Ноября','Декабря'
   ];
 
   _datePicker(context){
@@ -116,29 +58,15 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
       onConfirm: (result) {
         print('Дата в итоге $result');
         String formatData = DateFormat('dd MM yyyy').format(result);
-        _concreteMonth = formatData.substring(3, 5);
-        _concreteDay = formatData.substring(0, 2);
+        _concreteMonth = int.parse(formatData.substring(3, 5));
+        _concreteDay = int.parse(formatData.substring(0, 2));
         //String year = formatData.substring(6, 10);
-        date.text = '$_concreteDay ${month[int.parse(_concreteMonth) - 1]}';
-        _check();
+        date.text = '$_concreteDay ${month[_concreteMonth - 1]}';
       },
 //      currentTime: DateTime.now(),
       locale: LocaleType.ru,
-      pickerModel: CustomPicker(),
+      pickerModel: DatePickerBirthdayModel(),
     );
-  }
-
-  _check({bool throwData = false}){
-    setState(() {
-      if(throwData){
-        fio.clear();
-        date.clear();
-      }
-
-      if(fio.text != ''
-      || date.text != '') disable = false;
-      else disable = true;
-    });
   }
 
   bool disable = true;
@@ -175,7 +103,6 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
         controller: date,
         readOnly: true,
         onTap: () {
-          print('Дата пикер');
           _datePicker(context);
         },
         decoration: InputDecoration(
@@ -184,7 +111,6 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
                 ? IconButton(
               onPressed: () {
                 date.clear();
-                _check();
               },
               icon: Icon(
                 Icons.cancel,
@@ -214,21 +140,21 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> with Dis
         show: () {
           if(date.text.length > 0){
             dispatchSetFilterBirthday(
-                fio: fio.text,
+                fio: null,
                 startDayNumber: _concreteDay,
                 endDayNumber: _concreteDay,
                 startMonthNumber: _concreteMonth,
                 endMonthNumber: _concreteMonth,
-                titleDate: 'Конкретная дата: ${date.text}'
+                title: 'Конкретная дата: ${date.text}'
             );
           } else {
             dispatchSetFilterBirthday(
-              fio: fio.text,
-              startDayNumber: _startDayNumber,
-              endDayNumber: _endDayNumber,
-              startMonthNumber: _startMonthNumber,
-              endMonthNumber: _endMonthNumber,
-                titleDate: ''
+                fio: null,
+                startDayNumber: _startDayNumber,
+                endDayNumber: _endDayNumber,
+                startMonthNumber: _startMonthNumber,
+                endMonthNumber: _endMonthNumber,
+                title: ''
             );
           }
         },

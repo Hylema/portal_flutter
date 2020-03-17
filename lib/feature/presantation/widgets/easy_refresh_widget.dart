@@ -1,14 +1,7 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/mixins/blocs_dispatches_events.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/blocsResponses/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -156,9 +149,6 @@ class EasyRefreshLineWidgetState extends State<EasyRefreshLineWidget> {
 }
 
 
-
-
-
 class SmartRefresherWidget extends StatefulWidget {
   final Widget child;
   final bool enableControlRefresh;
@@ -216,105 +206,32 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> with Dispatc
     _refreshController.dispose();
   }
 
-//  _refreshDispatches(){
-//    Map _refreshDispatches = {
-//      ///Main Page
-//      MAIN_PAGE: dispatchGetMainParamsFromJson,
-//
-//      ///News Page
-//      NEWS_PAGE: dispatchGetNewsDataFromNetwork,
-//      NEWS_PAGE_SHIMMER: dispatchGetNewsDataFromNetwork,
-//
-//      ///Profile Page
-//      PROFILE_PAGE: dispatchGetProfileDataFromNetwork,
-//      PROFILE_PAGE_SHIMMER: dispatchGetProfileDataFromNetwork,
-//
-//      ///Birthday Page
-//      BIRTHDAY_PAGE: dispatchUpdateBirthdayFromNetwork,
-//      BIRTHDAY_PAGE_SHIMMER: dispatchUpdateBirthdayFromNetwork,
-//
-//      ///Polls Page
-//      POLLS_PAGE: dispatchGetMainParamsFromJson,
-//
-//      ///Video Page
-//      VIDEO_PAGE: dispatchGetVideosFromNetwork,
-//    };
-//
-//    return _refreshDispatches[widget.pageKey]();
-//  }
-//
-//  _loadDispatches(){
-//    Map _refreshDispatches = {
-//      ///News Page
-//      NEWS_PAGE: dispatchLoadMoreNewsDataFromNetwork,
-//
-//      ///Video Page
-//      VIDEO_PAGE: dispatchLoadMoreVideosFromNetwork,
-//
-//      ///Birthday Page
-//      BIRTHDAY_PAGE: dispatchLoadMoreBirthdayFromNetwork,
-//    };
-//
-//    return _refreshDispatches[widget.pageKey]();
-//  }
-
   @override
   Widget build(BuildContext context) {
 
-    return BlocListener<ResponsesBloc, ResponsesState>(
-      listener: (context, ResponsesState state) {
-        if(state is ResponseSuccessState) {
-          _refreshController.refreshCompleted();
-          _refreshController.loadComplete();
-
-          var _successState = state.state;
-
-          print('Главный стейт изменился  =========================== $_successState');
-
-          if(_successState is LoadedBirthdayState){
-            if(_successState.noData){
-              _refreshController.loadNoData();
-              setState(() {
-                loadMessage = 'Данных больше нету';
-              });
-            } else if(_successState.model.birthdays.length < BIRTHDAY_PAGE_SIZE) {
-              ///Должно, но не работает :(
-              _refreshController.loadNoData();
-              setState(() {
-                loadMessage = 'Данных больше нету';
-              });
-            } else _refreshController.resetNoData();
-          }
-        }
-        if(state is ResponseErrorState) {
-          _refreshController.refreshFailed();
-          _refreshController.loadFailed();
-        }
-      },
-      child: SmartRefresher(
-        enablePullUp: widget.enableControlLoad,
-        enablePullDown: widget.enableControlRefresh,
-        header: WaterDropMaterialHeader(
-          backgroundColor: Color.fromRGBO(238, 0, 38, 1),
-          color: Colors.white,
-          distance: 30,
-        ),
-        footer: ClassicFooter(
-          loadingText: 'Загрузка...',
-          canLoadingText: 'Загрузить ещё',
-          noDataText: loadMessage,
-          loadingIcon: CircularProgressIndicator(
-            strokeWidth: 2.0,
-            valueColor: AlwaysStoppedAnimation(
-              Color.fromRGBO(238, 0, 38, 1),
-            ),
+    return SmartRefresher(
+      enablePullUp: widget.enableControlLoad,
+      enablePullDown: widget.enableControlRefresh,
+      header: WaterDropMaterialHeader(
+        backgroundColor: Color.fromRGBO(238, 0, 38, 1),
+        color: Colors.white,
+        distance: 30,
+      ),
+      footer: ClassicFooter(
+        loadingText: 'Загрузка...',
+        canLoadingText: 'Загрузить ещё',
+        noDataText: loadMessage,
+        loadingIcon: CircularProgressIndicator(
+          strokeWidth: 2.0,
+          valueColor: AlwaysStoppedAnimation(
+            Color.fromRGBO(238, 0, 38, 1),
           ),
         ),
-        controller: _refreshController,
-        child: widget.child,
-        onRefresh: widget.onRefresh,
-        onLoading: widget.onLoading,
-      )
+      ),
+      controller: _refreshController,
+      child: widget.child,
+      onRefresh: widget.onRefresh,
+      onLoading: widget.onLoading,
     );
   }
 }

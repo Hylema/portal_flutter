@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,7 @@ class BirthdayMainPageSwipeWidgetState extends State {
       listener: (context, state) {},
       builder: (context, state) {
         if(state is LoadedBirthdayState){
-          return BirthdayMainPageSwipeWidgetStateBuild(birthdays: state.model.birthdays,);
+          return BirthdayMainPageSwipeWidgetStateBuild(listModel: state.birthdays,);
         } else {
           return Container();
         }
@@ -34,12 +35,10 @@ class BirthdayMainPageSwipeWidgetState extends State {
 
 class BirthdayMainPageSwipeWidgetStateBuild extends StatelessWidget {
 
-  final List birthdays;
+  final List<BirthdayModel> listModel;
   BirthdayMainPageSwipeWidgetStateBuild({
-    @required this.birthdays
-  }) {
-    assert(birthdays != null);
-  }
+    @required this.listModel
+  }) : assert(listModel != null);
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +48,51 @@ class BirthdayMainPageSwipeWidgetStateBuild extends StatelessWidget {
           autoplay: true,
           autoplayDelay: 4000,
           itemBuilder: (BuildContext context, int index) {
+            return BirthdayMainPageSwipeListWidget(birthdayModel: listModel[index]);
+          },
+          itemCount: listModel.length,
+          viewportFraction: 0.5
+      ),
+      height: 300,
+    );
+  }
+}
 
-            Map data = birthdays[index];
+class BirthdayMainPageSwipeListWidget extends StatelessWidget{
 
-            return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
+  final BirthdayModel birthdayModel;
+  BirthdayMainPageSwipeListWidget({@required this.birthdayModel});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10.0,
+              spreadRadius: 0.5,
+              offset: Offset(
+                5.0, // horizontal, move right 10
+                5.0, // vertical, move down 10
+              ),
+            )
+          ],
+        ),
+        margin: EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Container(
+              constraints: BoxConstraints(maxWidth: 130, maxHeight: 130),
+              child: Center(
+                child: Image.asset('assets/images/noPhoto.png', width: 70,),
+              ),
+              decoration: BoxDecoration(
                   color: Colors.white,
+                  shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black12,
@@ -67,61 +104,31 @@ class BirthdayMainPageSwipeWidgetStateBuild extends StatelessWidget {
                       ),
                     )
                   ],
-                ),
-                margin: EdgeInsets.all(10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Container(
-                      constraints: BoxConstraints(maxWidth: 130, maxHeight: 130),
-                      child: Center(
-                        child: Image.asset('assets/images/noPhoto.png', width: 70,),
-                      ),
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 10.0,
-                              spreadRadius: 0.5,
-                              offset: Offset(
-                                5.0, // horizontal, move right 10
-                                5.0, // vertical, move down 10
-                              ),
-                            )
-                          ],
-                          border: Border.all(
-                              color: Colors.white,
-                              width: 6.0
-                          )
-                      ),
-                    ),
-                    Text(
-                      '${data['lastName']} ${data['firstName']} ${data['fatherName']}',
-                      overflow: TextOverflow.fade,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                    ),
-                    Text(
-                      'Сегодня',
-                      style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 11
-                      ),
-                    ),
-                  ],
-                )
-            );
-          },
-          itemCount: birthdays.length,
-          viewportFraction: 0.5
-      ),
-      height: 300,
+                  border: Border.all(
+                      color: Colors.white,
+                      width: 6.0
+                  )
+              ),
+            ),
+            Text(
+              '${birthdayModel.lastName} ${birthdayModel.firstName} ${birthdayModel.fatherName}',
+              overflow: TextOverflow.fade,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+              ),
+            ),
+            Text(
+              'Сегодня',
+              style: TextStyle(
+                  color: Colors.grey[700],
+                  fontSize: 11
+              ),
+            ),
+          ],
+        )
     );
   }
 }

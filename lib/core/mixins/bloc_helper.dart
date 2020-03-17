@@ -54,8 +54,6 @@ class BlocHelper<Type> {
     Map params = {};
 
     map.forEach((key, value) {
-      print('key ====================== $key');
-      print('value ====================== $value');
       if (value != null && value != '') params[key] = '$value';
     });
 

@@ -8,11 +8,12 @@ class ErrorCatcher {
   final NetworkInfo networkInfo;
   ErrorCatcher({@required this.networkInfo});
 
-  Future<Either<Failure, Type>> getDataFromNetwork<Type>({@required remoteMethod}) async {
+  Future<Either<Failure, List<Type>>> getDataFromNetwork<Type>({@required remoteMethod}) async {
     if(await networkInfo.isConnected){
       try {
-        final Type remoteData = await remoteMethod();
-
+        final List remoteData = await remoteMethod();
+        print('remoteData ======== $remoteData');
+        print('remoteData ======== ${remoteData.runtimeType}');
         return Right(remoteData);
 
       } on AuthException {

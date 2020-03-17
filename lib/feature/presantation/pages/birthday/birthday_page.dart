@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/mixins/blocs_dispatches_events.dart';
+import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BirthdayPage extends StatefulWidget {
@@ -21,18 +23,6 @@ class BirthdayPageState extends State<BirthdayPage> with Dispatch{
   }
 
   Widget build(BuildContext context) {
-
-//    return BlocListener<BirthdayBloc, BirthdayState>(
-//        listener: (context, state) {
-//          if(state is LoadedBirthdayState) {
-//            print('ДОБАВЛЯЮ ================ ${state.model.birthdays}');
-//            setState(() {
-//              data.add(state.model.birthdays);
-//            });
-//          }
-//        },
-//      child: BirthdayPageBody(data: data),
-//    );
     return BlocConsumer<BirthdayBloc, BirthdayState>(
       builder: (context, state) {
         if (state is EmptyBirthdayState) {
@@ -40,7 +30,7 @@ class BirthdayPageState extends State<BirthdayPage> with Dispatch{
         } else if (state is LoadingBirthdayState) {
           return BirthdayPageShimmer();
         } else if (state is LoadedBirthdayState) {
-          return BirthdayPageBody(data: state.model.birthdays, titleData: state.titleDate);
+          return BirthdayPageBody(listModel: state.birthdays, title: state.title, hasReachedMax: state.hasReachedMax);
         } else if (state is ErrorBirthdayState) {
           return BirthdayPageShimmer();
         }
@@ -52,17 +42,19 @@ class BirthdayPageState extends State<BirthdayPage> with Dispatch{
 }
 
 class BirthdayPageBody extends StatelessWidget with Dispatch {
-  final List data;
-  final String titleData;
+  final List<BirthdayModel> listModel;
+  final String title;
+  final bool hasReachedMax;
 
   BirthdayPageBody({
-    this.data,
-    this.titleData,
+    this.listModel,
+    this.title,
+    this.hasReachedMax,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SmartRefresherWidget(
+    return RefreshLoadedWidget.smartRefresh(
         enableControlLoad: true,
         enableControlRefresh: true,
         onRefresh: () => dispatchUpdateBirthday(),
@@ -76,7 +68,7 @@ class BirthdayPageBody extends StatelessWidget with Dispatch {
                   child: Padding(
                     padding: EdgeInsets.only(left: 15, top: 10, bottom: 10),
                     child: Text(
-                      titleData,
+                      title,
                       style: TextStyle(
                           color: Color.fromRGBO(119, 134, 147, 1)
                       ),
@@ -87,11 +79,11 @@ class BirthdayPageBody extends StatelessWidget with Dispatch {
             ),
             SliverList(
               delegate: SliverChildBuilderDelegate((BuildContext context, int index){
-                return BuildBirthdayPageBody(
-                    data: data[index]
+                return BirthdayListWidget(
+                    birthdayModel: listModel[index]
                 );
               },
-                  childCount: data.length
+                  childCount: listModel.length
               ),
             ),
           ],
@@ -100,13 +92,12 @@ class BirthdayPageBody extends StatelessWidget with Dispatch {
   }
 }
 
-class BuildBirthdayPageBody extends StatelessWidget {
-  final Map data;
-  BuildBirthdayPageBody({
-    @required this.data
-  }) {
-    assert(data != null);
-  }
+class BirthdayListWidget extends StatelessWidget {
+  final BirthdayModel birthdayModel;
+
+  BirthdayListWidget({
+    @required this.birthdayModel
+  }) : assert(birthdayModel != null);
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +107,7 @@ class BuildBirthdayPageBody extends StatelessWidget {
           child: ListTile(
             dense: true,
             title: Text(
-                '${data['lastName']} ${data['firstName']} ${data['fatherName']}',
+                '${birthdayModel.lastName} ${birthdayModel.firstName} ${birthdayModel.fatherName}',
                 overflow: TextOverflow.fade,
                 maxLines: 1,
                 softWrap: false,
@@ -127,7 +118,7 @@ class BuildBirthdayPageBody extends StatelessWidget {
                 )
             ),
             subtitle: Text(
-                data['positionName'],
+                birthdayModel.positionName,
                 overflow: TextOverflow.fade,
                 maxLines: 1,
                 softWrap: false,

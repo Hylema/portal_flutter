@@ -6,8 +6,6 @@ import 'package:flutter_architecture_project/core/mixins/blocs.dart';
 import 'package:flutter_architecture_project/core/mixins/singleton.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/blocsResponses/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/fields/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
@@ -88,35 +86,26 @@ class Dispatch {
     blocs.birthdayBloc.add(UpdateBirthdayEvent());
   }
   void dispatchLoadMoreBirthday(){
-    blocs.birthdayBloc.add(LoadMoreBirthdayEvent());
+    blocs.birthdayBloc.add(FetchBirthdayEvent());
   }
   void dispatchSetFilterBirthday({
-    @required titleDate,
+    @required title,
     fio,
     startDayNumber,
     endDayNumber,
     startMonthNumber,
     endMonthNumber,
   }){
-    print('dispatchSetFilterBirthday=======================dispatchSetFilterBirthday');
     blocs.birthdayBloc.add(SetFilterBirthdayEvent(
       fio: fio,
       startDayNumber: startDayNumber,
       endDayNumber: endDayNumber,
       startMonthNumber: startMonthNumber,
       endMonthNumber: endMonthNumber,
-        titleDate: titleDate
+        title: title
     ));
   }
   void dispatchResetFilterBirthday(){
     blocs.birthdayBloc.add(ResetFilterBirthdayEvent());
-  }
-
-  ///Responses
-  void dispatchResponseSuccessBloc({@required state}){
-    blocs.responsesBloc.add(ResponseSuccessEvent(state: state));
-  }
-  void dispatchResponseErrorBloc({@required state}){
-    blocs.responsesBloc.add(ResponseErrorEvent(state: state));
   }
 }

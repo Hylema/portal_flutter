@@ -1,18 +1,22 @@
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class BirthdayEvent {}
+abstract class BirthdayEvent extends Equatable{
+  @override
+  List<Object> get props => [];
+}
 
-class LoadMoreBirthdayEvent extends BirthdayEvent {}
+class FetchBirthdayEvent extends BirthdayEvent {}
 class UpdateBirthdayEvent extends BirthdayEvent {}
 
 class SetFilterBirthdayEvent extends BirthdayEvent {
-  final fio;
-  final startDayNumber;
-  final endDayNumber;
-  final startMonthNumber;
-  final endMonthNumber;
-  final titleDate;
+  final String fio;
+  final int startDayNumber;
+  final int endDayNumber;
+  final int startMonthNumber;
+  final int endMonthNumber;
+  final String title;
 
   SetFilterBirthdayEvent({
     this.fio,
@@ -20,7 +24,7 @@ class SetFilterBirthdayEvent extends BirthdayEvent {
     this.endDayNumber,
     this.startMonthNumber,
     this.endMonthNumber,
-    this.titleDate,
+    this.title,
   });
 }
 
