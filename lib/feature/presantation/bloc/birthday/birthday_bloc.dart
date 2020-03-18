@@ -1,15 +1,12 @@
+import 'package:flutter_architecture_project/feature/domain/params/birthday_params.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
-import 'package:flutter_architecture_project/core/error/failure.dart';
-import 'package:flutter_architecture_project/core/error/messages.dart';
 import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/birthday/birthday_repository_interface.dart';
-import 'package:flutter_architecture_project/feature/domain/usecases/birthday/get_birthday_from_network.dart';
 import './bloc.dart';
 
 class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper<BirthdayState> {
@@ -20,18 +17,35 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper<Bi
   @override
   Stream<BirthdayState> transformEvents(
       Stream<BirthdayEvent> events,
-      Stream<BirthdayState> Function(BirthdayEvent event) next,
-      ) {
-    return super.transformEvents(
-      events.debounceTime(
-        Duration(milliseconds: 500),
-      ),
-      next,
-    );
-  }
+      Stream<BirthdayState> Function(BirthdayEvent event) next) =>
+      super.transformEvents(
+        events.debounceTime(
+          Duration(milliseconds: 500),
+        ),
+        next,
+      );
 
   @override
   BirthdayState get initialState => EmptyBirthdayState();
+
+  @override
+  Stream<BirthdayState> mapEventToState(
+      BirthdayEvent event,
+  ) async* {
+    final currentState = state;
+
+    if(event is SetFilterBirthdayEvent)
+      yield* _setParamsFetchBirthday(event: event);
+
+    if(event is UpdateBirthdayEvent)
+      yield* _updateParamsFetchBirthday(event: event);
+
+    if(event is ResetFilterBirthdayEvent)
+      yield* _resetParamsFetchBirthday(event: event);
+
+    if(event is FetchBirthdayEvent && !_hasReachedMax(currentState))
+      yield* _fetchBirthdayWithParams(event: event);
+  }
 
   BirthdayParams _params = BirthdayParams(
       pageIndex: 1,
@@ -45,78 +59,57 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper<Bi
 
   String _title = 'Сегодня';
 
-  bool _showBirthdayDay = false;
+  Stream<BirthdayState> _setParamsFetchBirthday({@required SetFilterBirthdayEvent event}) async* {
+    yield LoadingBirthdayState();
 
-  @override
-  Stream<BirthdayState> mapEventToState(
-      BirthdayEvent event,
-  ) async* {
-    final currentState = state;
+    _params = BirthdayParams(
+        pageIndex: 1,
+        pageSize: BIRTHDAY_PAGE_SIZE,
+        startDayNumber: event.startDayNumber,
+        endDayNumber: event.endDayNumber,
+        startMonthNumber: event.startMonthNumber,
+        endMonthNumber: event.endMonthNumber,
+        searchString: event.fio
+    );
 
-    if(event is SetFilterBirthdayEvent){
-      yield LoadingBirthdayState();
+    _title = event.title;
 
-      _params = BirthdayParams(
-          pageIndex: 1,
-          pageSize: BIRTHDAY_PAGE_SIZE,
-          startDayNumber: event.startDayNumber,
-          endDayNumber: event.endDayNumber,
-          startMonthNumber: event.startMonthNumber,
-          endMonthNumber: event.endMonthNumber,
-          searchString: event.fio
-      );
+    yield* _fetchFirstBirthday(params: _params);
+  }
 
+  Stream<BirthdayState> _updateParamsFetchBirthday({@required UpdateBirthdayEvent event}) async* {
+    _params.pageIndex = 1;
+    yield* _fetchFirstBirthday(params: _params);
+  }
 
-      _showBirthdayDay = true;
-      _title = event.title;
+  Stream<BirthdayState> _resetParamsFetchBirthday({@required ResetFilterBirthdayEvent event}) async* {
+    yield LoadingBirthdayState();
 
-      yield* _fetchFirstBirthday(params: _params);
-    }
+    _params = BirthdayParams(
+        pageIndex: 1,
+        pageSize: BIRTHDAY_PAGE_SIZE,
+        startDayNumber: DateTime.now().day,
+        endDayNumber: DateTime.now().day,
+        startMonthNumber: DateTime.now().month,
+        endMonthNumber: DateTime.now().month,
+        searchString: null
+    );
 
-    if(event is UpdateBirthdayEvent){
-      _params.pageIndex = 1;
-      yield* _fetchFirstBirthday(params: _params);
-    }
+    _title = 'Сегодня';
 
-    if(event is ResetFilterBirthdayEvent){
-      yield LoadingBirthdayState();
+    yield* _fetchFirstBirthday(params: _params);
+  }
 
-      _params = BirthdayParams(
-          pageIndex: 1,
-          pageSize: BIRTHDAY_PAGE_SIZE,
-          startDayNumber: DateTime.now().day,
-          endDayNumber: DateTime.now().day,
-          startMonthNumber: DateTime.now().month,
-          endMonthNumber: DateTime.now().month,
-          searchString: null
-      );
-
-      _title = 'Сегодня';
-
-      yield* _fetchFirstBirthday(params: _params);
-    }
-
-    if(event is FetchBirthdayEvent && !_hasReachedMax(currentState)){
-      _params.pageIndex++;
-      yield* _fetchBirthday(params: _params);
-    }
+  Stream<BirthdayState> _fetchBirthdayWithParams({@required FetchBirthdayEvent event}) async* {
+    _params.pageIndex++;
+    yield* _fetchBirthday(params: _params);
   }
 
   Stream<BirthdayState> _fetchFirstBirthday({@required BirthdayParams params}) async* {
-    Either<Failure, List<BirthdayModel>> repositoryResult =
+    List<BirthdayModel> repositoryResult =
     await repository.getBirthdayWithFilter(params: params);
 
-    yield await repositoryResult.fold(
-          (failure){
-        if(failure is AuthFailure){
-          return NeedAuthBirthday();
-        }
-        return ErrorBirthdayState(message: mapFailureToMessage(failure));
-      },
-          (listModel){
-        return LoadedBirthdayState(birthdays: listModel, hasReachedMax: false, title: _title);
-      },
-    );
+    yield LoadedBirthdayState(birthdays: repositoryResult, hasReachedMax: false, title: _title);
   }
 
   Stream<BirthdayState> _fetchBirthday({@required BirthdayParams params}) async* {
@@ -127,25 +120,15 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper<Bi
     }
 
     if(currentState is LoadedBirthdayState){
-      Either<Failure, List<BirthdayModel>> repositoryResult =
+      List<BirthdayModel> repositoryResult =
       await repository.getBirthdayWithFilter(params: params);
 
-      yield await repositoryResult.fold(
-            (failure){
-          if(failure is AuthFailure){
-            return NeedAuthBirthday();
-          }
-          return ErrorBirthdayState(message: mapFailureToMessage(failure));
-        },
-            (listModel){
-          return listModel.isEmpty
-              ? currentState.copyWith(hasReachedMax: true)
-              : LoadedBirthdayState(
-            birthdays: currentState.birthdays + listModel,
-            hasReachedMax: false,
-            title: _title
-          );
-        },
+      yield repositoryResult.isEmpty
+          ? currentState.copyWith(hasReachedMax: true)
+          : LoadedBirthdayState(
+          birthdays: currentState.birthdays + repositoryResult,
+          hasReachedMax: false,
+          title: _title
       );
     }
   }
@@ -154,49 +137,3 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper<Bi
       state is LoadedBirthdayState && state.hasReachedMax;
 }
 
-class BirthdayParams {
-  int pageIndex;
-  int pageSize;
-  int startDayNumber;
-  int endDayNumber;
-  int startMonthNumber;
-  int endMonthNumber;
-  String searchString;
-
-  BirthdayParams({
-    @required this.pageIndex,
-    @required this.pageSize,
-    @required this.startDayNumber,
-    @required this.endDayNumber,
-    @required this.startMonthNumber,
-    @required this.endMonthNumber,
-    @required this.searchString,
-  });
-}
-
-
-//Map _params = createParams(map: {
-//  'pageIndex': 0,
-//  'pageSize': BIRTHDAY_PAGE_SIZE,
-//  'startDayNumber': DateTime.now().day,
-//  'endDayNumber': DateTime.now().day,
-//  'startMonthNumber': DateTime.now().month,
-//  'endMonthNumber': DateTime.now().month,
-//});
-//
-//if(event is SetFilterBirthdayEvent){
-//yield LoadingBirthdayState();
-//
-//print('search params ================= search params');
-//
-//_titleDate = event.titleDate;
-//
-//_params = createParams(map: {
-//'pageIndex': _pageIndex,
-//'pageSize': BIRTHDAY_PAGE_SIZE,
-//'startDayNumber': event.startDayNumber,
-//'endDayNumber': event.endDayNumber,
-//'startMonthNumber': event.startMonthNumber,
-//'endMonthNumber': event.endMonthNumber,
-//'searchString': event.fio,
-//});

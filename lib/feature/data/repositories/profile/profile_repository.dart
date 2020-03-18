@@ -4,8 +4,8 @@ import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/profile/profile_repository_interface.dart';
-import 'package:flutter_architecture_project/feature/domain/entities/profile/profile.dart';
+import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/profile/profile_repository_interface.dart';
 import 'package:meta/meta.dart';
 
 class ProfileRepository implements IProfileRepository {
@@ -20,7 +20,7 @@ class ProfileRepository implements IProfileRepository {
   });
 
   @override
-  Future<Either<Failure, Profile>> getProfileFromNetwork() async {
+  Future<Either<Failure, ProfileModel>> getProfileFromNetwork() async {
     if (await networkInfo.isConnected) {
       try {
         final remoteNewsPortal = await remoteDataSource.getProfile();
@@ -37,7 +37,7 @@ class ProfileRepository implements IProfileRepository {
   }
 
   @override
-  Future<Either<Failure, Profile>> getProfileFromCache() async {
+  Future<Either<Failure, ProfileModel>> getProfileFromCache() async {
     try {
       final localNewsPortal = await localDataSource.getDataFromCache();
       return Right(localNewsPortal);

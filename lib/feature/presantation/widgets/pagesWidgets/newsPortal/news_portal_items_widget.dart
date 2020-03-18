@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/core/animation/fade_animation.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/newsPortalCardInformation/news_portal_card_information_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/date_time_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_image_network_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_likes_seen_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/title_widget.dart';
-import 'package:flutter_architecture_project/injection_container.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 
 class NewsPortalItems extends StatefulWidget {

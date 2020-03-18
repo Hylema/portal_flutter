@@ -1,12 +1,11 @@
-import 'package:flutter_architecture_project/feature/domain/entities/news/news_portal.dart';
 import 'package:meta/meta.dart';
 
-class NewsPortalModel extends NewsPortal {
+class NewsPortalModel {
+  final news;
+
   NewsPortalModel({
-    @required news,
-  }) : super(
-    news: news,
-  );
+    @required this.news,
+  });
 
   factory NewsPortalModel.fromJson(json) {
     return NewsPortalModel(

@@ -1,12 +1,11 @@
-import 'package:flutter_architecture_project/feature/domain/entities/main/main_params.dart';
 import 'package:meta/meta.dart';
 
-class MainParamsModel extends MainParams {
+class MainParamsModel {
+  final params;
+
   MainParamsModel({
-    @required params,
-  }) : super(
-    params: params,
-  );
+    @required this.params,
+  });
 
   factory MainParamsModel.fromJson(json) {
     return MainParamsModel(

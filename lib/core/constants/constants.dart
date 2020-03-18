@@ -6,12 +6,12 @@ const String JWT_DECODE = 'jwt_token_decode';
 const String JWT_TOKEN_SECOND = 'jwt_token_second';
 
 ///Pages
-const int MAIN_PAGE_NUMBER = 0;
-const int NEWS_PAGE_NUMBER = 1;
-const int PROFILE_PAGE_NUMBER = 2;
-const int BIRTHDAY_PAGE_NUMBER = 3;
-const int POLLS_PAGE_NUMBER = 4;
-const int VIDEO_PAGE_NUMBER = 5;
+const int MAIN_PAGE_INDEX_NUMBER = 3; //0
+const int NEWS_PAGE_INDEX_NUMBER = 1;
+const int PROFILE_PAGE_INDEX_NUMBER = 2;
+const int BIRTHDAY_PAGE_INDEX_NUMBER = 1; //3
+const int POLLS_PAGE_INDEX_NUMBER = 4;
+const int VIDEO_PAGE_INDEX_NUMBER = 5;
 
 const String MAIN_PAGE = 'main_page';
 const String NEWS_PAGE = 'news_page';
@@ -27,7 +27,7 @@ const String VIDEO_PAGE = 'video_page';
 const String UPDATE_FOOTER = 'footer';
 const String UPDATE_HEADER = 'header';
 
-const String CURRENT_PAGE = 'current_page';
+const String PAGE = 'page';
 
 const double BOTTOM_NAVIGATION_BAR_HEIGHT = 50.0;
 
@@ -36,6 +36,7 @@ const String CACHE_BIRTHDAY = 'cache_birthday';
 
 
 const int BIRTHDAY_PAGE_SIZE = 15;
+const int NEWS_PAGE_SIZE = 15;
 
 ///Errors
 const String CACHE_FAILURE_MESSAGE = 'Ошибка при получении данных из кэша';

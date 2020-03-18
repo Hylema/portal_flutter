@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/newsPopularity/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 class LikesSeen extends StatefulWidget {
   LikesSeen({this.id}){

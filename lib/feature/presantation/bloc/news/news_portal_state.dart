@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_architecture_project/feature/domain/entities/news/news_portal.dart';
+import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 
 import 'package:meta/meta.dart';
 
@@ -14,7 +14,7 @@ class AuthNewsPortal extends NewsPortalState {}
 class NeedAuthNewsPortal extends NewsPortalState {}
 
 class LoadedNewsPortal extends NewsPortalState {
-  final NewsPortal model;
+  final NewsPortalModel model;
 
   LoadedNewsPortal({@required this.model}) : super([model]);
 }

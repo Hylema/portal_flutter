@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/newsPopularity/news_popularity_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/domain/entities/newsPopularity/news_popularity.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/newsPopularity/news_popularity_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/data/models/newsPopularity/news_popularity_model.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/newsPopularity/news_popularity_repository_interface.dart';
 
 import 'package:meta/meta.dart';
 
@@ -21,7 +21,7 @@ class NewsPopularityRepository implements INewsPopularityRepository {
   });
 
   @override
-  Future<Either<Failure, NewsPopularity>> getNewsPopularity(int id) async {
+  Future<Either<Failure, NewsPopularityModel>> getNewsPopularity(int id) async {
     try {
       return Right(await remoteDataSource.getNewsPopularity(id));
     } catch(e) {
@@ -30,7 +30,7 @@ class NewsPopularityRepository implements INewsPopularityRepository {
   }
 
   @override
-  Future<Either<Failure, UserLikesSeen>> getNewsPopularityUserFromJson(int id) {
+  Future<Either<Failure, NewsPopularityModel>> getNewsPopularityUserFromJson(int id) {
     // TODO: implement getNewsPopularityUserFromJson
     throw UnimplementedError();
   }

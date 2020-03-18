@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/animation/wave_animation.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/app/app_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
@@ -101,7 +104,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
       }
     });
 
-    _btnController = new CustomRoundedLoadingButtonController();
+    _btnController = CustomRoundedLoadingButtonController();
   }
 
   @override
@@ -171,7 +174,10 @@ class BuildBodyState extends State with TickerProviderStateMixin{
                             child: _moveNextPage == false ? CustomRoundedLoadingButton(
                               child: Text('Начать', style: TextStyle(color: Colors.white)),
                               onPressed: () {
-                                BlocProvider.of<ProfileBloc>(context).add()
+//                                BlocProvider.of<ProfileBloc>(context).add(GetProfileFromNetworkEvent());
+//                                BlocProvider.of<NewsPortalBloc>(context).add(ResetFilterNewsEvent());
+//                                BlocProvider.of<VideoGalleryBloc>(context).add(Vide());
+                                BlocProvider.of<BirthdayBloc>(context).add(ResetFilterBirthdayEvent());
                               },
                               controller: _btnController,
                               color: Color.fromRGBO(238, 0, 38, 1),
@@ -196,6 +202,3 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     );
   }
 }
-
-
-

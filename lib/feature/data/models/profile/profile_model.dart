@@ -1,12 +1,11 @@
-import 'package:flutter_architecture_project/feature/domain/entities/profile/profile.dart';
 import 'package:meta/meta.dart';
 
-class ProfileModel extends Profile {
+class ProfileModel {
+  final profile;
+
   ProfileModel({
-    @required profile,
-  }) : super(
-    profile: profile,
-  );
+    @required this.profile,
+  });
 
   factory ProfileModel.fromJson(profileData) {
     return ProfileModel(

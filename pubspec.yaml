@@ -55,8 +55,6 @@ dependencies:
   simple_animations: ^1.3.6
   # A Flutter widget for rendering static html tags as Flutter widgets.
   flutter_html: ^0.8.2
-  # A flutter date time picker inspired by flutter-cupertino-date-picker
-  flutter_datetime_picker: ^1.3.2
   # Loading button with simple implementation
   rounded_loading_button: ^1.0.0
   # A Flutter plugin to use the Cloud Firestore API.
@@ -66,7 +64,6 @@ dependencies:
   # Use this package if you need more customization when notifying your user. For Android developers,
   # it is made to substitute toasts and snackbars. IOS developers,
   # I don't know what you use there, but you will like it.
-  flushbar: ^1.9.1
   dio: ^3.0.9
   pull_to_refresh: ^1.5.7
   flutter_easyrefresh: ^2.0.9
@@ -74,7 +71,7 @@ dependencies:
   flutter_swiper: ^1.1.6
   # This package includes ReorderableSliverList, ReorderableTable, ReorderableWrap, ReorderableRow,
   # and ReorderableColumn, which are reorderable versions of Flutter's SliverList, Table, Wrap, Row, and Column respectively.
-  reorderables: ^0.2.12
+  reorderables: ^0.3.2
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2

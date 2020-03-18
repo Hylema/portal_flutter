@@ -4,14 +4,12 @@ import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/domain/entities/news/news_portal.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/news/news_portal_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/news/news_portal_repository_interface.dart';
 
 import 'package:meta/meta.dart';
 
-typedef Future<NewsPortal> _ConcreteOrRandomChooser();
-
-class NewsPortalRepository implements INewsPortalRepository {
+class NewsPortalRepository implements INewsPortalRepository{
   final NewsPortalRemoteDataSource remoteDataSource;
   final NewsPortalLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
@@ -42,7 +40,7 @@ class NewsPortalRepository implements INewsPortalRepository {
   }
 
   @override
-  Future<Either<Failure, NewsPortal>> getNewsFromNetwork(int skip, int top) async {
+  Future<Either<Failure, NewsPortalModel>> getNewsFromNetwork(int skip, int top) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteNewsPortal = await remoteDataSource.getNewsPortal(skip, top);
@@ -59,7 +57,7 @@ class NewsPortalRepository implements INewsPortalRepository {
   }
 
   @override
-  Future<Either<Failure, NewsPortal>> getNewsFromCache() async {
+  Future<Either<Failure, NewsPortalModel>> getNewsFromCache() async {
     try {
       final localNewsPortal = await localDataSource.getLastNewsPortal();
       return Right(localNewsPortal);
@@ -69,7 +67,7 @@ class NewsPortalRepository implements INewsPortalRepository {
   }
 
   @override
-  Future<Either<Failure, NewsPortal>> updateNewsOrNextNews(int skip, int top) async {
+  Future<Either<Failure, NewsPortalModel>> updateNewsOrNextNews(int skip, int top) async {
     if (await networkInfo.isConnected) {
       try {
         try {

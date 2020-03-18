@@ -1,52 +1,39 @@
-import 'package:dartz/dartz.dart';
-import 'package:flutter_architecture_project/core/error/failure.dart';
-import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
-import 'package:flutter_architecture_project/feature/data/repositories/error_catcher.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/birthday/birthday_repository_interface.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
+import 'package:flutter_architecture_project/feature/domain/params/birthday_params.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
+
 import 'package:meta/meta.dart';
 
 class BirthdayRepository implements IBirthdayRepository{
   final BirthdayRemoteDataSource remoteDataSource;
   final BirthdayLocalDataSource localDataSource;
-  final ErrorCatcher errorCatcher;
 
   BirthdayRepository({
     @required this.remoteDataSource,
     @required this.localDataSource,
-    @required this.errorCatcher
   });
 
   @override
-  Future<Either<Failure, List<BirthdayModel>>> getBirthdayWithConcreteDay({
-    @required params,
-  }) async => await errorCatcher.getDataFromNetwork<BirthdayModel>(
-      remoteMethod: () => remoteDataSource.getBirthdayWithConcreteDay(
-          params: params
-      ));
-
-  @override
-  Future<Either<Failure, List<BirthdayModel>>> getBirthdayWithFilter({
+  Future<List<BirthdayModel>> getBirthdayWithConcreteDay({
     @required BirthdayParams params,
-  }) async => await errorCatcher.getDataFromNetwork<BirthdayModel>(
-      remoteMethod: () => remoteDataSource.getBirthdayWithFilter(
-          birthdayParams: params
-  ));
+  }) async => await remoteDataSource.getBirthdayWithConcreteDay(
+      birthdayParams: params);
 
   @override
-  Future<Either<Failure, BirthdayModel>> getBirthdayFromCache() async =>
-      await errorCatcher.getDataFromCache<BirthdayModel>(localMethod: () =>
-          localDataSource.getBirthdayFromCache()
-      );
+  Future<List<BirthdayModel>> getBirthdayWithFilter({
+    @required BirthdayParams params,
+  }) async => await remoteDataSource.getBirthdayWithFilter(
+      birthdayParams: params);
+
+  @override
+  BirthdayModel getBirthdayFromCache() =>
+      localDataSource.getBirthdayFromCache();
 
   @override
   Future<void> setBirthdayToCache({@required BirthdayModel model}) async =>
-      await errorCatcher.setDataToCache<BirthdayModel>(localMethod: () =>
-          localDataSource.setBirthdayToCache(model: model)
-      );
+      await localDataSource.setBirthdayToCache(model: model);
 }
 
 

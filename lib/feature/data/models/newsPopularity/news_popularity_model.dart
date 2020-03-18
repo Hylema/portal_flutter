@@ -1,12 +1,11 @@
-import 'package:flutter_architecture_project/feature/domain/entities/newsPopularity/news_popularity.dart';
 import 'package:meta/meta.dart';
 
-class NewsPopularityModel extends NewsPopularity {
+class NewsPopularityModel {
+  final popularity;
+
   NewsPopularityModel({
-    @required popularity,
-  }) : super(
-    popularity: popularity,
-  );
+    @required this.popularity,
+  });
 
   factory NewsPopularityModel.fromJson(json) {
     return NewsPopularityModel(

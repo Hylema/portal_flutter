@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'package:meta/meta.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/parameters_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pickersModels/date_picker_birthday_model.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+
 import 'package:intl/intl.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
@@ -48,24 +47,24 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> {
   ];
 
   _datePicker(context){
-    DatePicker.showPicker(
-      context,
-      showTitleActions: true,
-//      minTime: DateTime(DateTime.now().year, 1, 1),
-//      maxTime: DateTime(DateTime.now().year, 12, 31),
-      onChanged: (date) {},
-      onConfirm: (result) {
-        print('Дата в итоге $result');
-        String formatData = DateFormat('dd MM yyyy').format(result);
-        _concreteMonth = int.parse(formatData.substring(3, 5));
-        _concreteDay = int.parse(formatData.substring(0, 2));
-        //String year = formatData.substring(6, 10);
-        date.text = '$_concreteDay ${month[_concreteMonth - 1]}';
-      },
-//      currentTime: DateTime.now(),
-      locale: LocaleType.ru,
-      pickerModel: DatePickerBirthdayModel(),
-    );
+//    DatePicker.showPicker(
+//      context,
+//      showTitleActions: true,
+////      minTime: DateTime(DateTime.now().year, 1, 1),
+////      maxTime: DateTime(DateTime.now().year, 12, 31),
+//      onChanged: (date) {},
+//      onConfirm: (result) {
+//        print('Дата в итоге $result');
+//        String formatData = DateFormat('dd MM yyyy').format(result);
+//        _concreteMonth = int.parse(formatData.substring(3, 5));
+//        _concreteDay = int.parse(formatData.substring(0, 2));
+//        //String year = formatData.substring(6, 10);
+//        date.text = '$_concreteDay ${month[_concreteMonth - 1]}';
+//      },
+////      currentTime: DateTime.now(),
+//      locale: LocaleType.ru,
+//      pickerModel: DatePickerBirthdayModel(),
+//    );
   }
 
   bool disable = true;

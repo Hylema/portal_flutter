@@ -35,9 +35,6 @@ class LoadedBirthdayState extends BirthdayState {
     );
   }
 
-//  static LoadedBirthdayState getInstance({@required List<BirthdayModel> model}) =>
-//      LoadedBirthdayState(birthdays: model);
-
   @override
   List<Object> get props => [birthdays, hasReachedMax, title];
 }
@@ -45,7 +42,4 @@ class LoadedBirthdayState extends BirthdayState {
 class ErrorBirthdayState extends BirthdayState {
   final String message;
   ErrorBirthdayState({@required this.message});
-
-  static ErrorBirthdayState getInstance({@required String message}) =>
-      ErrorBirthdayState(message: message);
 }

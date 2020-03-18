@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexOnMainPage/selected_index_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_model_sheet_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page_parameters.dart';
@@ -27,7 +27,7 @@ class HeaderAppWidget extends StatelessWidget with PreferredSizeWidget{
             ),
             child: IconButton(
                 onPressed: (){
-                  Navigator.push(context, SlideRightRoute(page: MainPageParameters()));
+//                  Navigator.push(context, SlideRightRoute(page: MainPageParameters()));
                 },
                 icon: Image.asset(
                   'assets/icons/change.png',

@@ -3,8 +3,8 @@ import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/domain/entities/videoGallery/video_gallery.dart';
-import 'package:flutter_architecture_project/feature/domain/repositories/videoGallery/video_gallery_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/data/models/videoGallery/video_gallery_model.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/videoGallery/video_gallery_repository_interface.dart';
 import 'package:meta/meta.dart';
 
 class VideoGalleryRepository implements IVideoGalleryRepository {
@@ -19,7 +19,7 @@ class VideoGalleryRepository implements IVideoGalleryRepository {
   });
 
   @override
-  Future<Either<Failure, VideoGallery>> getVideosFromNetwork(int pageIndex, int pageSize) async {
+  Future<Either<Failure, VideosGalleryModel>> getVideosFromNetwork(int pageIndex, int pageSize) async {
     if (await networkInfo.isConnected) {
       try {
         final remoteVideos = await remoteDataSource.getVideos(pageIndex, pageSize);
