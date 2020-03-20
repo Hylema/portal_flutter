@@ -5,7 +5,10 @@ class ServerException implements Exception {
   ServerException({@required this.message});
 }
 class AuthException implements Exception {}
-class BadRequestException implements Exception {}
+class BadRequestException implements Exception {
+  final String message;
+  BadRequestException({@required this.message});
+}
 class CacheException implements Exception {}
 class ParserException implements Exception {}
 class JsonException implements Exception {}

@@ -5,6 +5,7 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
@@ -70,6 +71,8 @@ class BuildBodyState extends State with TickerProviderStateMixin{
   bool _moveNextPage = false;
   bool _buttonPulse = false;
 
+  BirthdayBloc _birthdayBloc;
+
   @override
   void initState() {
     super.initState();
@@ -105,6 +108,8 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     });
 
     _btnController = CustomRoundedLoadingButtonController();
+
+    _birthdayBloc = BlocProvider.of<BirthdayBloc>(context);
   }
 
   @override
@@ -122,7 +127,14 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     });
 
     await Future.delayed(Duration(milliseconds: 1400), () {});
-    Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AuthPage()));
+    Navigator.pushNamed(context, '/auth');
+  }
+
+  _loadingData(){
+    _birthdayBloc.add(ResetFilterBirthdayEvent());
+    //                                BlocProvider.of<ProfileBloc>(context).add(GetProfileFromNetworkEvent());
+//                                BlocProvider.of<NewsPortalBloc>(context).add(ResetFilterNewsEvent());
+//                                BlocProvider.of<VideoGalleryBloc>(context).add(Vide());
   }
 
   Future _finish() async {
@@ -139,11 +151,20 @@ class BuildBodyState extends State with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     if(_moveNextPage) _scaleController.forward();
 
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (BuildContext context, AuthState state) async {
-        if(state is NeedAuthState) await _auth(context: context);
-        else if (state is AuthCompletedState) await _finish();
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          listener: (BuildContext context, AuthState state) async {
+            if(state is NeedAuthState) await _auth(context: context);
+            else if (state is AuthCompletedState) await _loadingData();
+          },
+        ),
+        BlocListener<PageLoadingBloc, PageLoadingState>(
+          listener: (BuildContext context, PageLoadingState state) async {
+            if(state is AllPageLoaded) await _finish();
+          },
+        )
+      ],
       child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(
@@ -156,16 +177,16 @@ class BuildBodyState extends State with TickerProviderStateMixin{
                 ),
               ),
               Align(
-                  alignment: Alignment(0, 0.8),
-                  child: AnimatedBuilder(
-                    animation: _rippleAnimation,
-                    builder: (context, child) => Container(
-                      width: _buttonPulse ? _rippleAnimation.value : MediaQuery.of(context).size.width,
-                      height: _rippleAnimation.value,
-                      child: Container(
+                alignment: Alignment(0, 0.8),
+                child: AnimatedBuilder(
+                  animation: _rippleAnimation,
+                  builder: (context, child) => Container(
+                    width: _buttonPulse ? _rippleAnimation.value : MediaQuery.of(context).size.width,
+                    height: _rippleAnimation.value,
+                    child: Container(
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: _buttonPulse ? Color.fromRGBO(238, 0, 38, 1).withOpacity(.4) : Colors.white.withOpacity(0),
+                          shape: BoxShape.circle,
+                          color: _buttonPulse ? Color.fromRGBO(238, 0, 38, 1).withOpacity(.4) : Colors.white.withOpacity(0),
                         ),
                         child: AnimatedBuilder(
                           animation: _scaleAnimation,
@@ -174,10 +195,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
                             child: _moveNextPage == false ? CustomRoundedLoadingButton(
                               child: Text('Начать', style: TextStyle(color: Colors.white)),
                               onPressed: () {
-//                                BlocProvider.of<ProfileBloc>(context).add(GetProfileFromNetworkEvent());
-//                                BlocProvider.of<NewsPortalBloc>(context).add(ResetFilterNewsEvent());
-//                                BlocProvider.of<VideoGalleryBloc>(context).add(Vide());
-                                BlocProvider.of<BirthdayBloc>(context).add(ResetFilterBirthdayEvent());
+                                _loadingData();
                               },
                               controller: _btnController,
                               color: Color.fromRGBO(238, 0, 38, 1),
@@ -192,9 +210,9 @@ class BuildBodyState extends State with TickerProviderStateMixin{
                             ),
                           ),
                         )
-                      ),
                     ),
                   ),
+                ),
               ),
             ],
           )

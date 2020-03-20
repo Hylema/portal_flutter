@@ -17,6 +17,26 @@ class HeaderAppWidget extends StatelessWidget with PreferredSizeWidget{
   Widget build(BuildContext context) {
     List<Widget> _headerOptions = [
       HeaderAppMainBar(
+        titleText: 'Дни рождения',
+        action: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+                right: 15.0,
+                top: 7,
+                bottom: 7
+            ),
+            child: IconButton(
+                onPressed: (){
+                  Navigator.push(context, SlideRightRoute(page: BirthdayPageParameters()));
+                },
+                icon: Image.asset(
+                  'assets/icons/change.png',
+                )
+            ),
+          ),
+        ],
+      ),
+      HeaderAppMainBar(
         titleText: 'Главная',
         action: <Widget>[
           Padding(
@@ -59,26 +79,10 @@ class HeaderAppWidget extends StatelessWidget with PreferredSizeWidget{
       HeaderAppMainBar(
         titleText: 'Профиль',
       ),
-      HeaderAppMainBar(
-        titleText: 'Дни рождения',
-        action: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-                right: 15.0,
-                top: 7,
-                bottom: 7
-            ),
-            child: IconButton(
-                onPressed: (){
-                  Navigator.push(context, SlideRightRoute(page: BirthdayPageParameters()));
-                },
-                icon: Image.asset(
-                  'assets/icons/change.png',
-                )
-            ),
-          ),
-        ],
-      ),
+
+
+
+
       HeaderAppMainBar(
         titleText: 'test',
       ),

@@ -21,6 +21,9 @@ class BodyAppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map _pageOptions = {
+      BIRTHDAY_PAGE_INDEX_NUMBER: {
+        PAGE: BirthdayPage(),
+      },
       MAIN_PAGE_INDEX_NUMBER: {
 //        PAGE: BlocProvider<MainBloc>(
 //          create: (BuildContext context) => sl<MainBloc>(),
@@ -39,12 +42,6 @@ class BodyAppWidget extends StatelessWidget {
 //          child: ProfilePage(),
 //        ),
       },
-      BIRTHDAY_PAGE_INDEX_NUMBER: {
-        PAGE: BlocProvider<BirthdayBloc>(
-          create: (BuildContext context) => sl<BirthdayBloc>(),
-          child: BirthdayPage(),
-        ),
-      },
       VIDEO_PAGE_INDEX_NUMBER: {
 //        PAGE: BlocProvider<VideoGalleryBloc>(
 //          create: (BuildContext context) => sl<VideoGalleryBloc>(),
@@ -56,6 +53,9 @@ class BodyAppWidget extends StatelessWidget {
     return BlocConsumer<SelectedIndexBloc, SelectedIndexState>(
       builder: (context, state) {
         if (state is LoadedSelectedIndexState) {
+          print('state.index ==== ${state.index}');
+          print('BIRTHDAY_PAGE_INDEX_NUMBER ==== $BIRTHDAY_PAGE_INDEX_NUMBER');
+          print('_pageOptions[state.index] ==== ${_pageOptions[state.index]}');
           return BodyAppWidgetBuild(pages: _pageOptions[state.index]);
         } else {
           return Container(

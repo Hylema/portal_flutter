@@ -25,6 +25,7 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
@@ -46,6 +47,9 @@ Future<void> init() async {
 
   /// auth
   sl.registerFactory(() => AuthBloc());
+
+  ///pageLoading
+  sl.registerFactory(() => PageLoadingBloc());
 
 //  /// profile
 //  sl.registerFactory(

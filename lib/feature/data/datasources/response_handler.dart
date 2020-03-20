@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 
 class ResponseHandler<Type> {
@@ -12,15 +13,17 @@ class ResponseHandler<Type> {
 
         final raws = data['data'] as List;
 
-        List<Type> listModel = List<Type>.from(raws.map((raw) => model(raw)));
+        List<Type> listModels = List<Type>.from(raws.map((raw) => model(raw)));
 
-        return listModel;
+        return listModels;
 
         break;
-      case 400 : throw BadRequestException(); break;
+      case 400 : throw BadRequestException(
+          message: BAD_REQUEST_EXCEPTION_MESSAGE,
+      ); break;
       case 401 : throw AuthException(); break;
       case 500 : throw ServerException(
-        message: 'Ошибка сервера, статус код 500'
+        message: SERVER_EXCEPTION_MESSAGE,
       ); break;
       default: throw UnknownException(
           code: response.statusCode

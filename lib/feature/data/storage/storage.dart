@@ -5,14 +5,14 @@ import 'package:jwt_decode/jwt_decode.dart';
 class Storage {
 
   Storage(){
-    getData();
+    updateData();
   }
 
   String token;
   String secondToken;
   Map<String, dynamic> tokenDecode;
 
-  getData() async {
+  updateData() async {
     FlutterSecureStorage secureStorage = new FlutterSecureStorage();
     token = await secureStorage.read(key: JWT_TOKEN);
     secondToken = await secureStorage.read(key: JWT_TOKEN_SECOND);

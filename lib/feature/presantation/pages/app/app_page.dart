@@ -23,23 +23,13 @@ class AppPage extends StatelessWidget {
 class Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
-      builder: (BuildContext context, AuthState state) {
-        if(state is AuthCompletedState) {
-          return Scaffold(
-            extendBody: true,
-            appBar: HeaderAppWidget(),
-            body: BodyAppWidget(),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-            floatingActionButton: MainFloatingActionButtonWidget(),
-            bottomNavigationBar: ActionButtonNavigationBarWidget(),
-          );
-        } else if(state is NeedAuthState){
-          return AuthPage();
-        } else {
-          return Container(child: Center(child: Text('Что-то пошло не так'),),);
-        }
-      },
+    return Scaffold(
+      extendBody: true,
+      appBar: HeaderAppWidget(),
+      body: BodyAppWidget(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButton: MainFloatingActionButtonWidget(),
+      bottomNavigationBar: ActionButtonNavigationBarWidget(),
     );
   }
 }

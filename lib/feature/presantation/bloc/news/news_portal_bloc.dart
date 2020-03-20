@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
 import './bloc.dart';
 
-class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState> with BlocHelper<NewsPortalState>{
+class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState>{
 
   @override
   NewsPortalState get initialState => EmptyNewsPortal();

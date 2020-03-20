@@ -9,7 +9,7 @@ import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import './bloc.dart';
 
-class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> with BlocHelper<BirthdayState> {
+class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
   final IBirthdayRepository repository;
 
   BirthdayBloc({@required this.repository});

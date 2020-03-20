@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
@@ -24,6 +25,7 @@ class BirthdayPageState extends State<BirthdayPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<BirthdayBloc, BirthdayState>(
       builder: (context, state) {
+        print('state is $state');
         if (state is EmptyBirthdayState) {
           return BirthdayPageShimmer();
         } else if (state is LoadingBirthdayState) {
@@ -56,8 +58,8 @@ class BirthdayPageBody extends StatelessWidget {
     return RefreshLoadedWidget.smartRefresh(
         enableControlLoad: true,
         enableControlRefresh: true,
-//        onRefresh: () => dispatchUpdateBirthday(),
-//        onLoading: () => dispatchLoadMoreBirthday(),
+        onRefresh: () => BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent()),
+        onLoading: () => BlocProvider.of<BirthdayBloc>(context).add(FetchBirthdayEvent()),
         child: CustomScrollView(
           slivers: <Widget>[
             SliverList(

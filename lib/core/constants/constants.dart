@@ -9,7 +9,7 @@ const String JWT_TOKEN_SECOND = 'jwt_token_second';
 const int MAIN_PAGE_INDEX_NUMBER = 3; //0
 const int NEWS_PAGE_INDEX_NUMBER = 1;
 const int PROFILE_PAGE_INDEX_NUMBER = 2;
-const int BIRTHDAY_PAGE_INDEX_NUMBER = 1; //3
+const int BIRTHDAY_PAGE_INDEX_NUMBER = 0; //3
 const int POLLS_PAGE_INDEX_NUMBER = 4;
 const int VIDEO_PAGE_INDEX_NUMBER = 5;
 
@@ -42,7 +42,12 @@ const int NEWS_PAGE_SIZE = 15;
 const String CACHE_FAILURE_MESSAGE = 'Ошибка при получении данных из кэша';
 const String JSON_FAILURE_MESSAGE = 'Ошибка при получении данных из json';
 const String NETWORK_FAILURE_MESSAGE = 'Ошибка при подключении к сети';
-const String SERVER_FAILURE_MESSAGE = 'Ошибка сервера, статус код: 500';
-const String BAD_REQUEST_MESSAGE = 'Ошибка, неверно переданы параметры';
+const String SERVER_EXCEPTION_MESSAGE = 'Ошибка сервера, статус код: 500';
+const String BAD_REQUEST_EXCEPTION_MESSAGE = 'Ошибка, неверно переданы параметры, статус код: 400';
 const String UNKNOWN_ERROR_FAILURE = 'Неизвестная ошибка';
 
+class Routes {
+  static const String welcome = '/';
+  static const String auth = '/auth';
+  static const String app = '/app';
+}

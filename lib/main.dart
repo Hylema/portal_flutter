@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 
 
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/welcome/welcome_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'injection_container.dart' as di;
@@ -15,9 +20,20 @@ import 'injection_container.dart' as di;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
-  runApp(BlocProvider<AuthBloc>(
-      create: (BuildContext context) => di.sl<AuthBloc>(),
-      child: App()),
+  runApp(
+      MultiBlocProvider(
+          providers: [
+            BlocProvider<AuthBloc>(
+                create: (BuildContext context) => di.sl<AuthBloc>()),
+            BlocProvider<PageLoadingBloc>(
+                create: (BuildContext context) => di.sl<PageLoadingBloc>()),
+            BlocProvider<BirthdayBloc>(
+              create: (BuildContext context) => di.sl<BirthdayBloc>()),
+            BlocProvider<NewsPortalBloc>(
+              create: (BuildContext context) => di.sl<NewsPortalBloc>()),
+          ],
+          child: App()
+      )
   );
 }
 
@@ -27,37 +43,32 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      initialRoute: Routes.welcome,
       routes: {
         Routes.welcome: (context) {
-          return MultiBlocProvider(
-              providers: [
-//                BlocProvider<ProfileBloc>(
-//                  create: (BuildContext context) => di.sl<ProfileBloc>(),
-//                ),
-                BlocProvider<NewsPortalBloc>(
-                  create: (BuildContext context) => di.sl<NewsPortalBloc>(),
-                ),
-//                BlocProvider<VideoGalleryBloc>(
-//                  create: (BuildContext context) => di.sl<VideoGalleryBloc>(),
-//                ),
-                BlocProvider<BirthdayBloc>(
-                  create: (BuildContext context) => di.sl<BirthdayBloc>(),
-                ),
-              ],
-              child: Scaffold(
-                body: CreateBlocSupervisor(
-                  page: WelcomePage(),
-                ),
-              )
-          );
-        },
-        Routes.app: (context) {
           return Scaffold(
             body: CreateBlocSupervisor(
-              page: AppPage(),
+              page: WelcomePage(),
             ),
           );
         },
+        Routes.app: (context) {
+          return BlocProvider<SelectedIndexBloc>(
+            create: (BuildContext context) => di.sl<SelectedIndexBloc>(),
+            child: Scaffold(
+              body: CreateBlocSupervisor(
+                page: AppPage(),
+              ),
+            ),
+          );
+        },
+        Routes.auth: (context) {
+          return Scaffold(
+            body: CreateBlocSupervisor(
+              page: AuthPage(),
+            ),
+          );
+        }
       },
     );
   }
@@ -71,7 +82,9 @@ class CreateBlocSupervisor extends StatelessWidget {
   Widget build(BuildContext context) {
     BlocSupervisor.delegate = HandlerBlocDelegate(
         snackBar: Scaffold.of(context).showSnackBar,
-        blocAuth: BlocProvider.of<AuthBloc>(context)
+        blocAuth: BlocProvider.of<AuthBloc>(context),
+        pageLoading: BlocProvider.of<PageLoadingBloc>(context),
+        context: context
     );
 
     return page;
@@ -81,9 +94,16 @@ class CreateBlocSupervisor extends StatelessWidget {
 class HandlerBlocDelegate extends BlocDelegate {
 
   final Function snackBar;
-  final blocAuth;
+  final AuthBloc blocAuth;
+  final PageLoadingBloc pageLoading;
+  final BuildContext context;
 
-  HandlerBlocDelegate({@required this.snackBar, @required this.blocAuth});
+  HandlerBlocDelegate({
+    @required this.snackBar,
+    @required this.blocAuth,
+    @required this.pageLoading,
+    @required this.context
+  });
 
   @override
   void onEvent(Bloc bloc, Object event) {
@@ -95,13 +115,24 @@ class HandlerBlocDelegate extends BlocDelegate {
   void onTransition(Bloc bloc, Transition transition) {
     super.onTransition(bloc, transition);
     print(transition.nextState);
+
+    if(transition.nextState is LoadedBirthdayState){
+      pageLoading.add(SuccessLoading(state: LoadingBirthdayState));
+    }
   }
 
   @override
-  void onError(Bloc bloc, Object error, StackTrace stacktrace) {
+  void onError(Bloc bloc, Object error, StackTrace stacktrace) async {
     super.onError(bloc, error, stacktrace);
     if(error is AuthException) {
-      blocAuth.add(NeedAuthEvent());
+      Navigator.pushNamed(context, '/auth');
+      //Navigator.pushReplacementNamed(context, '/auth');
+      return;
+    } else if(error is ServerException){
+//      blocAuth.add(NeedAuthEvent());
+    print('Need auth ============================================= !');
+    print('context =============================================$context !');
+      Navigator.pushNamed(context, '/auth');
       return;
     }
     print('OnERROR ==================== $error');
@@ -126,14 +157,13 @@ class HandlerBlocDelegate extends BlocDelegate {
         SnackBar(
           content: Text(errorMessage),
           duration: Duration(seconds: seconds),
+          action: SnackBarAction(
+            label: 'Закрыть',
+            onPressed: () {},
+          ),
         )
     );
   }
 }
 
-class Routes {
-  static String welcome = '/';
-  static String auth = '/auth';
-  static String app = '/app';
-}
 

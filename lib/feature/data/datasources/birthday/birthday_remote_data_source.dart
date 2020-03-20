@@ -58,6 +58,7 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
     );
 
     print('statusCode ---- ${response.statusCode}');
+    print('body ---- ${response.body}');
 
     return responseHandler(response: response, model: BirthdayModel.fromJson);
   }
