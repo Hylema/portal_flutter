@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/animation/wave_animation.dart';
+import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:page_transition/page_transition.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -110,6 +106,13 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     _btnController = CustomRoundedLoadingButtonController();
 
     _birthdayBloc = BlocProvider.of<BirthdayBloc>(context);
+
+    BlocSupervisor.delegate = SupervisorWelcomePage(
+        snackBar: Scaffold.of(context).showSnackBar,
+        blocAuth: BlocProvider.of<AuthBloc>(context),
+        pageLoadingBloc: BlocProvider.of<PageLoadingBloc>(context),
+        context: context
+    );
   }
 
   @override
@@ -132,9 +135,9 @@ class BuildBodyState extends State with TickerProviderStateMixin{
 
   _loadingData(){
     _birthdayBloc.add(ResetFilterBirthdayEvent());
-    //                                BlocProvider.of<ProfileBloc>(context).add(GetProfileFromNetworkEvent());
-//                                BlocProvider.of<NewsPortalBloc>(context).add(ResetFilterNewsEvent());
-//                                BlocProvider.of<VideoGalleryBloc>(context).add(Vide());
+//    BlocProvider.of<ProfileBloc>(context).add(GetProfileFromNetworkEvent());
+//    BlocProvider.of<NewsPortalBloc>(context).add(ResetFilterNewsEvent());
+//    BlocProvider.of<VideoGalleryBloc>(context).add(Vide());
   }
 
   Future _finish() async {
@@ -217,6 +220,75 @@ class BuildBodyState extends State with TickerProviderStateMixin{
             ],
           )
       ),
+    );
+  }
+}
+
+class SupervisorWelcomePage extends BlocDelegate {
+
+  final Function snackBar;
+  final AuthBloc blocAuth;
+  final PageLoadingBloc pageLoadingBloc;
+  final BuildContext context;
+
+  SupervisorWelcomePage({
+    @required this.snackBar,
+    @required this.blocAuth,
+    @required this.pageLoadingBloc,
+    @required this.context
+  });
+
+  @override
+  void onEvent(Bloc bloc, Object event) {
+    super.onEvent(bloc, event);
+    print(event);
+  }
+
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    print(transition.nextState);
+
+    if(transition.nextState is LoadedBirthdayState){
+      pageLoadingBloc.add(SuccessLoading(state: LoadingBirthdayState));
+    }
+  }
+
+  @override
+  void onError(Bloc bloc, Object error, StackTrace stacktrace) async {
+    super.onError(bloc, error, stacktrace);
+    if(error is AuthException) {
+      Navigator.pushNamed(context, '/auth');
+      //Navigator.pushReplacementNamed(context, '/auth');
+      return;
+    }
+
+
+    int seconds;
+    String errorMessage = error.toString();
+
+    if(error is ServerException) errorMessage = error.message;
+
+    final int errorMessageLength = errorMessage.length;
+
+    if(errorMessageLength > 20 && errorMessageLength < 40) seconds = 3;
+    else if(errorMessageLength > 40 && errorMessageLength < 60) seconds = 4;
+    else if(errorMessageLength > 69 && errorMessageLength < 80) seconds = 5;
+    else if(errorMessageLength > 80 && errorMessageLength < 100) seconds = 6;
+    else if(errorMessageLength > 100 && errorMessageLength < 120) seconds = 7;
+    else if(errorMessageLength > 120 && errorMessageLength < 140) seconds = 8;
+    else if(errorMessageLength > 140 && errorMessageLength < 160) seconds = 9;
+    else seconds = 15;
+
+    snackBar(
+        SnackBar(
+          content: Text(errorMessage),
+          duration: Duration(seconds: seconds),
+          action: SnackBarAction(
+            label: 'Закрыть',
+            onPressed: () {},
+          ),
+        )
     );
   }
 }

@@ -16,15 +16,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthEvent event,
   ) async* {
     if(event is NeedAuthEvent) yield NeedAuthState();
-    //else if(event is AuthCodeEvent) yield* _authUser(code: event.code);
-    else if(event is AuthCodeEvent) {
-      await Future.delayed(Duration(seconds: 6));
-      yield AuthCompletedState();
-    }
+    else if(event is AuthCodeEvent) yield* _authUser(code: event.code);
   }
 
 
-  _authUser({@required String code}){
-    authRepository.getToken(code: code);
+  Stream<AuthState> _authUser({@required String code}) async* {
+    if(await authRepository.getToken(code: code)) yield AuthCompletedState();
   }
 }

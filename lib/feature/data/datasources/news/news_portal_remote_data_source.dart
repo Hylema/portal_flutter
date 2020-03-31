@@ -17,7 +17,7 @@ abstract class INewsPortalRemoteDataSource {
 
 class NewsPortalRemoteDataSource implements INewsPortalRemoteDataSource {
   final http.Client client;
-  Storage storage;
+  final Storage storage;
 
   NewsPortalRemoteDataSource({
     @required this.client,

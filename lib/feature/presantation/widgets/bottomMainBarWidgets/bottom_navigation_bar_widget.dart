@@ -15,9 +15,52 @@ class BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
   @override
   Widget build(BuildContext context) {
 
+    final Color selectedColor = Color.fromRGBO(238, 0, 38, 1);
+    final Color defaultColor = Colors.grey;
+
+    final String path = 'assets/icons/';
+
+    final _bottomAppBarItem = [
+      {
+        'iconData': '${path}home.png',
+        'text': 'Главная',
+      },
+      {
+        'iconData': '${path}news.png',
+        'text': 'Новости',
+      },
+      {
+        'iconData': '${path}profile.png',
+        'text': 'Профиль',
+      },
+    ];
     return BlocConsumer<SelectedIndexBloc, SelectedIndexState>(
       builder: (context, state) {
         if(state is LoadedSelectedIndexState){
+//          return SizedBox(
+//            height: 200,
+//            child: BottomNavigationBar(
+//              iconSize: 40,
+//              selectedFontSize: 14.0,
+//              unselectedFontSize: 12.0,
+//              currentIndex: state.index,
+//              onTap: (index) => context.bloc<SelectedIndexBloc>().add(UpdateIndexEvent(index: index)),
+//              items:   List.generate(_bottomAppBarItem.length, (int index) {
+//                Color color = state.index == index ? selectedColor : defaultColor;
+//                return BottomNavigationBarItem(
+//                    icon: Image.asset(
+//                      _bottomAppBarItem[index]['iconData'],
+//                      height: 24.0,
+//                      color: color,
+//                    ),
+//                    title: Text(
+//                      _bottomAppBarItem[index]['text'],
+//                      style: TextStyle(color: color),
+//                    )
+//                );
+//              }),
+//            ),
+//          );
           return BottomNavigationBarWidgetStateBuilder(selectedIndex: state.index);
         } else {
           return Container();
@@ -86,6 +129,7 @@ class BottomNavigationBarWidgetStateBuilder extends StatelessWidget {
     Function dispatch
   }) {
     Color color = selectedIndex == index ? selectedColor : defaultColor;
+    double size = selectedIndex == index ? 14.0 : 12.0;
     return Expanded(
       child: SizedBox(
         height: BOTTOM_NAVIGATION_BAR_HEIGHT,
@@ -106,7 +150,7 @@ class BottomNavigationBarWidgetStateBuilder extends StatelessWidget {
                 ),
                 Text(
                   item['text'],
-                  style: TextStyle(color: color),
+                  style: TextStyle(color: color, fontSize: size),
                 )
               ],
             ),

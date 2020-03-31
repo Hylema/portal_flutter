@@ -3,11 +3,7 @@ import 'package:flutter_architecture_project/feature/data/models/birthday/birthd
 import 'package:flutter_architecture_project/feature/domain/params/birthday_params.dart';
 
 abstract class IBirthdayRepository {
-  Future<List<BirthdayModel>> getBirthdayWithConcreteDay({
-    @required BirthdayParams params,
-  });
-
-  Future<List<BirthdayModel>> getBirthdayWithFilter({
+  Future<List<BirthdayModel>> getBirthdayWithParams({
     @required BirthdayParams params,
   });
 

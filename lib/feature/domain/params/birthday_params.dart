@@ -22,12 +22,12 @@ class BirthdayParams extends Params{
 
   Map toMap(){
     return createParams(map: {
-      'pageIndex': pageIndex.toString(),
-      'pageSize': pageSize.toString(),
-      'startDayNumber': startDayNumber.toString(),
-      'endDayNumber': endDayNumber.toString(),
-      'startMonthNumber': startMonthNumber.toString(),
-      'endMonthNumber': endMonthNumber.toString(),
+      'pageIndex': pageIndex,
+      'pageSize': pageSize,
+      'startDayNumber': startDayNumber,
+      'endDayNumber': endDayNumber,
+      'startMonthNumber': startMonthNumber,
+      'endMonthNumber': endMonthNumber,
       'searchString': searchString,
     });
   }

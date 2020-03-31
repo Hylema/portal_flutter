@@ -53,9 +53,6 @@ class BodyAppWidget extends StatelessWidget {
     return BlocConsumer<SelectedIndexBloc, SelectedIndexState>(
       builder: (context, state) {
         if (state is LoadedSelectedIndexState) {
-          print('state.index ==== ${state.index}');
-          print('BIRTHDAY_PAGE_INDEX_NUMBER ==== $BIRTHDAY_PAGE_INDEX_NUMBER');
-          print('_pageOptions[state.index] ==== ${_pageOptions[state.index]}');
           return BodyAppWidgetBuild(pages: _pageOptions[state.index]);
         } else {
           return Container(

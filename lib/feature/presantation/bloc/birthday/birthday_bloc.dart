@@ -107,7 +107,7 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
 
   Stream<BirthdayState> _fetchFirstBirthday({@required BirthdayParams params}) async* {
     List<BirthdayModel> repositoryResult =
-    await repository.getBirthdayWithFilter(params: params);
+    await repository.getBirthdayWithParams(params: params);
 
     yield LoadedBirthdayState(birthdays: repositoryResult, hasReachedMax: false, title: _title);
   }
@@ -121,7 +121,7 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
 
     if(currentState is LoadedBirthdayState){
       List<BirthdayModel> repositoryResult =
-      await repository.getBirthdayWithFilter(params: params);
+      await repository.getBirthdayWithParams(params: params);
 
       yield repositoryResult.isEmpty
           ? currentState.copyWith(hasReachedMax: true)

@@ -13,30 +13,13 @@ class RefreshLoadedWidget {
     Function onLoading,
     String noDataText
   }){
-    RefreshController _refreshController = new RefreshController();
-    return SmartRefresher(
-      enablePullUp: enableControlLoad,
-      enablePullDown: enableControlRefresh,
-      header: WaterDropMaterialHeader(
-        backgroundColor: Color.fromRGBO(238, 0, 38, 1),
-        color: Colors.white,
-        distance: 30,
-      ),
-      footer: ClassicFooter(
-        loadingText: 'Загрузка...',
-        canLoadingText: 'Загрузить ещё',
-        noDataText: noDataText,
-        loadingIcon: CircularProgressIndicator(
-          strokeWidth: 2.0,
-          valueColor: AlwaysStoppedAnimation(
-            Color.fromRGBO(238, 0, 38, 1),
-          ),
-        ),
-      ),
-      controller: _refreshController,
+    return SmartRefresherWidget(
       child: child,
-      onRefresh: onRefresh,
+      enableControlLoad: enableControlLoad,
+      enableControlRefresh: enableControlRefresh,
       onLoading: onLoading,
+      onRefresh: onRefresh,
+      noDataText: noDataText,
     );
   }
 
@@ -65,6 +48,76 @@ class RefreshLoadedWidget {
       onRefresh: onRefresh,
       onLoad: onLoading,
       child: child,
+    );
+  }
+}
+
+class SmartRefresherWidget extends StatefulWidget {
+  final Widget child;
+  final bool enableControlRefresh;
+  final bool enableControlLoad;
+  final Function onRefresh;
+  final Function onLoading;
+  final String noDataText;
+
+  SmartRefresherWidget({
+    @required Widget this.child,
+    @required bool this.enableControlRefresh,
+    @required bool this.enableControlLoad,
+    Function this.onRefresh,
+    Function this.onLoading,
+    String this.noDataText
+  });
+
+  @override
+  SmartRefresherWidgetState createState() => SmartRefresherWidgetState();
+}
+
+class SmartRefresherWidgetState extends State<SmartRefresherWidget> {
+
+  RefreshController _refreshController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _refreshController = RefreshController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _refreshController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _refreshController.loadComplete();
+    _refreshController.refreshCompleted();
+    return SmartRefresher(
+      enablePullUp: widget.enableControlLoad,
+      enablePullDown: widget.enableControlRefresh,
+      header: WaterDropMaterialHeader(
+        backgroundColor: Color.fromRGBO(238, 0, 38, 1),
+        color: Colors.white,
+        distance: 30,
+      ),
+      footer: ClassicFooter(
+        loadingText: 'Загрузка...',
+        canLoadingText: 'Загрузить ещё',
+        noDataText: widget.noDataText,
+        loadingIcon: CircularProgressIndicator(
+          strokeWidth: 2.0,
+          valueColor: AlwaysStoppedAnimation(
+            Color.fromRGBO(238, 0, 38, 1),
+          ),
+        ),
+      ),
+      controller: _refreshController,
+      child: widget.child,
+      onRefresh: widget.onRefresh,
+      onLoading: widget.onLoading,
     );
   }
 }

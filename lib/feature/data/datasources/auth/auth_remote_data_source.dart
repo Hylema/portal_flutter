@@ -1,13 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/response_handler.dart';
+import 'package:flutter_architecture_project/feature/data/models/auth/first_token_model.dart';
+import 'package:flutter_architecture_project/feature/data/models/auth/second_token_model.dart';
 import 'package:http/http.dart' as http;
 
 abstract class IAuthRemoteDataSource {
 
-  Future<String> getFirstToken({
+  Future<FirstTokenModel> getFirstToken({
     @required String code
   });
 
-  Future<String> getSecondToken({
+  Future<SecondTokenModel> getSecondToken({
     @required String refreshToken
   });
 }
@@ -20,7 +25,7 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
   });
 
   @override
-  Future<String> getFirstToken({String code}) async {
+  Future<FirstTokenModel> getFirstToken({String code}) async {
     String uri = 'https://login.microsoftonline.com/12f6ad44-d1ba-410f-97d4-6c966e38421b/oauth2/token';
 
     final response = await http.post(
@@ -37,11 +42,11 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
       }
     );
 
-    print('auth token ======= ${response.body}');
+    return FirstTokenModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
   }
 
   @override
-  Future<String> getSecondToken({String refreshToken}) async {
+  Future<SecondTokenModel> getSecondToken({String refreshToken}) async {
     String uri = 'https://login.microsoftonline.com/12f6ad44-d1ba-410f-97d4-6c966e38421b/oauth2/token';
 
     final response = await http.post(
@@ -59,7 +64,6 @@ class AuthRemoteDataSource implements IAuthRemoteDataSource {
         }
     );
 
-    print('auth secondToken ======= ${response.body}');
-
+    return SecondTokenModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
   }
 }

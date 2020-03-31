@@ -3,5 +3,5 @@ import 'package:flutter_architecture_project/feature/data/models/birthday/birthd
 import 'package:flutter_architecture_project/feature/domain/params/birthday_params.dart';
 
 abstract class IAuthRepository {
-  void getToken();
+  Future<bool> getToken();
 }

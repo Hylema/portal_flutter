@@ -25,13 +25,16 @@ class BirthdayPageState extends State<BirthdayPage> {
   Widget build(BuildContext context) {
     return BlocConsumer<BirthdayBloc, BirthdayState>(
       builder: (context, state) {
-        print('state is $state');
         if (state is EmptyBirthdayState) {
           return BirthdayPageShimmer();
         } else if (state is LoadingBirthdayState) {
           return BirthdayPageShimmer();
         } else if (state is LoadedBirthdayState) {
-          return BirthdayPageBody(listModel: state.birthdays, title: state.title, hasReachedMax: state.hasReachedMax);
+          return BirthdayPageBody(
+              listModel: state.birthdays,
+              title: state.title,
+              hasReachedMax: state.hasReachedMax
+          );
         } else if (state is ErrorBirthdayState) {
           return BirthdayPageShimmer();
         }
@@ -55,9 +58,12 @@ class BirthdayPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(listModel.length == 0){
+      return Center(child: Text('По вашему запросу ничего не было найдено'),);
+    }
     return RefreshLoadedWidget.smartRefresh(
-        enableControlLoad: true,
         enableControlRefresh: true,
+        enableControlLoad: true,
         onRefresh: () => BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent()),
         onLoading: () => BlocProvider.of<BirthdayBloc>(context).add(FetchBirthdayEvent()),
         child: CustomScrollView(
@@ -132,7 +138,8 @@ class BirthdayListWidget extends StatelessWidget {
                 foregroundColor: Colors.red,
                 //radius: 60.0,
                 backgroundColor: Colors.white,
-                backgroundImage: NetworkImage('https://dollarquiltingclub.com/wp-content/uploads/2018/09/noPhoto.png')
+                //backgroundImage: NetworkImage('https://dollarquiltingclub.com/wp-content/uploads/2018/09/noPhoto.png'),
+              child: Image.asset('assets/images/noPhoto.png')
             ),
           ),
         ),

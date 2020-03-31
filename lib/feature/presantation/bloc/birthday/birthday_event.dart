@@ -19,12 +19,12 @@ class SetFilterBirthdayEvent extends BirthdayEvent {
   final String title;
 
   SetFilterBirthdayEvent({
-    this.fio,
-    this.startDayNumber,
-    this.endDayNumber,
-    this.startMonthNumber,
-    this.endMonthNumber,
-    this.title,
+    @required this.fio,
+    @required this.startDayNumber,
+    @required this.endDayNumber,
+    @required this.startMonthNumber,
+    @required this.endMonthNumber,
+    @required this.title,
   });
 }
 

@@ -2,45 +2,27 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-class ParametersWidget extends StatefulWidget {
+class ParametersWidget extends StatelessWidget {
   final String title;
   final String textButton;
   final List<Widget> fields;
   final Function show;
   final Function throwData;
+  final bool disable;
 
   ParametersWidget({
     @required this.title,
     @required this.textButton,
     @required this.fields,
     this.show,
-    this.throwData
+    this.throwData,
+    this.disable
   });
 
   @override
-  ParametersWidgetState createState() => ParametersWidgetState();
-}
-
-class ParametersWidgetState extends State<ParametersWidget> {
-  bool disable = true;
-  RoundedLoadingButtonController _btnController;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-
-    _btnController = RoundedLoadingButtonController();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    RoundedLoadingButtonController _btnController = RoundedLoadingButtonController();
+
     return Scaffold(
       appBar: AppBar(
           leading: GestureDetector(
@@ -48,13 +30,11 @@ class ParametersWidgetState extends State<ParametersWidget> {
             child: Icon(Icons.close, color: Colors.black),
           ),
           backgroundColor: Colors.white,
-          title: Text(widget.title, style: TextStyle(color: Colors.black),),
+          title: Text(title, style: TextStyle(color: Colors.black),),
           centerTitle: true,
           actions: [
             MaterialButton(
-                onPressed: () {
-                  widget.throwData();
-                },
+                onPressed: () => throwData(),
                 child: Text('Сбросить', style: TextStyle(color: Colors.lightBlue, fontSize: 16),)
             ),
           ]
@@ -70,18 +50,14 @@ class ParametersWidgetState extends State<ParametersWidget> {
                       Padding(
                         padding: EdgeInsets.all(15),
                         child: Column(
-                          children: widget.fields,
+                          children: fields,
                         ),
                       ),
                       RoundedLoadingButton(
-                        child: Text(widget.textButton, style: TextStyle(color: Colors.white)),
+                        child: Text(textButton, style: TextStyle(color: Colors.white)),
                         controller: _btnController,
                         onPressed: () {
-                          widget.show();
-//                          await Future.delayed(Duration(seconds: 3), () async {
-//                            _btnController.success();
-//                          });
-//                          await Future.delayed(Duration(milliseconds: 1000), () {});
+                          show();
                           Navigator.of(context).pop();
                         },
                         color: disable

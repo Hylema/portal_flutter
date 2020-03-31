@@ -3,6 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/auth/auth_local_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/auth/auth_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
@@ -12,6 +14,7 @@ import 'package:flutter_architecture_project/feature/data/datasources/newsPopula
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/auth/auth_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/birthday/birthday_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/error_catcher.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
@@ -29,6 +32,7 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoadi
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -46,7 +50,9 @@ Future<void> init() async {
   sl.registerFactory(() => NewsPortalBloc());
 
   /// auth
-  sl.registerFactory(() => AuthBloc());
+  sl.registerFactory(() => AuthBloc(
+      authRepository: sl()
+  ));
 
   ///pageLoading
   sl.registerFactory(() => PageLoadingBloc());
@@ -136,6 +142,15 @@ Future<void> init() async {
 //    ),
 //  );
 
+  /// auth
+  sl.registerLazySingleton<AuthRepository>(
+        () => AuthRepository(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+    ),
+  );
+
+
   /// birthday
   sl.registerLazySingleton<IBirthdayRepository>(
         () => BirthdayRepository(
@@ -209,6 +224,19 @@ Future<void> init() async {
     ),
   );
 
+  /// auth
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+        () => AuthRemoteDataSource(
+        client: sl()
+    ),
+  );
+  sl.registerLazySingleton<AuthLocalDataSource>(
+        () => AuthLocalDataSource(
+          flutterSecureStorage: sl(),
+          storage: sl()
+    ),
+  );
+
 
 
 
@@ -217,6 +245,7 @@ Future<void> init() async {
 
   ///! CORE
   sl.registerLazySingleton<Storage>(() => Storage());
+  sl.registerLazySingleton<FlutterSecureStorage>(() => FlutterSecureStorage());
   sl.registerLazySingleton<ProfileParser>(() => ProfileParser());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton<ErrorCatcher>(() => ErrorCatcher(networkInfo: sl()));

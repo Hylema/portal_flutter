@@ -1,12 +1,12 @@
+import 'package:flutter_architecture_project/feature/data/datasources/auth/auth_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/auth/auth_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/auth/auth_repository_interface.dart';
 
 import 'package:meta/meta.dart';
 
 class AuthRepository implements IAuthRepository{
   final AuthRemoteDataSource remoteDataSource;
-  final BirthdayLocalDataSource localDataSource;
+  final AuthLocalDataSource localDataSource;
 
   AuthRepository({
     @required this.remoteDataSource,
@@ -14,8 +14,16 @@ class AuthRepository implements IAuthRepository{
   });
 
   @override
-  void getToken({@required code}) async {
-    await remoteDataSource.getFirstToken(code: code);
+  Future<bool> getToken({@required code}) async {
+    final firstToken = await remoteDataSource.getFirstToken(code: code);
+    final secondToken = await remoteDataSource.getSecondToken(refreshToken: firstToken.refreshToken);
+
+    await localDataSource.saveTokens(
+        firstToken: firstToken.accessToken,
+        secondToken: secondToken.accessToken
+    );
+
+    return true;
   }
 
 

@@ -18,7 +18,7 @@ abstract class IProfileRemoteDataSource {
 class ProfileRemoteDataSource implements IProfileRemoteDataSource {
   final http.Client client;
   final ProfileParser parser;
-  Storage storage;
+  final Storage storage;
 
   ProfileRemoteDataSource({
     @required this.client,

@@ -8,11 +8,7 @@ import 'package:http/http.dart' as http;
 
 abstract class IBirthdayRemoteDataSource {
 
-  Future<List<BirthdayModel>> getBirthdayWithConcreteDay({
-    @required BirthdayParams birthdayParams
-  });
-
-  Future<List<BirthdayModel>> getBirthdayWithFilter({
+  Future<List<BirthdayModel>> getBirthdayWithParams({
     @required BirthdayParams birthdayParams
   });
 }
@@ -27,24 +23,7 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
   });
 
   @override
-  Future<List<BirthdayModel>> getBirthdayWithConcreteDay({
-    @required BirthdayParams birthdayParams
-}) async {
-    String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays', birthdayParams.toMap()).toString();
-
-    final response = await http.get(
-        uri,
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer ${storage.secondToken}',
-        },
-    );
-
-    return responseHandler(response: response, model: BirthdayModel.fromJson);
-  }
-
-  @override
-  Future<List<BirthdayModel>> getBirthdayWithFilter({
+  Future<List<BirthdayModel>> getBirthdayWithParams({
     @required BirthdayParams birthdayParams,
   }) async {
     String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays/filter', birthdayParams.toMap()).toString();
@@ -57,8 +36,8 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
         },
     );
 
-    print('statusCode ---- ${response.statusCode}');
-    print('body ---- ${response.body}');
+    print(response.body);
+    print(response.statusCode);
 
     return responseHandler(response: response, model: BirthdayModel.fromJson);
   }

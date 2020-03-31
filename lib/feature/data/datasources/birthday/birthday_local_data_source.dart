@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 abstract class IBirthdayLocalDataSource {
   BirthdayModel getBirthdayFromCache();
 
-  Future<void> setBirthdayToCache({@required BirthdayModel model});
+  Future<void> setBirthdayToCache({@required List<BirthdayModel> model});
 }
 
 class BirthdayLocalDataSource implements IBirthdayLocalDataSource {
@@ -27,7 +27,7 @@ class BirthdayLocalDataSource implements IBirthdayLocalDataSource {
   }
 
   @override
-  Future<void> setBirthdayToCache({@required BirthdayModel model}) =>
+  Future<void> setBirthdayToCache({@required List<BirthdayModel> model}) =>
       sharedPreferences.setString(
         cachedName,
         json.encode(model),
