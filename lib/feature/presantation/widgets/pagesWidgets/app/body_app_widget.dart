@@ -76,12 +76,16 @@ class BodyAppWidgetBuild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+//    return Scrollbar(
+//      child: pages[PAGE]
+//    );
+
     return Column(
       children: <Widget>[
         Expanded(
-            child: pages[PAGE]
+            child: Scrollbar(child: pages[PAGE],)
         ),
-        Container(
+        SizedBox(
           height: BOTTOM_NAVIGATION_BAR_HEIGHT + 10,
         ),
       ],

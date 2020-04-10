@@ -7,3 +7,5 @@ class SuccessLoading extends PageLoadingEvent {
   final state;
   SuccessLoading({@required this.state});
 }
+
+class AllPageLoadedEvent extends PageLoadingEvent {}

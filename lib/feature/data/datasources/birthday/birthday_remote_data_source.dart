@@ -28,6 +28,8 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
   }) async {
     String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays/filter', birthdayParams.toMap()).toString();
 
+    print('uri =========== $uri');
+
     final response = await http.get(
         uri,
         headers: {

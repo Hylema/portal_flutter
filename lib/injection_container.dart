@@ -32,6 +32,8 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoadi
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -83,7 +85,8 @@ Future<void> init() async {
   /// birthday
   sl.registerFactory(
         () => BirthdayBloc(
-          repository: sl()
+          repository: sl(),
+          networkInfo: sl()
     ),
   );
 
@@ -238,21 +241,12 @@ Future<void> init() async {
   );
 
 
-
-
-
-
-
   ///! CORE
   sl.registerLazySingleton<Storage>(() => Storage());
   sl.registerLazySingleton<FlutterSecureStorage>(() => FlutterSecureStorage());
   sl.registerLazySingleton<ProfileParser>(() => ProfileParser());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton<ErrorCatcher>(() => ErrorCatcher(networkInfo: sl()));
-
-
-
-
 
 
 

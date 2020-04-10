@@ -35,6 +35,7 @@ void main() async {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             initialRoute: Routes.welcome,
+            theme: ThemeData(highlightColor: Color.fromRGBO(238, 0, 38, 0.5).withOpacity(0.1)),
             routes: {
               Routes.welcome: (context) {
                 return Scaffold(

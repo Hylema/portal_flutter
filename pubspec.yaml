@@ -65,6 +65,7 @@ dependencies:
   # it is made to substitute toasts and snackbars. IOS developers,
   # I don't know what you use there, but you will like it.
   dio: ^3.0.9
+  connectivity: ^0.4.8+2
   pull_to_refresh: ^1.5.7
   flutter_easyrefresh: ^2.0.9
   flutter_datetime_picker: ^1.3.5

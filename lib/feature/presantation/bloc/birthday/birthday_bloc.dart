@@ -1,3 +1,5 @@
+import 'package:flutter_architecture_project/core/error/exceptions.dart';
+import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/domain/params/birthday_params.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
 import 'package:rxdart/rxdart.dart';
@@ -11,8 +13,9 @@ import './bloc.dart';
 
 class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
   final IBirthdayRepository repository;
+  final NetworkInfo networkInfo;
 
-  BirthdayBloc({@required this.repository});
+  BirthdayBloc({@required this.repository, @required this.networkInfo});
 
   @override
   Stream<BirthdayState> transformEvents(
@@ -26,25 +29,16 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
       );
 
   @override
-  BirthdayState get initialState => EmptyBirthdayState();
+  BirthdayState get initialState => _initialState();
 
-  @override
-  Stream<BirthdayState> mapEventToState(
-      BirthdayEvent event,
-  ) async* {
-    final currentState = state;
+  BirthdayState _initialState() {
+    try {
+      List<BirthdayModel> listModels = repository.getBirthdayFromCache();
 
-    if(event is SetFilterBirthdayEvent)
-      yield* _setParamsFetchBirthday(event: event);
-
-    if(event is UpdateBirthdayEvent)
-      yield* _updateParamsFetchBirthday(event: event);
-
-    if(event is ResetFilterBirthdayEvent)
-      yield* _resetParamsFetchBirthday(event: event);
-
-    if(event is FetchBirthdayEvent && !_hasReachedMax(currentState))
-      yield* _fetchBirthdayWithParams(event: event);
+      return BirthdayFromCacheState(birthdays: listModels);
+    } catch(e){
+      return BirthdayFromCacheState(birthdays: []);
+    }
   }
 
   BirthdayParams _params = BirthdayParams(
@@ -58,6 +52,29 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
   );
 
   String _title = 'Сегодня';
+
+  @override
+  Stream<BirthdayState> mapEventToState(
+      BirthdayEvent event,
+  ) async* {
+    final currentState = state;
+
+    if(await networkInfo.isConnected){
+      if(event is SetFilterBirthdayEvent)
+        yield* _setParamsFetchBirthday(event: event);
+
+      if(event is UpdateBirthdayEvent)
+        yield* _updateParamsFetchBirthday(event: event);
+
+      if(event is ResetFilterBirthdayEvent)
+        yield* _resetParamsFetchBirthday(event: event);
+
+      if(event is FetchBirthdayEvent && !_hasReachedMax(currentState))
+        yield* _fetchBirthdayWithParams(event: event);
+    } else {
+      throw NetworkException();
+    }
+  }
 
   Stream<BirthdayState> _setParamsFetchBirthday({@required SetFilterBirthdayEvent event}) async* {
     yield LoadingBirthdayState();
@@ -74,12 +91,12 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
 
     _title = event.title;
 
-    yield* _fetchFirstBirthday(params: _params);
+    yield* _updateBirthday(params: _params);
   }
 
   Stream<BirthdayState> _updateParamsFetchBirthday({@required UpdateBirthdayEvent event}) async* {
     _params.pageIndex = 1;
-    yield* _fetchFirstBirthday(params: _params);
+    yield* _updateBirthday(params: _params);
   }
 
   Stream<BirthdayState> _resetParamsFetchBirthday({@required ResetFilterBirthdayEvent event}) async* {
@@ -97,7 +114,7 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
 
     _title = 'Сегодня';
 
-    yield* _fetchFirstBirthday(params: _params);
+    yield* _updateBirthday(params: _params);
   }
 
   Stream<BirthdayState> _fetchBirthdayWithParams({@required FetchBirthdayEvent event}) async* {
@@ -105,9 +122,9 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
     yield* _fetchBirthday(params: _params);
   }
 
-  Stream<BirthdayState> _fetchFirstBirthday({@required BirthdayParams params}) async* {
+  Stream<BirthdayState> _updateBirthday({@required BirthdayParams params}) async* {
     List<BirthdayModel> repositoryResult =
-    await repository.getBirthdayWithParams(params: params);
+    await repository.updateBirthday(params: params);
 
     yield LoadedBirthdayState(birthdays: repositoryResult, hasReachedMax: false, title: _title);
   }
@@ -115,13 +132,9 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
   Stream<BirthdayState> _fetchBirthday({@required BirthdayParams params}) async* {
     final currentState = state;
 
-    if(currentState is EmptyBirthdayState){
-      yield* _fetchFirstBirthday(params: params);
-    }
-
     if(currentState is LoadedBirthdayState){
       List<BirthdayModel> repositoryResult =
-      await repository.getBirthdayWithParams(params: params);
+      await repository.fetchBirthday(params: params);
 
       yield repositoryResult.isEmpty
           ? currentState.copyWith(hasReachedMax: true)

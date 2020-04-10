@@ -11,16 +11,20 @@ class PageLoadingBloc extends Bloc<PageLoadingEvent, PageLoadingState> {
   Stream<PageLoadingState> mapEventToState(
     PageLoadingEvent event,
   ) async* {
-    if(event is SuccessLoading) state[event.state] = true;
+    if(event is AllPageLoadedEvent) {
+      yield AllPageLoaded();
+    }
+    if(event is SuccessLoading){
+      state[event.state] = true;
 
 
-    bool allPageLoaded = true;
-    state.forEach((key, value) {
-      print('value ========================== $value');
-      if(value == false) allPageLoaded = false;
-    });
+      bool allPageLoaded = true;
+      state.forEach((key, value) {
+        if(value == false) allPageLoaded = false;
+      });
 
-    if(allPageLoaded) yield AllPageLoaded();
+      if(allPageLoaded) yield AllPageLoaded();
+    }
   }
 }
 

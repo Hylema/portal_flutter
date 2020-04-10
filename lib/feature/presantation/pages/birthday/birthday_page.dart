@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
@@ -5,9 +8,10 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page_shimmer.dart';
-import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:flutter_architecture_project/injection_container.dart' as di;
 
 class BirthdayPage extends StatefulWidget {
 
@@ -17,19 +21,60 @@ class BirthdayPage extends StatefulWidget {
 
 class BirthdayPageState extends State<BirthdayPage> {
 
+  StreamSubscription _subscription;
+  bool currentConnection = false;
+  bool needUpdate = false;
+
   @override
   void initState() {
     super.initState();
+
+    _subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if(result == ConnectivityResult.none){
+        currentConnection = false;
+        needUpdate = true;
+      } else {
+        currentConnection = true;
+      }
+
+      if(currentConnection == true && needUpdate){
+        BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent());
+
+        needUpdate = false;
+      }
+    });
   }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
+    _subscription.cancel();
+  }
+
 
   Widget build(BuildContext context) {
     return BlocConsumer<BirthdayBloc, BirthdayState>(
       builder: (context, state) {
-        if (state is EmptyBirthdayState) {
-          return BirthdayPageShimmer();
+        if (state is BirthdayFromCacheState) {
+          if(state.birthdays.length == 0){
+            return Center(child: Text('Нет ранее сохраненных данных'),);
+          }
+
+          return BirthdayPageBody(
+              listModel: state.birthdays,
+              title: 'Последние загруженные данные',
+              enableControlLoad: false,
+            hasReachedMax: true,
+          );
         } else if (state is LoadingBirthdayState) {
           return BirthdayPageShimmer();
         } else if (state is LoadedBirthdayState) {
+          if(state.birthdays.length == 0){
+            return Center(child: Text('По вашему запросу ничего не было найдено'),);
+          }
+
           return BirthdayPageBody(
               listModel: state.birthdays,
               title: state.title,
@@ -49,21 +94,23 @@ class BirthdayPageBody extends StatelessWidget {
   final List<BirthdayModel> listModel;
   final String title;
   final bool hasReachedMax;
+  final bool enableControlRefresh;
+  final bool enableControlLoad;
 
   BirthdayPageBody({
-    this.listModel,
-    this.title,
-    this.hasReachedMax,
+    @required this.listModel,
+    @required this.title,
+    @required this.hasReachedMax,
+    this.enableControlRefresh = true,
+    this.enableControlLoad = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    if(listModel.length == 0){
-      return Center(child: Text('По вашему запросу ничего не было найдено'),);
-    }
-    return RefreshLoadedWidget.smartRefresh(
-        enableControlRefresh: true,
-        enableControlLoad: true,
+    return SmartRefresherWidget(
+        enableControlRefresh: enableControlRefresh,
+        enableControlLoad: enableControlLoad,
+        hasReachedMax: hasReachedMax,
         onRefresh: () => BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent()),
         onLoading: () => BlocProvider.of<BirthdayBloc>(context).add(FetchBirthdayEvent()),
         child: CustomScrollView(

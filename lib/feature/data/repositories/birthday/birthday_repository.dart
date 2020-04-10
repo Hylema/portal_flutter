@@ -16,24 +16,39 @@ class BirthdayRepository implements IBirthdayRepository{
   });
 
   @override
-  Future<List<BirthdayModel>> getBirthdayWithParams({
+  Future<List<BirthdayModel>> fetchBirthday({
     @required BirthdayParams params,
   }) async {
     List<BirthdayModel> listModel =
     await remoteDataSource.getBirthdayWithParams(birthdayParams: params);
 
-    await setBirthdayToCache(model: listModel);
+    await saveBirthdayToCache(listModels: listModel);
 
     return listModel;
   }
 
   @override
-  BirthdayModel getBirthdayFromCache() =>
+  Future<List<BirthdayModel>> updateBirthday({BirthdayParams params}) async {
+    List<BirthdayModel> listModel =
+    await remoteDataSource.getBirthdayWithParams(birthdayParams: params);
+
+    await updateBirthdayCache(listModels: listModel);
+
+    return listModel;
+  }
+
+  @override
+  List<BirthdayModel> getBirthdayFromCache() =>
       localDataSource.getBirthdayFromCache();
 
   @override
-  Future<void> setBirthdayToCache({@required List<BirthdayModel> model}) async =>
-      await localDataSource.setBirthdayToCache(model: model);
+  Future<void> saveBirthdayToCache({@required List<BirthdayModel> listModels}) async =>
+      await localDataSource.saveBirthdayToCache(listModels: listModels);
+
+  @override
+  Future<void> updateBirthdayCache({@required List<BirthdayModel> listModels}) async =>
+      await localDataSource.updateBirthdayCache(listModels: listModels);
+
 }
 
 

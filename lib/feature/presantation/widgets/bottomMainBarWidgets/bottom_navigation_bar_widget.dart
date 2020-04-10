@@ -14,26 +14,6 @@ class BottomNavigationBarWidgetState extends State<BottomNavigationBarWidget> {
 
   @override
   Widget build(BuildContext context) {
-
-    final Color selectedColor = Color.fromRGBO(238, 0, 38, 1);
-    final Color defaultColor = Colors.grey;
-
-    final String path = 'assets/icons/';
-
-    final _bottomAppBarItem = [
-      {
-        'iconData': '${path}home.png',
-        'text': 'Главная',
-      },
-      {
-        'iconData': '${path}news.png',
-        'text': 'Новости',
-      },
-      {
-        'iconData': '${path}profile.png',
-        'text': 'Профиль',
-      },
-    ];
     return BlocConsumer<SelectedIndexBloc, SelectedIndexState>(
       builder: (context, state) {
         if(state is LoadedSelectedIndexState){
@@ -130,6 +110,8 @@ class BottomNavigationBarWidgetStateBuilder extends StatelessWidget {
   }) {
     Color color = selectedIndex == index ? selectedColor : defaultColor;
     double size = selectedIndex == index ? 14.0 : 12.0;
+    double width = selectedIndex == index ? 100 : 50;
+    double height = selectedIndex == index ? 100 : 50;
     return Expanded(
       child: SizedBox(
         height: BOTTOM_NAVIGATION_BAR_HEIGHT,

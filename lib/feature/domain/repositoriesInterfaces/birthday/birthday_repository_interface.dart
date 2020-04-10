@@ -3,11 +3,16 @@ import 'package:flutter_architecture_project/feature/data/models/birthday/birthd
 import 'package:flutter_architecture_project/feature/domain/params/birthday_params.dart';
 
 abstract class IBirthdayRepository {
-  Future<List<BirthdayModel>> getBirthdayWithParams({
+  Future<List<BirthdayModel>> fetchBirthday({
     @required BirthdayParams params,
   });
 
-  BirthdayModel getBirthdayFromCache();
+  Future<List<BirthdayModel>> updateBirthday({
+    @required BirthdayParams params,
+  });
 
-  Future<void> setBirthdayToCache();
+  List<BirthdayModel> getBirthdayFromCache();
+
+  Future<void> saveBirthdayToCache();
+  Future<void> updateBirthdayCache();
 }

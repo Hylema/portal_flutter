@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/presantation/widgets/parameters_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pickersModels/date_picker_birthday_model.dart';
 
 import 'package:intl/intl.dart';
@@ -140,7 +139,6 @@ class BirthdayPageParametersState extends State<BirthdayPageParameters> {
 
   @override
   Widget build(BuildContext context) {
-    RoundedLoadingButtonController _btnController = RoundedLoadingButtonController();
 
     return Scaffold(
       appBar: AppBar(

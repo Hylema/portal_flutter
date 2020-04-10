@@ -6,9 +6,10 @@ import 'package:flutter_architecture_project/feature/data/models/birthday/birthd
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class IBirthdayLocalDataSource {
-  BirthdayModel getBirthdayFromCache();
+  List<BirthdayModel> getBirthdayFromCache();
 
-  Future<void> setBirthdayToCache({@required List<BirthdayModel> model});
+  Future<void> saveBirthdayToCache({@required List<BirthdayModel> listModels});
+  Future<void> updateBirthdayCache({@required List<BirthdayModel> listModels});
 }
 
 class BirthdayLocalDataSource implements IBirthdayLocalDataSource {
@@ -21,15 +22,31 @@ class BirthdayLocalDataSource implements IBirthdayLocalDataSource {
   });
 
   @override
-  BirthdayModel getBirthdayFromCache() {
+  List<BirthdayModel> getBirthdayFromCache() {
     final jsonString = sharedPreferences.getString(cachedName);
-    return BirthdayModel.fromJson(json.decode(jsonString));
+    final List<dynamic> listBirthday = json.decode(jsonString);
+
+    List<BirthdayModel> listModels = List<BirthdayModel>.from(listBirthday.map((raw) => BirthdayModel.fromJson(raw)));
+
+    print('listModels =============== $listModels');
+
+    return listModels;
   }
 
   @override
-  Future<void> setBirthdayToCache({@required List<BirthdayModel> model}) =>
+  Future<void> saveBirthdayToCache({@required List<BirthdayModel> listModels}) {
+    List<BirthdayModel> _listModels = getBirthdayFromCache();
+
+    return sharedPreferences.setString(
+      cachedName,
+      json.encode([..._listModels, ...listModels]),
+    );
+  }
+
+  @override
+  Future<void> updateBirthdayCache({@required List<BirthdayModel> listModels}) =>
       sharedPreferences.setString(
         cachedName,
-        json.encode(model),
+        json.encode(listModels),
       );
 }

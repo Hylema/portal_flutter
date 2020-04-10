@@ -18,13 +18,9 @@ class ResponseHandler<Type> {
         return listModels;
 
         break;
-      case 400 : throw BadRequestException(
-          message: BAD_REQUEST_EXCEPTION_MESSAGE,
-      ); break;
+      case 400 : throw BadRequestException(); break;
       case 401 : throw AuthException(); break;
-      case 500 : throw ServerException(
-        message: SERVER_EXCEPTION_MESSAGE,
-      ); break;
+      case 500 : throw ServerException(); break;
       default: throw UnknownException(
           code: response.statusCode
       );

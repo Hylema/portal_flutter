@@ -65,6 +65,9 @@ class SupervisorAppPage extends BlocDelegate {
       Navigator.pushNamed(context, '/auth');
       //Navigator.pushReplacementNamed(context, '/auth');
       return;
+    } else if(error is ServerException){
+      Navigator.pushNamed(context, '/auth');
+      return;
     }
 
 
@@ -72,6 +75,7 @@ class SupervisorAppPage extends BlocDelegate {
     String errorMessage = error.toString();
 
     if(error is ServerException) errorMessage = error.message;
+    if(error is NetworkException) errorMessage = error.message;
 
     final int errorMessageLength = errorMessage.length;
 

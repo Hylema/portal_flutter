@@ -8,7 +8,11 @@ abstract class BirthdayState extends Equatable{
   List<Object> get props => [];
 }
 
-class EmptyBirthdayState extends BirthdayState {}
+class BirthdayFromCacheState extends BirthdayState {
+  final List birthdays;
+
+  BirthdayFromCacheState({@required this.birthdays});
+}
 class NeedAuthBirthday extends BirthdayState {}
 class LoadingBirthdayState extends BirthdayState {}
 

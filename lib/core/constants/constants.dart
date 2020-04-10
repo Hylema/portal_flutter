@@ -39,12 +39,12 @@ const int BIRTHDAY_PAGE_SIZE = 15;
 const int NEWS_PAGE_SIZE = 15;
 
 ///Errors
-const String CACHE_FAILURE_MESSAGE = 'Ошибка при получении данных из кэша';
-const String JSON_FAILURE_MESSAGE = 'Ошибка при получении данных из json';
-const String NETWORK_FAILURE_MESSAGE = 'Ошибка при подключении к сети';
+const String CACHE_EXCEPTION_MESSAGE = 'Ошибка при получении данных из кэша';
+const String JSON_EXCEPTION_MESSAGE = 'Ошибка при получении данных из json';
+const String NETWORK_EXCEPTION_MESSAGE = 'Ошибка при подключении к сети';
 const String SERVER_EXCEPTION_MESSAGE = 'Ошибка сервера, статус код: 500';
 const String BAD_REQUEST_EXCEPTION_MESSAGE = 'Ошибка, неверно переданы параметры, статус код: 400';
-const String UNKNOWN_ERROR_FAILURE = 'Неизвестная ошибка';
+const String UNKNOWN_EXCEPTION_MESSAGE = 'Неизвестная ошибка';
 
 class Routes {
   static const String welcome = '/';
