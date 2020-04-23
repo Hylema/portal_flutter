@@ -1,47 +1,58 @@
-//import 'dart:async';
-//import 'package:bloc/bloc.dart';
-//import 'package:flutter/cupertino.dart';
-//import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
-//import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
-//import './bloc.dart';
-//
-//class MainBloc extends Bloc<MainEvent, MainState> with BlocHelper<MainState>{
-//
+import 'dart:async';
+import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
+import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/main/main_params_repository_interface.dart';
+import './bloc.dart';
+import 'package:rxdart/rxdart.dart';
+class MainBloc extends Bloc<MainEvent, MainState> {
+  final IMainParamsRepository repository;
+
+  MainBloc({@required this.repository});
+
 //  @override
-//  MainState get initialState => EmptyMainState();
-//
-//  @override
-//  Stream<MainState> mapEventToState(MainEvent event) async* {
-//
-//    if(event is GetParamsFromJsonForMainPageBlocEvent){
-//     var modelOrFailure = await getMainParamsFromJson(NoParams());
-//
-//     yield modelOrFailure.fold(
-//           (failure){
-//         return ErrorMainParams(message: mapFailureToMessage(failure));
-//       },
-//           (model){
-//         return LoadedMainParams(model: model);
-//       },
-//     );
-//    } else if(event is SetParamsToJsonForMainPageBlocEvent){
-//      var saveOrFail = await setMainParamsToJson(Main(params: event.params));
-//      //TODO нужна проверка
-//      var modelOrFailure = await getMainParamsFromJson(NoParams());
-//
-//      yield modelOrFailure.fold(
-//            (failure){
-//          return ErrorMainParams(message: mapFailureToMessage(failure));
-//        },
-//            (model){
-//          return LoadedMainParams(model: model);
-//        },
+//  Stream<MainState> transformEvents(
+//      Stream<MainEvent> events,
+//      Stream<MainEvent> Function(MainEvent event) next) =>
+//      super.transformEvents(
+//        events.debounceTime(
+//          Duration(milliseconds: 500),
+//        ),
+//        next,
 //      );
-//    } else if(event is UpdateMainParams){
+
+  @override
+  MainState get initialState => EmptyMainState();
+
+//  MainState _initialState() {
+//    try {
+//      List<BirthdayModel> listModels = repository.getBirthdayFromCache();
 //
-//      print('event ==== ${event.params}');
-//
-//      yield LoadedMainParams(model: MainParamsModel(params: event.params));
+//      return BirthdayFromCacheState(birthdays: listModels);
+//    } catch(e){
+//      return BirthdayFromCacheState(birthdays: []);
 //    }
 //  }
-//}
+
+  @override
+  Stream<MainState> mapEventToState(MainEvent event) async* {
+
+    if(event is GetPositionPagesEvent){
+      final List repositoryResult =
+      repository.getPositionPages();
+
+      yield LoadedMainParams(model: repositoryResult);
+
+    } else if(event is SetPositionPagesEvent){
+      await repository.setPositionPages(event.params);
+
+      yield LoadedMainParams(model: event.params);
+    } else if(event is UpdateMainParams){
+
+      print('event ==== ${event.params}');
+
+      yield LoadedMainParams(model: event.params);
+    }
+  }
+}

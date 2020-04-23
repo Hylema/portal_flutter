@@ -8,29 +8,19 @@ import 'package:flutter_architecture_project/feature/domain/repositoriesInterfac
 import 'package:meta/meta.dart';
 
 class MainParamsRepository implements IMainParamsRepository {
-  final MainParamsJsonDataSource jsonDataSource;
+  final MainParamsJsonDataSource localDataSource;
 
   MainParamsRepository({
-    @required this.jsonDataSource,
+    @required this.localDataSource,
   });
 
   @override
-  Future<Either<Failure, MainParamsModel>> getParamsFromJson() async{
-    try {
-      final data = await jsonDataSource.getFromJson();
-      return Right(data);
-    } on JsonException {
-      return Left(JsonFailure());
-    }
+  List getPositionPages() {
+    return localDataSource.getFromCache();
   }
 
   @override
-  Future<Either<Failure, MainParamsModel>> setParamsToJson(params) async{
-    try {
-      final data = await jsonDataSource.setToJson(params);
-      return Right(data);
-    } on JsonException {
-      return Left(JsonFailure());
-    }
+  Future<void> setPositionPages(params) async {
+    return await localDataSource.setToCache(positionPages: params);
   }
 }

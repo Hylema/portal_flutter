@@ -1,42 +1,34 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
-abstract class IMainParamsJsonDataSource {
 
-  Future<MainParamsModel> getFromJson();
-  setToJson(params);
+import 'package:shared_preferences/shared_preferences.dart';
+abstract class IMainParamsJsonDataSource {
+  Future<void> setToCache({@required List positionPages});
+  List getFromCache();
 }
 
 class MainParamsJsonDataSource implements IMainParamsJsonDataSource {
+  final SharedPreferences sharedPreferences;
+  final cachedName;
 
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
+  MainParamsJsonDataSource({
+    @required this.cachedName,
+    @required this.sharedPreferences
+  });
 
-  Future<File> get _localFile async {
-    final String fileName = 'main_params.json';
-
+  List getFromCache() {
     try {
-      final path = await _localPath;
-      return File('$path/$fileName');
+      final jsonString = sharedPreferences.getString(cachedName);
+      final List<dynamic> listPositionPages = json.decode(jsonString);
+
+      return listPositionPages;
     } catch(e){
-
-      final localPath = await _localPath;
-      return File('$localPath/$fileName');
-    }
-  }
-
-  Future readFile() async {
-    try {
-      final file = await _localFile;
-
-      return jsonDecode(file.readAsStringSync());
-    } catch(e) {
       final String path = 'assets/icons/';
-      final data = [
+      final defaultPositionPages = [
         {
           'name': 'Новости',
           'status': true,
@@ -64,40 +56,15 @@ class MainParamsJsonDataSource implements IMainParamsJsonDataSource {
         },
       ];
 
-      await writeFile(data);
+      setToCache(positionPages: defaultPositionPages);
 
-      final file = await _localFile;
-
-      return jsonDecode(file.readAsStringSync());
+      return defaultPositionPages;
     }
   }
 
-  Future writeFile(json) async {
-    final file = await _localFile;
-
-    return file.writeAsString(jsonEncode({
-      'params': json
-    }));
-  }
-
-  @override
-  Future<MainParamsModel> getFromJson() async {
-    final file = await readFile();
-
-    if (file != null) {
-      return Future.value(MainParamsModel.fromJson(file));
-    } else {
-      throw JsonException();
-    }
-  }
-
-  @override
-  setToJson(params) async {
-    try {
-      final file = await writeFile(params);
-      return Future.value(MainParamsModel.fromJson(file));
-    } catch(e){
-      throw JsonException();
-    }
-  }
+  Future<void> setToCache({@required List positionPages}) =>
+      sharedPreferences.setString(
+        cachedName,
+        json.encode(positionPages),
+      );
 }

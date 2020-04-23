@@ -21,14 +21,11 @@ class BodyAppWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map _pageOptions = {
-      BIRTHDAY_PAGE_INDEX_NUMBER: {
-        PAGE: BirthdayPage(),
-      },
       MAIN_PAGE_INDEX_NUMBER: {
-//        PAGE: BlocProvider<MainBloc>(
-//          create: (BuildContext context) => sl<MainBloc>(),
-//          child: MainPage(),
-//        ),
+        PAGE: BlocProvider<MainBloc>(
+          create: (BuildContext context) => sl<MainBloc>(),
+          child: MainPage(),
+        ),
       },
       NEWS_PAGE_INDEX_NUMBER: {
         PAGE: BlocProvider<NewsPortalBloc>(
@@ -36,18 +33,21 @@ class BodyAppWidget extends StatelessWidget {
           child: NewsPortalPage(),
         ),
       },
-      PROFILE_PAGE_INDEX_NUMBER: {
+//      PROFILE_PAGE_INDEX_NUMBER: {
 //        PAGE: BlocProvider<ProfileBloc>(
 //          create: (BuildContext context) => sl<ProfileBloc>(),
 //          child: ProfilePage(),
 //        ),
+//      },
+      BIRTHDAY_PAGE_INDEX_NUMBER: {
+        PAGE: BirthdayPage(),
       },
-      VIDEO_PAGE_INDEX_NUMBER: {
+//      VIDEO_PAGE_INDEX_NUMBER: {
 //        PAGE: BlocProvider<VideoGalleryBloc>(
 //          create: (BuildContext context) => sl<VideoGalleryBloc>(),
 //          child: VideoGalleryPage(),
 //        ),
-      },
+//      },
     };
 
     return BlocConsumer<SelectedIndexBloc, SelectedIndexState>(
@@ -80,10 +80,11 @@ class BodyAppWidgetBuild extends StatelessWidget {
 //      child: pages[PAGE]
 //    );
 
+
     return Column(
       children: <Widget>[
         Expanded(
-            child: Scrollbar(child: pages[PAGE],)
+            child: pages[PAGE],
         ),
         SizedBox(
           height: BOTTOM_NAVIGATION_BAR_HEIGHT + 10,

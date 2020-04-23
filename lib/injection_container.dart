@@ -24,6 +24,7 @@ import 'package:flutter_architecture_project/feature/data/repositories/profile/p
 import 'package:flutter_architecture_project/feature/data/repositories/videoGallery/video_gallery_repository.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/main/main_params_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
@@ -67,13 +68,12 @@ Future<void> init() async {
 //    ),
 //  );
 //
-//  /// main params page
-//  sl.registerFactory(
-//        () => MainBloc(
-//        getMainParamsFromJson: sl(),
-//        setMainParamsToJson: sl()
-//    ),
-//  );
+  /// main params page
+  sl.registerFactory(
+        () => MainBloc(
+          repository: sl()
+    ),
+  );
 //
 //  /// video gallery
 //  sl.registerFactory(
@@ -122,12 +122,12 @@ Future<void> init() async {
 //    ),
 //  );
 //
-//  /// main params page
-//  sl.registerLazySingleton<IMainParamsRepository>(
-//        () => MainParamsRepository(
-//      jsonDataSource: sl(),
-//    ),
-//  );
+  /// main params page
+  sl.registerLazySingleton<IMainParamsRepository>(
+        () => MainParamsRepository(
+      localDataSource: sl(),
+    ),
+  );
 //
 //  /// likes/seen
 //  sl.registerLazySingleton<INewsPopularityRepository>(
@@ -144,7 +144,6 @@ Future<void> init() async {
 //        remoteDataSource: sl()
 //    ),
 //  );
-
   /// auth
   sl.registerLazySingleton<AuthRepository>(
         () => AuthRepository(
@@ -195,7 +194,10 @@ Future<void> init() async {
 
   /// main params page
   sl.registerLazySingleton<MainParamsJsonDataSource>(
-        () => MainParamsJsonDataSource(),
+        () => MainParamsJsonDataSource(
+          cachedName: CACHE_POSITION_PAGES,
+          sharedPreferences: sl()
+        ),
   );
 
   /// likes/seen

@@ -6,6 +6,7 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,6 +69,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
   bool _buttonPulse = false;
 
   BirthdayBloc _birthdayBloc;
+  MainBloc _mainBloc;
 
   @override
   void initState() {
@@ -106,6 +108,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     _btnController = CustomRoundedLoadingButtonController();
 
     _birthdayBloc = BlocProvider.of<BirthdayBloc>(context);
+    _mainBloc = BlocProvider.of<MainBloc>(context);
 
     BlocSupervisor.delegate = SupervisorWelcomePage(
         snackBar: Scaffold.of(context).showSnackBar,
@@ -135,6 +138,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
 
   _loadingData(){
     _birthdayBloc.add(ResetFilterBirthdayEvent());
+    _mainBloc.add(GetPositionPagesEvent());
 //    BlocProvider.of<ProfileBloc>(context).add(GetProfileFromNetworkEvent());
 //    BlocProvider.of<NewsPortalBloc>(context).add(ResetFilterNewsEvent());
 //    BlocProvider.of<VideoGalleryBloc>(context).add(Vide());
@@ -275,6 +279,7 @@ class SupervisorWelcomePage extends BlocDelegate {
 
     if(error is ServerException) errorMessage = error.message;
     if(error is NetworkException) errorMessage = error.message;
+    if(error is UnknownException) errorMessage = error.message + ' ${error.code}';
 
     final int errorMessageLength = errorMessage.length;
 

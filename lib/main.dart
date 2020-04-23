@@ -3,6 +3,7 @@ import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 
@@ -31,6 +32,10 @@ void main() async {
               create: (BuildContext context) => di.sl<BirthdayBloc>()),
             BlocProvider<NewsPortalBloc>(
               create: (BuildContext context) => di.sl<NewsPortalBloc>()),
+            BlocProvider<SelectedIndexBloc>(
+              create: (BuildContext context) => di.sl<SelectedIndexBloc>()),
+            BlocProvider<MainBloc>(
+                create: (BuildContext context) => di.sl<MainBloc>()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
@@ -39,15 +44,12 @@ void main() async {
             routes: {
               Routes.welcome: (context) {
                 return Scaffold(
-                  body: WelcomePage()
+                  body: WelcomePage(),
                 );
               },
               Routes.app: (context) {
-                return BlocProvider<SelectedIndexBloc>(
-                  create: (BuildContext context) => di.sl<SelectedIndexBloc>(),
-                  child: Scaffold(
-                    body: AppPage(),
-                  ),
+                return Scaffold(
+                  body: AppPage(),
                 );
               },
               Routes.auth: (context) {

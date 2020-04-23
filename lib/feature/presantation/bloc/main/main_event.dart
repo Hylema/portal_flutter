@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class MainEvent {}
 
-class GetParamsFromJsonForMainPageBlocEvent extends MainEvent {}
+class GetPositionPagesEvent extends MainEvent {}
 
 class UpdateMainParams extends MainEvent {
   final params;
@@ -12,8 +12,8 @@ class UpdateMainParams extends MainEvent {
   UpdateMainParams(this.params);
 }
 
-class SetParamsToJsonForMainPageBlocEvent extends MainEvent {
+class SetPositionPagesEvent extends MainEvent {
   final params;
 
-  SetParamsToJsonForMainPageBlocEvent(this.params);
+  SetPositionPagesEvent(this.params);
 }

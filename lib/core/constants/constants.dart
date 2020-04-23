@@ -6,10 +6,10 @@ const String JWT_DECODE = 'jwt_token_decode';
 const String JWT_TOKEN_SECOND = 'jwt_token_second';
 
 ///Pages
-const int MAIN_PAGE_INDEX_NUMBER = 3; //0
+const int MAIN_PAGE_INDEX_NUMBER = 0;
 const int NEWS_PAGE_INDEX_NUMBER = 1;
 const int PROFILE_PAGE_INDEX_NUMBER = 2;
-const int BIRTHDAY_PAGE_INDEX_NUMBER = 0; //3
+const int BIRTHDAY_PAGE_INDEX_NUMBER = 3;
 const int POLLS_PAGE_INDEX_NUMBER = 4;
 const int VIDEO_PAGE_INDEX_NUMBER = 5;
 
@@ -33,6 +33,7 @@ const double BOTTOM_NAVIGATION_BAR_HEIGHT = 50.0;
 
 ///Cache
 const String CACHE_BIRTHDAY = 'cache_birthday';
+const String CACHE_POSITION_PAGES = 'cache_position_pages';
 
 
 const int BIRTHDAY_PAGE_SIZE = 15;
