@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -6,7 +7,7 @@ abstract class MainState{}
 
 class EmptyMainState extends MainState {}
 class LoadedMainParams extends MainState {
-  final model;
+  final MainParamsModel model;
 
   LoadedMainParams({@required this.model});
 }

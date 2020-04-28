@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reorderables/reorderables.dart';
@@ -7,167 +8,27 @@ class MainPageParameters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: BuildMainPageParameters()
-    );
-  }
-}
-
-class BuildMainPageParameters extends StatefulWidget {
-
-  @override
-  BuildMainPageParametersState createState() => BuildMainPageParametersState();
-}
-
-class BuildMainPageParametersState extends State<BuildMainPageParameters> {
-
-  var _data;
-
-  List _listStatusTrue = [];
-  List _listStatusFalse = [];
-
-  final String path = 'assets/icons/';
-
-  get _params => [..._listStatusTrue, ..._listStatusFalse];
-
-  @override
-  void initState() {
-
-    dispatchGetMainParamsFromJson();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  void removeItem(index){
-    final item = _listStatusTrue.removeAt(index);
-    item['status'] = false;
-    _listStatusFalse.add(item);
-
-    dispatchUpdateMainParams();
-  }
-
-  void addItem(index){
-    final item = _listStatusFalse.removeAt(index);
-    item['status'] = true;
-    _listStatusTrue.add(item);
-
-    print('_listStatusTrue ============== $_listStatusTrue');
-
-    dispatchUpdateMainParams();
-  }
-
-  void dispatchGetMainParamsFromJson(){
-    context.bloc<MainBloc>().add(GetPositionPagesEvent());
-  }
-
-  void dispatchSetMainParamsToJson(){
-    context.bloc<MainBloc>().add(SetPositionPagesEvent(_params));
-  }
-
-  void dispatchUpdateMainParams(){
-    context.bloc<MainBloc>().add(UpdateMainParams(_params));
-  }
-
-  Widget getListTile(item, index, addOrRemove){
-    return Container(
-      padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
-      key: ValueKey(item['name']),
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height/12,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: GestureDetector(
-                  onTap: () {
-                    if(addOrRemove) removeItem(index);
-                    else addItem(index);
-                  },
-                  child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50.0),
-                          color: true == addOrRemove
-                              ? Color.fromRGBO(255, 59, 48, 1)
-                              : Color.fromRGBO(76, 217, 100, 1)
-                      ),
-                      width: 25,
-                      height: 25,
-                      child: true == addOrRemove
-                          ? Icon(Icons.remove, color: Colors.white, size: 15,)
-                          : Icon(Icons.add, color: Colors.white, size: 15,)
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Image.asset(item['icon'], width: 26, height: 26),
-              ),
-              Text(item['name']),
-            ],
-          ),
-          Container(
-              padding: EdgeInsets.all((5)),
-              child: true == addOrRemove ? Image.asset('${path}iconDrag.png') : Container()
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return BlocBuilder<MainBloc, MainState>(
       builder: (context, state) {
-        if(state is EmptyMainState){
-          if(_data == null){
-            return Center(child: Text('загрузка'),);
-          }
-          else return buildBody();
-        } else if(state is LoadedMainParams){
-          _data = state.model;
-
-          print('Страница обновилась, новые данные === $_data');
-
-          _listStatusTrue = [];
-          _listStatusFalse = [];
-
-          _data.asMap().forEach((index, item){
-            if(item['status']){
-              _listStatusTrue.add(item);
-            } else {
-              _listStatusFalse.add(item);
-            }
-          });
-
-          return buildBody();
+        if(state is LoadedMainParams){
+          return MainPageParametersBody(model: state.model);
         } else {
           return Container();
         }
       },
     );
   }
+}
 
-//  updateParams(){
-//    for(var i = 0; i < _listStatusTrue.length; i++){
-//      _listStatusTrue[i]['status'] = true;
-//    }
-//    for(var i = 0; i < _listStatusFalse.length; i++){
-//      _listStatusFalse[i]['status'] = false;
-//    }
-//
-//    return [..._listStatusTrue, ..._listStatusFalse];
-//  }
+class MainPageParametersBody extends StatelessWidget {
 
-  Widget buildBody() {
+  final MainParamsModel model;
+  MainPageParametersBody({@required this.model});
+
+  @override
+  Widget build(BuildContext context) {
     ScrollController _scrollController = PrimaryScrollController.of(context) ?? ScrollController();
+
     return Scaffold(
         appBar: AppBar(
             leading: GestureDetector(
@@ -180,7 +41,7 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
             actions: [
               MaterialButton(
                   onPressed: () {
-                    dispatchSetMainParamsToJson();
+                    context.bloc<MainBloc>().add(SetPositionPagesEvent(model: model));
                     Navigator.pop(context);
                   },
                   child: Text('Готово', style: TextStyle(color: Colors.lightBlue, fontSize: 16),)
@@ -207,16 +68,15 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
                   scrollController: _scrollController,
                   needsLongPressDraggable: false,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: _listStatusTrue
+                  children: model.listStatusWithTrue
                       .asMap()
-                      .map((index, item) => MapEntry(index, getListTile(item, index, true)))
+                      .map((index, item) => MapEntry(index, Container(key: ValueKey(item['name']), child: RawParameter(item: item, index: index, status: true, model: model))))
                       .values
                       .toList(),
                   onReorder: (oldIndex, newIndex) {
-                    final item = _listStatusTrue.removeAt(oldIndex);
-                    _listStatusTrue.insert(newIndex, item);
+                    model.changePositionItem(oldIndex: oldIndex, newIndex: newIndex);
 
-                    dispatchUpdateMainParams();
+                    context.bloc<MainBloc>().add(UpdateMainParams(model: model));
                   },
                 ),
                 Container(
@@ -233,9 +93,9 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
                 ),
                 ListView(
                   shrinkWrap: true,
-                  children: _listStatusFalse
+                  children: model.listStatusWithFalse
                       .asMap()
-                      .map((index, item) => MapEntry(index, getListTile(item, index, false)))
+                      .map((index, item) => MapEntry(index, RawParameter(item: item, index: index, status: false, model: model)))
                       .values
                       .toList(),
                 )
@@ -243,6 +103,74 @@ class BuildMainPageParametersState extends State<BuildMainPageParameters> {
             ),
           ],
         )
+    );
+  }
+}
+
+class RawParameter extends StatelessWidget {
+
+  final String path = 'assets/icons/';
+
+  final Map item;
+  final int index;
+  final bool status;
+  final MainParamsModel model;
+
+  RawParameter({
+    @required this.item,
+    @required this.index,
+    @required this.status,
+    @required this.model,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height/12,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: GestureDetector(
+                  onTap: () {
+                    if(status) model.removeItem(index: index);
+                    else model.addItem(index: index);
+
+                    context.bloc<MainBloc>().add(UpdateMainParams(model: model));
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(50.0),
+                          color: true == status
+                              ? Color.fromRGBO(255, 59, 48, 1)
+                              : Color.fromRGBO(76, 217, 100, 1)
+                      ),
+                      width: 25,
+                      height: 25,
+                      child: true == status
+                          ? Icon(Icons.remove, color: Colors.white, size: 15,)
+                          : Icon(Icons.add, color: Colors.white, size: 15,)
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Image.asset(item['icon'], width: 26, height: 26),
+              ),
+              Text(item['name']),
+            ],
+          ),
+          Container(
+              padding: EdgeInsets.all((5)),
+              child: true == status ? Image.asset('${path}iconDrag.png') : Container()
+          ),
+        ],
+      ),
     );
   }
 }

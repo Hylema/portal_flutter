@@ -15,12 +15,12 @@ class MainParamsRepository implements IMainParamsRepository {
   });
 
   @override
-  List getPositionPages() {
+  MainParamsModel getPositionPages() {
     return localDataSource.getFromCache();
   }
 
   @override
-  Future<void> setPositionPages(params) async {
-    return await localDataSource.setToCache(positionPages: params);
+  Future<void> setPositionPages({@required MainParamsModel model}) async {
+    return await localDataSource.setToCache(model: model);
   }
 }

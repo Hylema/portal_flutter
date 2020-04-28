@@ -22,10 +22,7 @@ class BodyAppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Map _pageOptions = {
       MAIN_PAGE_INDEX_NUMBER: {
-        PAGE: BlocProvider<MainBloc>(
-          create: (BuildContext context) => sl<MainBloc>(),
-          child: MainPage(),
-        ),
+        PAGE: MainPage()
       },
       NEWS_PAGE_INDEX_NUMBER: {
         PAGE: BlocProvider<NewsPortalBloc>(

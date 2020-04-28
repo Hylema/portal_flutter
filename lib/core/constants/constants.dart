@@ -52,3 +52,33 @@ class Routes {
   static const String auth = '/auth';
   static const String app = '/app';
 }
+
+
+const String path = 'assets/icons/';
+const List DEFAULT_POSITION_PAGES = [
+  {
+    'name': 'Новости',
+    'status': true,
+    'icon': '${path}news.png'
+  },
+  {
+    'name': 'Опросы',
+    'status': true,
+    'icon': '${path}polls.png'
+  },
+  {
+    'name': 'Видеогалерея',
+    'status': true,
+    'icon': '${path}videoGallery.png'
+  },
+  {
+    'name': 'Дни рождения',
+    'status': false,
+    'icon': '${path}birthday.png',
+  },
+  {
+    'name': 'Бронирование переговорных',
+    'status': false,
+    'icon': '${path}negotiationReservation.png'
+  },
+];

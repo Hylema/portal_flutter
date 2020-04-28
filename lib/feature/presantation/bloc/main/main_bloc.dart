@@ -39,20 +39,17 @@ class MainBloc extends Bloc<MainEvent, MainState> {
   Stream<MainState> mapEventToState(MainEvent event) async* {
 
     if(event is GetPositionPagesEvent){
-      final List repositoryResult =
+      final MainParamsModel repositoryResult =
       repository.getPositionPages();
 
       yield LoadedMainParams(model: repositoryResult);
 
     } else if(event is SetPositionPagesEvent){
-      await repository.setPositionPages(event.params);
+      await repository.setPositionPages(model: event.model);
 
-      yield LoadedMainParams(model: event.params);
+      yield LoadedMainParams(model: event.model);
     } else if(event is UpdateMainParams){
-
-      print('event ==== ${event.params}');
-
-      yield LoadedMainParams(model: event.params);
+      yield LoadedMainParams(model: event.model);
     }
   }
 }

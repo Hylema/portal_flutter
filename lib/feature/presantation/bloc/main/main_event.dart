@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -7,13 +8,13 @@ abstract class MainEvent {}
 class GetPositionPagesEvent extends MainEvent {}
 
 class UpdateMainParams extends MainEvent {
-  final params;
+  final MainParamsModel model;
 
-  UpdateMainParams(this.params);
+  UpdateMainParams({@required this.model});
 }
 
 class SetPositionPagesEvent extends MainEvent {
-  final params;
+  final MainParamsModel model;
 
-  SetPositionPagesEvent(this.params);
+  SetPositionPagesEvent({@required this.model});
 }
