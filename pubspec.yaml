@@ -59,8 +59,6 @@ dependencies:
   flutter_html: ^0.8.2
   # Loading button with simple implementation
   rounded_loading_button: ^1.0.0
-  # A Flutter plugin to use the Cloud Firestore API.
-  cloud_firestore: ^0.13.2+1
   # A carousel slider widget, support infinite scroll and custom child widget, with auto play feature.
   carousel_slider: ^1.4.1
   # Use this package if you need more customization when notifying your user. For Android developers,

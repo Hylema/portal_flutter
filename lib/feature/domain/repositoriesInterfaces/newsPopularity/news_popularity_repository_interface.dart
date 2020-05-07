@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/feature/data/models/newsPopularity/news_popularity_model.dart';
@@ -15,7 +14,4 @@ abstract class INewsPopularityRepository {
 
   ///Пользователю впервые увидел эту запись, записываем её в json
   Future<Either<Failure, bool>> setUserSeePage(int newsId);
-
-  ///Загружаем все документы Firebase в json
-  Future<Either<Failure, List<DocumentSnapshot>>> loadingPopularity();
 }

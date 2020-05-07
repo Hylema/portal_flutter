@@ -10,7 +10,6 @@ import 'package:flutter_architecture_project/feature/data/datasources/birthday/b
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
-import 'package:flutter_architecture_project/feature/data/datasources/newsPopularity/news_popularity_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/polls/polls_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
@@ -20,7 +19,6 @@ import 'package:flutter_architecture_project/feature/data/repositories/birthday/
 import 'package:flutter_architecture_project/feature/data/repositories/error_catcher.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
-import 'package:flutter_architecture_project/feature/data/repositories/newsPopularity/news_popularity_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/polls/polls_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/profile/profile_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/videoGallery/video_gallery_repository.dart';
@@ -225,13 +223,6 @@ Future<void> init() async {
         ),
   );
 
-  /// likes/seen
-  sl.registerLazySingleton<NewsPopularityRemoteDataSource>(
-        () => NewsPopularityRemoteDataSource(
-        client: sl(),
-        storage: sl()
-    ),
-  );
   /// video gallery
   sl.registerLazySingleton<VideoGalleryRemoteDataSource>(
         () => VideoGalleryRemoteDataSource(
