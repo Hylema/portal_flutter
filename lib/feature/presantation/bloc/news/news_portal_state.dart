@@ -5,26 +5,40 @@ import 'package:meta/meta.dart';
 
 @immutable
 abstract class NewsPortalState extends Equatable{
-  NewsPortalState([List props = const <dynamic>[]]) : super(props);
+  @override
+  List<Object> get props => [];
 }
 
 class EmptyNewsPortal extends NewsPortalState {}
 class LoadingNewsPortal extends NewsPortalState {}
-class AuthNewsPortal extends NewsPortalState {}
-class NeedAuthNewsPortal extends NewsPortalState {}
-
 class LoadedNewsPortal extends NewsPortalState {
-  final NewsPortalModel model;
+  final List<NewsModel> listModels;
+  final bool hasReachedMax;
 
-  LoadedNewsPortal({@required this.model}) : super([model]);
+  LoadedNewsPortal({@required this.listModels, this.hasReachedMax});
+
+  LoadedNewsPortal copyWith({
+    List<NewsModel> birthdays,
+    bool hasReachedMax,
+  }) {
+    return LoadedNewsPortal(
+      listModels: listModels ?? this.listModels,
+        hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+    );
+  }
+
+  @override
+  List<Object> get props => [listModels, hasReachedMax];
 }
 
 class ErrorNewsPortal extends NewsPortalState {
   final String message;
 
-  ErrorNewsPortal({@required this.message}) : super([message]);
+  ErrorNewsPortal({@required this.message});
 }
 
+class NewsFromCacheState extends NewsPortalState {
+  final List<NewsModel> listModels;
+  NewsFromCacheState({@required this.listModels});
+}
 
-
-class InitialNewsPortalState extends NewsPortalState {}

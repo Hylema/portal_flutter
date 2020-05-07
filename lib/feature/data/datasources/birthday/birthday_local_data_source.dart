@@ -28,8 +28,6 @@ class BirthdayLocalDataSource implements IBirthdayLocalDataSource {
 
     List<BirthdayModel> listModels = List<BirthdayModel>.from(listBirthday.map((raw) => BirthdayModel.fromJson(raw)));
 
-    print('listModels =============== $listModels');
-
     return listModels;
   }
 

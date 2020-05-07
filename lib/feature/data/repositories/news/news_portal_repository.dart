@@ -5,6 +5,7 @@ import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
+import 'package:flutter_architecture_project/feature/domain/params/news/news_params.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/news/news_portal_repository_interface.dart';
 
 import 'package:meta/meta.dart';
@@ -20,68 +21,35 @@ class NewsPortalRepository implements INewsPortalRepository{
     @required this.networkInfo,
   });
 
-  getRemoteData(skip, top) async {
-    try {
-      final remoteNewsPortal = await remoteDataSource.getNewsPortal(skip, top);
-      localDataSource.cacheNewsPortal(remoteNewsPortal);
-      return Right(remoteNewsPortal);
-    } on ServerException {
-      return Left(ServerFailure());
-    }
-  }
+  @override
+  Future<List<NewsModel>> fetchNews({@required NewsParams params}) async {
+    List<NewsModel> listModel =
+    await remoteDataSource.getNewsWithParams(params: params);
 
-  getLocalData() async {
-    try {
-      final localNewsPortal = await localDataSource.getLastNewsPortal();
-      return Right(localNewsPortal);
-    } on CacheException {
-      return Left(CacheFailure());
-    }
+    await saveNewsToCache(listModels: listModel);
+
+    return listModel;
   }
 
   @override
-  Future<Either<Failure, NewsPortalModel>> getNewsFromNetwork(int skip, int top) async {
-    if (await networkInfo.isConnected) {
-      try {
-        final remoteNewsPortal = await remoteDataSource.getNewsPortal(skip, top);
-        localDataSource.cacheNewsPortal(remoteNewsPortal);
-        return Right(remoteNewsPortal);
-      } on AuthFailure {
-        return Left(AuthFailure());
-      } on ServerException {
-        return Left(ServerFailure());
-      }
-    } else {
-      return Left(NetworkFailure());
-    }
+  Future<List<NewsModel>> updateNews({@required NewsParams params}) async {
+    List<NewsModel> listModel =
+    await remoteDataSource.getNewsWithParams(params: params);
+
+    await updateNewsCache(listModels: listModel);
+
+    return listModel;
   }
 
   @override
-  Future<Either<Failure, NewsPortalModel>> getNewsFromCache() async {
-    try {
-      final localNewsPortal = await localDataSource.getLastNewsPortal();
-      return Right(localNewsPortal);
-    } on CacheException {
-      return Left(CacheFailure());
-    }
-  }
+  List<NewsModel> getNewsFromCache() =>
+      localDataSource.getNewsFromCache();
 
   @override
-  Future<Either<Failure, NewsPortalModel>> updateNewsOrNextNews(int skip, int top) async {
-    if (await networkInfo.isConnected) {
-      try {
-        try {
-          final remoteNewsPortal = await remoteDataSource.getNewsPortal(skip, top);
-          localDataSource.cacheNewsPortal(remoteNewsPortal);
-          return Right(remoteNewsPortal);
-        } on ServerException {
-          return Left(ServerFailure());
-        }
-      } on ServerException {
-        return Left(ServerFailure());
-      }
-    } else {
-      return Left(NetworkFailure());
-    }
-  }
+  Future<void> saveNewsToCache({@required List<NewsModel> listModels}) async =>
+      await localDataSource.saveNewsToCache(listModels: listModels);
+
+  @override
+  Future<void> updateNewsCache({@required List<NewsModel> listModels}) async =>
+      await localDataSource.updateNewsCache(listModels: listModels);
 }

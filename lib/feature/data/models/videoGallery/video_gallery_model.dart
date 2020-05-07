@@ -1,20 +1,34 @@
 import 'package:meta/meta.dart';
 
 class VideosGalleryModel {
-  final videos;
+  final id;
+  final title;
+  final videoUrl;
+  final created;
+
+
   VideosGalleryModel({
-    @required this.videos,
+    @required this.id,
+    @required this.title,
+    @required this.videoUrl,
+    @required this.created,
   });
 
-  factory VideosGalleryModel.fromJson(json) {
+  static VideosGalleryModel fromJson(raw) {
     return VideosGalleryModel(
-      videos: json['data'],
+      id: raw['id'],
+      title: raw['title'],
+      videoUrl: raw['videoUrl'],
+      created: raw['created'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'data': videos,
+      'id': id,
+      'title': title,
+      'videoUrl': videoUrl,
+      'created': created,
     };
   }
 }

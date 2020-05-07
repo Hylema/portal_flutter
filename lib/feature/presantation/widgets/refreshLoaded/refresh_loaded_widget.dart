@@ -144,7 +144,7 @@ class SmartRefresherWidget extends StatefulWidget {
     @required this.child,
     @required this.enableControlRefresh,
     @required this.enableControlLoad,
-    @required this.hasReachedMax,
+    this.hasReachedMax = true,
     this.onRefresh,
     this.onLoading,
     this.noDataText = 'Данных больше нету'
@@ -226,6 +226,7 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> {
       onLoading: () {
         if(_connection) widget.onLoading();
         else _refreshController.loadComplete();
+        print('onLoading');
       },
     );
   }

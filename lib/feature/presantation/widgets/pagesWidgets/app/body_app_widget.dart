@@ -11,6 +11,7 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/videoGall
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/polls/polls_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/profile/profile_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/video_gallery_page.dart';
 import 'package:flutter_architecture_project/injection_container.dart';
@@ -25,26 +26,20 @@ class BodyAppWidget extends StatelessWidget {
         PAGE: MainPage()
       },
       NEWS_PAGE_INDEX_NUMBER: {
-        PAGE: BlocProvider<NewsPortalBloc>(
-          create: (BuildContext context) => sl<NewsPortalBloc>(),
-          child: NewsPortalPage(),
-        ),
+        PAGE: NewsPortalPage()
       },
-//      PROFILE_PAGE_INDEX_NUMBER: {
-//        PAGE: BlocProvider<ProfileBloc>(
-//          create: (BuildContext context) => sl<ProfileBloc>(),
-//          child: ProfilePage(),
-//        ),
-//      },
+      PROFILE_PAGE_INDEX_NUMBER: {
+        PAGE: ProfilePage()
+      },
       BIRTHDAY_PAGE_INDEX_NUMBER: {
         PAGE: BirthdayPage(),
       },
-//      VIDEO_PAGE_INDEX_NUMBER: {
-//        PAGE: BlocProvider<VideoGalleryBloc>(
-//          create: (BuildContext context) => sl<VideoGalleryBloc>(),
-//          child: VideoGalleryPage(),
-//        ),
-//      },
+      VIDEO_PAGE_INDEX_NUMBER: {
+        PAGE: VideoGalleryPage()
+      },
+      POLLS_PAGE_INDEX_NUMBER: {
+        PAGE: PollsPage()
+      },
     };
 
     return BlocConsumer<SelectedIndexBloc, SelectedIndexState>(

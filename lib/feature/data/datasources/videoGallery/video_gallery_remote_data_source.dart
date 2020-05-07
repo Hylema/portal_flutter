@@ -4,43 +4,39 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/api/api.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/error/failure.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/response_handler.dart';
 import 'package:flutter_architecture_project/feature/data/models/videoGallery/video_gallery_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
+import 'package:flutter_architecture_project/feature/domain/params/videoGallery/video_gallery_params.dart';
 import 'package:http/http.dart' as http;
+
 abstract class IVideoGalleryRemoteDataSource {
-  
-  Future<VideosGalleryModel> getVideos(int pageIndex, int pageSize);
+  Future<List<VideosGalleryModel>> getVideos({@required VideoGalleryParams videoGalleryParams});
 }
 
-class VideoGalleryRemoteDataSource implements IVideoGalleryRemoteDataSource {
-  final http.Client client;
+class VideoGalleryRemoteDataSource with ResponseHandler implements IVideoGalleryRemoteDataSource {
   Storage storage;
+  final http.Client client;
 
   VideoGalleryRemoteDataSource({
-    @required this.client,
     @required this.storage,
+    @required this.client,
   });
 
   @override
-  Future<VideosGalleryModel> getVideos(int pageIndex, int pageSize) =>
-      _getVideosFromUrl('${Api.HOST_URL}:8080/api/videos?pageSize=$pageSize&pageIndex=$pageIndex');
+  Future<List<VideosGalleryModel>> getVideos({
+    @required VideoGalleryParams videoGalleryParams,
+  }) async {
+    String uri = Uri.http('${Api.HOST_URL}', '/api/videos', videoGalleryParams.toMap()).toString();
 
-  Future<VideosGalleryModel> _getVideosFromUrl(String url) async {
-
-    final response = await client.get(
-      url,
+    final response = await http.get(
+      uri,
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer ${storage.token}',
       },
     );
 
-    if (response.statusCode == 200) {
-      return VideosGalleryModel.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-    } else if(response.statusCode == 401){
-      throw AuthFailure();
-    } else {
-      throw ServerException();
-    }
+    return responseHandler<VideosGalleryModel>(response: response, model: VideosGalleryModel.fromJson, key: 'data');
   }
 }

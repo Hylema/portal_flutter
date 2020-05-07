@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_items_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,10 +14,8 @@ class NewsMainPageSwipeWidget extends StatefulWidget {
   NewsMainPageSwipeWidgetState createState() => NewsMainPageSwipeWidgetState();
 }
 
-class NewsMainPageSwipeWidgetState extends State<NewsMainPageSwipeWidget> with AutomaticKeepAliveClientMixin<NewsMainPageSwipeWidget>{
+class NewsMainPageSwipeWidgetState extends State<NewsMainPageSwipeWidget>{
 
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -32,7 +31,7 @@ class NewsMainPageSwipeWidgetState extends State<NewsMainPageSwipeWidget> with A
         } else if (state is LoadingNewsPortal) {
           return Container();
         } else if (state is LoadedNewsPortal) {
-          return NewsMainPageSwipeWidgetBody(news: state.model.news,);
+          return NewsMainPageSwipeWidgetBody(news: state.listModels,);
         } else if (state is ErrorNewsPortal) {
           return Container(
             child: Center(

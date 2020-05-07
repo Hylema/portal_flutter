@@ -1,47 +1,90 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/newsPortalCardInformation/news_portal_card_information_page.dart';
+import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_card_information_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/date_time_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_image_network_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_likes_seen_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/title_widget.dart';
 
+class NewsPortalItems extends StatelessWidget {
 
-class NewsPortalItems extends StatefulWidget {
+  final NewsModel news;
+  final int index;
+  final bool vertical;
+
+  int flexImage = 5;
+  int flexBody = 7;
+
   NewsPortalItems({
-    this.news,
-    this.index,
+    @required this.news,
+    @required this.index,
     this.vertical = false,
   }){
     assert(this.news != null);
     assert(this.index != null);
+    if(vertical){
+      flexBody = 6;
+      flexImage = 6;
+    }
   }
-  final news;
-  final index;
-  final bool vertical;
 
-  @override
-  NewsPortalItemsState createState() => NewsPortalItemsState();
-}
-
-class NewsPortalItemsState extends State<NewsPortalItems> with AutomaticKeepAliveClientMixin{
-
-  @override
-  bool get wantKeepAlive => true;
-
-  double _heightCard = 160;
-  var _news;
-  var _index;
-
-  @override
-  void initState() {
-    _news = widget.news;
-    _index = widget.index;
-
-    super.initState();
-  }
+  final double _heightCard = 160;
 
   @override
   Widget build(BuildContext context) {
+    final _childrenWidgets = <Widget>[
+      Expanded(
+        flex: flexImage,
+        child: ClipRRect(
+          borderRadius: vertical == false ? BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              bottomLeft: Radius.circular(10.0)
+          )
+              : BorderRadius.only(
+              topLeft: Radius.circular(10.0),
+              topRight: Radius.circular(10.0)
+          ),
+          child: ImageNetworkWidget(
+              path: news.slNewsCover,
+              index: index
+          ),
+        ),
+      ),
+      Expanded(
+        flex: flexBody,
+        child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  news.title,
+                  overflow: TextOverflow.fade,
+                  maxLines: 3,
+                  softWrap: true,
+                  style: TextStyle(fontSize: 15, color: Colors.black),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Container(
+                      //padding: EdgeInsets.only(top: 10),
+                      child: DateTimeWidget(
+                        dataTime: news.created,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    LikesSeenWidget(likesCount: news.likesCount,)
+                  ],
+                ),
+              ],
+            )
+        ),
+      ),
+    ];
+
     return Container(
       height: 200,
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
@@ -51,8 +94,8 @@ class NewsPortalItemsState extends State<NewsPortalItems> with AutomaticKeepAliv
               context,
               MaterialPageRoute(
                   builder: (context) => NewsPortalCardInformationPage(
-                    index: _index,
-                    news: _news,
+                    index: index,
+                    news: news,
                   )
               )
           );
@@ -82,79 +125,13 @@ class NewsPortalItemsState extends State<NewsPortalItems> with AutomaticKeepAliv
                   color: Colors.white
               ),
               height: _heightCard,
-              child: GestureDetector(
-//                    onPanUpdate: (details){
-//
-//                        setState(() {
-//                          flexImage = 11;
-//                          flexText = 1;
-//                        });
-//
-//                    },
-                  child: widget.vertical == false ? Row(
-                    children: _childrenWidgets(),
-                  )
-                      : Column(
-                    children: _childrenWidgets(),
-                  )
-              ),
+              child: vertical == true ? Column(
+                children: _childrenWidgets
+              ) : Row(children: _childrenWidgets),
             ),
           ),
         ),
       ),
     );
-  }
-
-  _childrenWidgets(){
-    return <Widget>[
-      Expanded(
-        //fit: FlexFit.tight,
-        child: ClipRRect(
-          borderRadius: widget.vertical == false ? BorderRadius.only(
-              topLeft: Radius.circular(10.0),
-              bottomLeft: Radius.circular(10.0)
-          )
-              : BorderRadius.only(
-              topLeft: Radius.circular(10.0),
-              topRight: Radius.circular(10.0)
-          ),
-          child: ImageNetworkWidget(
-              path: _news['slNewsCover'],
-              index: _index
-          ),
-        ),
-      ),
-      Expanded(
-        child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                TitleWidget(
-                  titleSize: 15,
-                  title: _news['Title'],
-                  color: Colors.black,
-                  maxSymbol: 70,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-                      //padding: EdgeInsets.only(top: 10),
-                      child: DateTimeWidget(
-                        dataTime: _news['Created'],
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    LikesSeen(id: _news['Id'])
-                  ],
-                ),
-              ],
-            )
-        ),
-      ),
-    ];
   }
 }

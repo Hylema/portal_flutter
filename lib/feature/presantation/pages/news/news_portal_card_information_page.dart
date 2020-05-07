@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_title_widget.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:html/dom.dart' as dom;
 
-var _news;
+NewsModel _news;
 int _index;
 
 class NewsPortalCardInformationPage extends StatefulWidget {
@@ -179,7 +180,7 @@ class NewsPortalCardInformationPageState extends State {
                     ),
                     Html(
                       backgroundColor: Colors.white,
-                      data: _news['slNewsBody'],
+                      data: _news.slNewsBody,
                       defaultTextStyle: TextStyle(
                           fontSize: 17
                       ),

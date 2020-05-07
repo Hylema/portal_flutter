@@ -1,6 +1,6 @@
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
-import 'package:flutter_architecture_project/feature/domain/params/birthday_params.dart';
+import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:async';

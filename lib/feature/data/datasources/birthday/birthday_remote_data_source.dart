@@ -3,7 +3,7 @@ import 'package:flutter_architecture_project/core/api/api.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/response_handler.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
-import 'package:flutter_architecture_project/feature/domain/params/birthday_params.dart';
+import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
 import 'package:http/http.dart' as http;
 
 abstract class IBirthdayRemoteDataSource {
@@ -13,7 +13,7 @@ abstract class IBirthdayRemoteDataSource {
   });
 }
 
-class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IBirthdayRemoteDataSource {
+class BirthdayRemoteDataSource with ResponseHandler implements IBirthdayRemoteDataSource {
   Storage storage;
   final http.Client client;
 
@@ -28,8 +28,6 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
   }) async {
     String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays/filter', birthdayParams.toMap()).toString();
 
-    print('uri =========== $uri');
-
     final response = await http.get(
         uri,
         headers: {
@@ -38,9 +36,6 @@ class BirthdayRemoteDataSource with ResponseHandler<BirthdayModel> implements IB
         },
     );
 
-    print(response.body);
-    print(response.statusCode);
-
-    return responseHandler(response: response, model: BirthdayModel.fromJson);
+    return responseHandler<BirthdayModel>(response: response, model: BirthdayModel.fromJson, key: 'data');
   }
 }

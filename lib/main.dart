@@ -4,6 +4,8 @@ import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 
@@ -36,6 +38,14 @@ void main() async {
               create: (BuildContext context) => di.sl<SelectedIndexBloc>()),
             BlocProvider<MainBloc>(
                 create: (BuildContext context) => di.sl<MainBloc>()),
+            BlocProvider<NewsPortalBloc>(
+                create: (BuildContext context) => di.sl<NewsPortalBloc>()),
+            BlocProvider<VideoGalleryBloc>(
+                create: (BuildContext context) => di.sl<VideoGalleryBloc>()),
+            BlocProvider<PastPollsBloc>(
+                create: (BuildContext context) => di.sl<PastPollsBloc>()),
+            BlocProvider<CurrentPollsBloc>(
+                create: (BuildContext context) => di.sl<CurrentPollsBloc>()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

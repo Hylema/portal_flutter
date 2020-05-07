@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_cupertino_indicator_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_items_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_title_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -41,7 +43,7 @@ class BuildPageNewsPortalState extends State<BuildPageNewsPortal> {
           return NewsPortalPageShimmer();
 
         } else if (state is LoadedNewsPortal) {
-          _news = state.model.news;
+          _news = state.listModels;
           return NewsPortalBody();
 
         } else if (state is ErrorNewsPortal) {
@@ -81,6 +83,7 @@ class NewsPortalBodyState extends State<NewsPortalBody> with AutomaticKeepAliveC
     return SmartRefresherWidget(
       enableControlLoad: true,
       enableControlRefresh: true,
+      hasReachedMax: false,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/newsPortalCardInformation/news_portal_card_information_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_card_information_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_image_network_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/title_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/date_time_widget.dart';
@@ -33,7 +33,7 @@ class NewsPortalTitle extends StatelessWidget {
         background: Stack(
             children: <Widget>[
               ImageNetworkWidget(
-                  path: news['slNewsCover'],
+                  path: news.slNewsCover,
                   index: index
               ),
               Container(
@@ -59,12 +59,12 @@ class NewsPortalTitle extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(bottom: 15),
                       child: DateTimeWidget(
-                        dataTime: news['Created'],
+                        dataTime: news.created,
                         color: Colors.white,
                       ),
                     ),
                     TitleWidget(
-                      title: news['Title'],
+                      title: news.title,
                     ),
                   ],
                 ),

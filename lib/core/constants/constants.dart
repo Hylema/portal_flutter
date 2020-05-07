@@ -34,6 +34,7 @@ const double BOTTOM_NAVIGATION_BAR_HEIGHT = 50.0;
 ///Cache
 const String CACHE_BIRTHDAY = 'cache_birthday';
 const String CACHE_POSITION_PAGES = 'cache_position_pages';
+const String CACHE_NEWS = 'cache_news';
 
 
 const int BIRTHDAY_PAGE_SIZE = 15;

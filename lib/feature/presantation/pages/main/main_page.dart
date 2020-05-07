@@ -8,6 +8,7 @@ import 'package:flutter_architecture_project/feature/presantation/widgets/pagesW
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/news_main_page_swipe_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/polls_main_page_custom_swipe_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/mainPage/vidoes_main_page_swipe_stack_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 const String NEWS_PAGE = 'Новости';
@@ -117,6 +118,7 @@ class MainPageBody extends StatelessWidget {
     return SmartRefresherWidget(
       enableControlRefresh: false,
       enableControlLoad: false,
+      hasReachedMax: true,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

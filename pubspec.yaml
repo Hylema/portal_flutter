@@ -44,7 +44,9 @@ dependencies:
   # A package provides an easy way to add shimmer effect in Flutter project
   shimmer: ^1.0.1
   # A Flutter plugin for iOS and Android for playing back video on a Widget surface.
-  video_player: ^0.10.8+1
+  video_player: ^0.10.9+2
+  chewie: ^0.9.10
+
   page_transition: ^1.1.4
   # Work with JWT Token
   jwt_decode: ^0.1.0
@@ -116,6 +118,7 @@ flutter:
     - assets/icons/newsCompany.png
     - assets/icons/home.png
     - assets/icons/iconDrag.png
+    - assets/icons/archivePolls.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

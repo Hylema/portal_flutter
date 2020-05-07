@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:shimmer/shimmer.dart';
 
 
@@ -16,6 +17,7 @@ class ProfilePageShimmer extends StatelessWidget {
     return SmartRefresherWidget(
       enableControlLoad: false,
       enableControlRefresh: true,
+      hasReachedMax: false,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

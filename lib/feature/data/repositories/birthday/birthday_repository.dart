@@ -1,7 +1,7 @@
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
-import 'package:flutter_architecture_project/feature/domain/params/birthday_params.dart';
+import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
 
 import 'package:meta/meta.dart';

@@ -4,14 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 
-class ResponseHandler<Type> {
+class ResponseHandler {
 
-  List<Type> responseHandler({@required response, @required model}){
+  List<Type> responseHandler<Type>({@required response, @required model, @required String key}){
     switch(response.statusCode){
       case 200 :
         final data = jsonDecode(utf8.decode(response.bodyBytes));
 
-        final raws = data['data'] as List;
+        final raws = data[key] as List;
 
         List<Type> listModels = List<Type>.from(raws.map((raw) => model(raw)));
 

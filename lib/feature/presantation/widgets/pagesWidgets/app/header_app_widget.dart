@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/polls/archive_polls_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/video_gallery_parameters.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_model_sheet_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page_parameters.dart';
@@ -80,7 +82,38 @@ class HeaderAppWidget extends StatelessWidget with PreferredSizeWidget{
         ],
       ),
       HeaderAppMainBar(
-        titleText: 'test',
+        titleText: 'Опросы',
+        action: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+                top: 7,
+                bottom: 7
+            ),
+            child: IconButton(
+                onPressed: (){
+                  Navigator.push(context, SlideRightRoute(page: ArchivePollsPage()));
+                },
+                icon: Image.asset(
+                  'assets/icons/archivePolls.png',
+                )
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                right: 15.0,
+                top: 7,
+                bottom: 7
+            ),
+            child: IconButton(
+                onPressed: (){
+                  Navigator.push(context, ScaleRoute(page: BirthdayPageParameters()));
+                },
+                icon: Image.asset(
+                  'assets/icons/change.png',
+                )
+            ),
+          ),
+        ],
       ),
       HeaderAppMainBar(
         titleText: 'Видеогалерея',
@@ -92,7 +125,9 @@ class HeaderAppWidget extends StatelessWidget with PreferredSizeWidget{
                 bottom: 7
             ),
             child: IconButton(
-                onPressed: (){},
+                onPressed: (){
+                  Navigator.push(context, ScaleRoute(page: VideoGalleryParameters()));
+                },
                 icon: Image.asset(
                   'assets/icons/change.png',
                 )

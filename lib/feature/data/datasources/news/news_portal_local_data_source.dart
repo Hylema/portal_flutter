@@ -5,32 +5,45 @@ import 'package:flutter_architecture_project/feature/data/models/news/news_porta
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class INewsPortalLocalDataSource {
-  Future<NewsPortalModel> getLastNewsPortal();
+  List<NewsModel> getNewsFromCache();
 
-  Future<void> cacheNewsPortal(NewsPortalModel triviaToCache);
+  Future<void> saveNewsToCache({@required List<NewsModel> listModels});
+  Future<void> updateNewsCache({@required List<NewsModel> listModels});
 }
 
 class NewsPortalLocalDataSource implements INewsPortalLocalDataSource {
   final SharedPreferences sharedPreferences;
-  final String cachedName = 'CACHED_NEWS_PORTAL';
+  final cachedName;
 
-  NewsPortalLocalDataSource({@required this.sharedPreferences});
+  NewsPortalLocalDataSource({
+    @required this.cachedName,
+    @required this.sharedPreferences
+  });
 
   @override
-  Future<NewsPortalModel> getLastNewsPortal() {
+  List<NewsModel> getNewsFromCache() {
     final jsonString = sharedPreferences.getString(cachedName);
-    if (jsonString != null) {
-      return Future.value(NewsPortalModel.fromJson(json.decode(jsonString)));
-    } else {
-      throw CacheException();
-    }
+    final List<dynamic> listBirthday = json.decode(jsonString);
+
+    List<NewsModel> listModels = List<NewsModel>.from(listBirthday.map((raw) => NewsModel.fromJson(raw)));
+
+    return listModels;
   }
 
   @override
-  Future<void> cacheNewsPortal(NewsPortalModel modelNewsToCache) {
+  Future<void> saveNewsToCache({@required List<NewsModel> listModels}) {
+    List<NewsModel> _listModels = getNewsFromCache();
+
     return sharedPreferences.setString(
       cachedName,
-      json.encode(modelNewsToCache.toJson()),
+      json.encode([..._listModels, ...listModels]),
     );
   }
+
+  @override
+  Future<void> updateNewsCache({@required List<NewsModel> listModels}) =>
+      sharedPreferences.setString(
+        cachedName,
+        json.encode(listModels),
+      );
 }

@@ -11,6 +11,7 @@ import 'package:flutter_architecture_project/feature/data/datasources/main/main_
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/newsPopularity/news_popularity_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/polls/polls_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
@@ -20,16 +21,22 @@ import 'package:flutter_architecture_project/feature/data/repositories/error_cat
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/newsPopularity/news_popularity_repository.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/polls/polls_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/profile/profile_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/videoGallery/video_gallery_repository.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/main/main_params_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/news/news_portal_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/polls/polls_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/videoGallery/video_gallery_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
@@ -50,7 +57,10 @@ Future<void> init() async {
   ///! BLOCS
 
   /// news portal
-  sl.registerFactory(() => NewsPortalBloc());
+  sl.registerFactory(() => NewsPortalBloc(
+    networkInfo: sl(),
+    repository: sl()
+  ));
 
   /// auth
   sl.registerFactory(() => AuthBloc(
@@ -74,13 +84,14 @@ Future<void> init() async {
           repository: sl()
     ),
   );
-//
-//  /// video gallery
-//  sl.registerFactory(
-//        () => VideoGalleryBloc(
-//        getVideoGalleryFromNetwork: sl()
-//    ),
-//  );
+
+  /// video gallery
+  sl.registerFactory(
+        () => VideoGalleryBloc(
+        networkInfo: sl(),
+        repository: sl()
+    ),
+  );
 
   /// birthday
   sl.registerFactory(
@@ -93,7 +104,15 @@ Future<void> init() async {
   /// selected index
   sl.registerFactory(() => SelectedIndexBloc());
 
-
+  ///polls
+  sl.registerFactory(() => PastPollsBloc(
+    networkInfo: sl(),
+    repository: sl()
+  ));
+  sl.registerFactory(() => CurrentPollsBloc(
+      networkInfo: sl(),
+      repository: sl()
+  ));
 
 
 
@@ -104,14 +123,14 @@ Future<void> init() async {
 
   ///! REPOSITORY
 
-//  /// news portal
-//  sl.registerLazySingleton<INewsPortalRepository>(
-//        () => NewsPortalRepository(
-//      remoteDataSource: sl(),
-//      localDataSource: sl(),
-//      networkInfo: sl(),
-//    ),
-//  );
+  /// news portal
+  sl.registerLazySingleton<INewsPortalRepository>(
+        () => NewsPortalRepository(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
 //
 //  /// profile
 //  sl.registerLazySingleton<IProfileRepository>(
@@ -136,14 +155,13 @@ Future<void> init() async {
 //        remoteDataSource: sl()
 //    ),
 //  );
-//
-//  /// video gallery
-//  sl.registerLazySingleton<IVideoGalleryRepository>(
-//        () => VideoGalleryRepository(
-//        networkInfo: sl(),
-//        remoteDataSource: sl()
-//    ),
-//  );
+
+  /// video gallery
+  sl.registerLazySingleton<IVideoGalleryRepository>(
+        () => VideoGalleryRepository(
+        remoteDataSource: sl()
+    ),
+  );
   /// auth
   sl.registerLazySingleton<AuthRepository>(
         () => AuthRepository(
@@ -161,6 +179,13 @@ Future<void> init() async {
     ),
   );
 
+  ///polls
+  sl.registerLazySingleton<PollsRepository>(
+        () => PollsRepository(
+        remoteDataSource: sl(),
+        networkInfo: sl()
+    ),
+  );
 
 
 
@@ -175,7 +200,7 @@ Future<void> init() async {
     ),
   );
   sl.registerLazySingleton<NewsPortalLocalDataSource>(
-        () => NewsPortalLocalDataSource(sharedPreferences: sl()),
+        () => NewsPortalLocalDataSource(sharedPreferences: sl(), cachedName: CACHE_NEWS),
   );
 
   /// profile
@@ -239,6 +264,14 @@ Future<void> init() async {
         () => AuthLocalDataSource(
           flutterSecureStorage: sl(),
           storage: sl()
+    ),
+  );
+
+  ///polls
+  sl.registerLazySingleton<PollsRemoteDataSource>(
+        () => PollsRemoteDataSource(
+        client: sl(),
+        storage: sl()
     ),
   );
 

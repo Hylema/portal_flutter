@@ -7,7 +7,11 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -70,6 +74,10 @@ class BuildBodyState extends State with TickerProviderStateMixin{
 
   BirthdayBloc _birthdayBloc;
   MainBloc _mainBloc;
+  NewsPortalBloc _newsBloc;
+  VideoGalleryBloc _videoGalleryBloc;
+  PastPollsBloc _pastPollsBloc;
+  CurrentPollsBloc _currentPollsBloc;
 
   @override
   void initState() {
@@ -109,6 +117,10 @@ class BuildBodyState extends State with TickerProviderStateMixin{
 
     _birthdayBloc = BlocProvider.of<BirthdayBloc>(context);
     _mainBloc = BlocProvider.of<MainBloc>(context);
+    _newsBloc = BlocProvider.of<NewsPortalBloc>(context);
+    _videoGalleryBloc = BlocProvider.of<VideoGalleryBloc>(context);
+    _pastPollsBloc = BlocProvider.of<PastPollsBloc>(context);
+    _currentPollsBloc = BlocProvider.of<CurrentPollsBloc>(context);
 
     BlocSupervisor.delegate = SupervisorWelcomePage(
         snackBar: Scaffold.of(context).showSnackBar,
@@ -139,6 +151,10 @@ class BuildBodyState extends State with TickerProviderStateMixin{
   _loadingData(){
     _birthdayBloc.add(ResetFilterBirthdayEvent());
     _mainBloc.add(GetPositionPagesEvent());
+    _newsBloc.add(UpdateNewsEvent());
+    _videoGalleryBloc.add(UpdateVideosEvent());
+    _currentPollsBloc.add(FetchCurrentPolls());
+    _pastPollsBloc.add(FetchPastPolls());
 //    BlocProvider.of<ProfileBloc>(context).add(GetProfileFromNetworkEvent());
 //    BlocProvider.of<NewsPortalBloc>(context).add(ResetFilterNewsEvent());
 //    BlocProvider.of<VideoGalleryBloc>(context).add(Vide());
