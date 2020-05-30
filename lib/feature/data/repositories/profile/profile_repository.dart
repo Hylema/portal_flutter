@@ -1,6 +1,5 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
-import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
@@ -8,7 +7,7 @@ import 'package:flutter_architecture_project/feature/data/models/profile/profile
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/profile/profile_repository_interface.dart';
 import 'package:meta/meta.dart';
 
-class ProfileRepository implements IProfileRepository {
+class ProfileRepository implements IProfileRepository{
   final ProfileRemoteDataSource remoteDataSource;
   final ProfileLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
@@ -20,29 +19,20 @@ class ProfileRepository implements IProfileRepository {
   });
 
   @override
-  Future<Either<Failure, ProfileModel>> getProfileFromNetwork() async {
-    if (await networkInfo.isConnected) {
-      try {
-        final remoteNewsPortal = await remoteDataSource.getProfile();
-        localDataSource.saveDataToCache(remoteNewsPortal);
-        return Right(remoteNewsPortal);
-      } on AuthFailure {
-        return Left(AuthFailure());
-      } on ServerException {
-        return Left(ServerFailure());
-      }
-    } else {
-      return Left(NetworkFailure());
-    }
+  Future<ProfileModel> fetchProfile() async {
+    ProfileModel model = await remoteDataSource.getProfile();
+
+    await saveProfileToCache(model: model);
+
+    return model;
   }
 
   @override
-  Future<Either<Failure, ProfileModel>> getProfileFromCache() async {
-    try {
-      final localNewsPortal = await localDataSource.getDataFromCache();
-      return Right(localNewsPortal);
-    } on CacheException {
-      return Left(CacheFailure());
-    }
-  }
+  ProfileModel getProfileFromCache() =>
+      localDataSource.getProfileFromCache();
+
+  @override
+  Future<void> saveProfileToCache({@required ProfileModel model}) async =>
+      await localDataSource.saveProfileToCache(model: model);
+
 }

@@ -10,3 +10,4 @@ class AuthCodeEvent extends AuthEvent {
 }
 
 class NeedAuthEvent extends AuthEvent {}
+class CheckAuthEvent extends AuthEvent {}

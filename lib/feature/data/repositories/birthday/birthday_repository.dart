@@ -2,6 +2,7 @@ import 'package:flutter_architecture_project/feature/data/datasources/birthday/b
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
+import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params_response.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
 
 import 'package:meta/meta.dart';
@@ -16,104 +17,65 @@ class BirthdayRepository implements IBirthdayRepository{
   });
 
   @override
-  Future<List<BirthdayModel>> fetchBirthday({
+  Future<BirthdayResponse> fetchBirthday({
     @required BirthdayParams params,
+    bool update = false
   }) async {
-    List<BirthdayModel> listModel =
-    await remoteDataSource.getBirthdayWithParams(birthdayParams: params);
+    final BirthdayResponse _response = await _getData(params: params);
 
-    await saveBirthdayToCache(listModels: listModel);
+    if(update) await updateBirthdayCache(response: _response);
+    else await saveBirthdayToCache(response: _response);
 
-    return listModel;
+    return _response;
   }
 
   @override
-  Future<List<BirthdayModel>> updateBirthday({BirthdayParams params}) async {
-    List<BirthdayModel> listModel =
-    await remoteDataSource.getBirthdayWithParams(birthdayParams: params);
-
-    await updateBirthdayCache(listModels: listModel);
-
-    return listModel;
-  }
-
-  @override
-  List<BirthdayModel> getBirthdayFromCache() =>
+  BirthdayResponse getBirthdayFromCache() =>
       localDataSource.getBirthdayFromCache();
 
   @override
-  Future<void> saveBirthdayToCache({@required List<BirthdayModel> listModels}) async =>
-      await localDataSource.saveBirthdayToCache(listModels: listModels);
+  Future<void> saveBirthdayToCache({@required BirthdayResponse response}) async =>
+      await localDataSource.saveBirthdayToCache(response: response);
 
   @override
-  Future<void> updateBirthdayCache({@required List<BirthdayModel> listModels}) async =>
-      await localDataSource.updateBirthdayCache(listModels: listModels);
+  Future<void> updateBirthdayCache({@required BirthdayResponse response}) async =>
+      await localDataSource.updateBirthdayCache(response: response);
 
+  Future<BirthdayResponse> _getData({@required BirthdayParams params}) async {
+    final month = [
+      'Января','Ферваля','Марта',
+      'Апреля','Мая','Июня',
+      'Июля','Августа','Сентября',
+      'Октября','Ноября','Декабря'
+    ];
+
+    String _title;
+    List<BirthdayModel> _listModels;
+
+    if(params.dayNumber != null && params.monthNumber != null){
+      _title = 'Поиск ${params.dayNumber} ${month[params.monthNumber - 1]}';
+
+      _listModels = await remoteDataSource.getConcreteDayBirthdayWithParams(birthdayParams: params);
+
+    } else {
+      _listModels = await remoteDataSource.getStartEndDayBirthdayWithParams(birthdayParams: params);
+
+      if(params.startDayNumber != null && params.startMonthNumber != null){
+        _title = 'Поиск с ${params.startDayNumber} ${month[params.startMonthNumber - 1]}';
+      }
+
+      if(params.endDayNumber != null && params.endMonthNumber != null){
+        _title = 'Поиск по ${params.endDayNumber} ${month[params.endMonthNumber - 1]}';
+      }
+
+      if(params.startDayNumber != null && params.startMonthNumber != null && params.endDayNumber != null && params.endMonthNumber != null){
+        _title = 'Поиск c ${params.startDayNumber} ${month[params.startMonthNumber - 1]} по ${params.endDayNumber} ${month[params.endMonthNumber - 1]}';
+      }
+    }
+
+    return BirthdayResponse(
+      title: _title,
+      listModels: _listModels
+    );
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-//@override
-//Future<Either<Failure, BirthdayModel>> getBirthdayWithConcreteDay({
-//  @required int monthNumber,
-//  @required int dayNumber,
-//  @required int pageSize,
-//  @required int pageIndex,
-//  @required bool update,
-//}) async {
-//  bool noDataMore = false;
-//
-//  Either<Failure, BirthdayModel> _cacheResult = await _getBirthdayFromCache();
-//
-//  dynamic _birthdayModelFromCache = _cacheResult.fold(
-//          (Failure failure) => failure,
-//          (BirthdayModel modelFromCache) => modelFromCache);
-//
-//  if(_birthdayModelFromCache is !BirthdayModel)
-//    return Left(_birthdayModelFromCache);
-//
-//  if (await networkInfo.isConnected) {
-//
-//    Either<Failure, BirthdayModel> _networkResult = await _getBirthdayFromNetwork(
-//      monthNumber: monthNumber,
-//      dayNumber: dayNumber,
-//      pageIndex: pageIndex,
-//      pageSize: pageSize,
-//    );
-//
-//    dynamic _birthdayModelFromNetwork = _networkResult.fold(
-//            (Failure failure) => failure,
-//            (BirthdayModel modelFromNetwork) => modelFromNetwork);
-//
-//    if(_birthdayModelFromNetwork is !BirthdayModel)
-//      return Left(_birthdayModelFromNetwork);
-//
-//    if(pageIndex == 1){
-//      await _setBirthdayToCache(model: _birthdayModelFromNetwork);
-//      return Right(_birthdayModelFromNetwork);
-//    } else {
-//      if(_birthdayModelFromNetwork.birthdays.length == 0) noDataMore = true;
-//
-//      BirthdayModel _birthdayModel = BirthdayModel(birthdays: [
-//        ..._birthdayModelFromCache.birthdays,
-//        ..._birthdayModelFromNetwork.birthdays
-//      ]);
-//
-//      await _setBirthdayToCache(model: _birthdayModel);
-//      return Right(BirthdayModel(birthdays: _birthdayModel.birthdays, noDataMore: noDataMore));
-//    }
-//  } else {
-//    return Left(NetworkFailure());
-//    //return Right(BirthdayModel(birthdays: _birthdayModelFromCache.birthdays, network: false));
-//  }
-//}

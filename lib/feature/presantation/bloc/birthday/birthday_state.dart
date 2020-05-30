@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
+import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
 import 'package:meta/meta.dart';
 
 @immutable
@@ -10,8 +11,9 @@ abstract class BirthdayState extends Equatable{
 
 class BirthdayFromCacheState extends BirthdayState {
   final List birthdays;
+  final String title;
 
-  BirthdayFromCacheState({@required this.birthdays});
+  BirthdayFromCacheState({@required this.birthdays, @required this.title});
 }
 class NeedAuthBirthday extends BirthdayState {}
 class LoadingBirthdayState extends BirthdayState {}
@@ -33,9 +35,9 @@ class LoadedBirthdayState extends BirthdayState {
     bool hasReachedMax,
   }) {
     return LoadedBirthdayState(
-      birthdays: birthdays ?? this.birthdays,
-      hasReachedMax: hasReachedMax ?? this.hasReachedMax,
-      title: title
+        birthdays: birthdays ?? this.birthdays,
+        hasReachedMax: hasReachedMax ?? this.hasReachedMax,
+        title: title,
     );
   }
 

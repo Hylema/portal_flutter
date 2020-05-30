@@ -8,18 +8,21 @@ abstract class ProfileState extends Equatable{
 }
 
 class InitialProfileState extends ProfileState {}
-class EmptyProfile extends ProfileState {}
-class LoadingProfile extends ProfileState {}
-class NeedAuthProfile extends ProfileState {}
+class LoadingProfileState extends ProfileState {}
 
-class LoadedProfile extends ProfileState {
-  final ProfileModel model;
-
-  LoadedProfile({@required this.model}) : super([model]);
+class LoadedProfileFromCacheState extends ProfileState {
+  final data;
+  LoadedProfileFromCacheState({@required this.data});
 }
 
-class ErrorProfile extends ProfileState {
+class LoadedProfileState extends ProfileState {
+  final ProfileModel model;
+
+  LoadedProfileState({@required this.model}) : super([model]);
+}
+
+class ErrorProfileState extends ProfileState {
   final String message;
 
-  ErrorProfile({@required this.message}) : super([message]);
+  ErrorProfileState({@required this.message}) : super([message]);
 }

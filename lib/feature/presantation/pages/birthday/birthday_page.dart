@@ -2,78 +2,44 @@ import 'dart:async';
 
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/core/global_state.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page_shimmer.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/birthday/filter/birthday_page_filter.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/data_from_cache_message.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_architecture_project/injection_container.dart' as di;
 
-class BirthdayPage extends StatefulWidget {
-
-  @override
-  BirthdayPageState createState() => BirthdayPageState();
-}
-
-class BirthdayPageState extends State<BirthdayPage> {
-
-  StreamSubscription _subscription;
-  bool currentConnection = false;
-  bool needUpdate = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if(result == ConnectivityResult.none){
-        currentConnection = false;
-        needUpdate = true;
-      } else {
-        currentConnection = true;
-      }
-
-      if(currentConnection == true && needUpdate){
-        BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent());
-
-        needUpdate = false;
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-
-    _subscription.cancel();
-  }
-
+class BirthdayPage extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return BlocConsumer<BirthdayBloc, BirthdayState>(
+      // ignore: missing_return
       builder: (context, state) {
         if (state is BirthdayFromCacheState) {
-          if(state.birthdays.length == 0){
-            return Center(child: Text('Нет ранее сохраненных данных'),);
-          }
+          if(state.birthdays.length == 0)
+            return Center(child: Text('Нет ранее сохраненных данных'));
 
           return BirthdayPageBody(
-              listModel: state.birthdays,
-              title: 'Последние загруженные данные',
-              enableControlLoad: false,
+            listModel: state.birthdays,
+            title: state.title,
+            enableControlLoad: false,
+            fromCache: true,
             hasReachedMax: true,
           );
         } else if (state is LoadingBirthdayState) {
           return BirthdayPageShimmer();
         } else if (state is LoadedBirthdayState) {
-          if(state.birthdays.length == 0){
-            return Center(child: Text('По вашему запросу ничего не было найдено'),);
-          }
+          if(state.birthdays.length == 0)
+            return Center(child: Text('По вашему запросу ничего не было найдено'));
 
           return BirthdayPageBody(
               listModel: state.birthdays,
@@ -83,7 +49,6 @@ class BirthdayPageState extends State<BirthdayPage> {
         } else if (state is ErrorBirthdayState) {
           return BirthdayPageShimmer();
         }
-        return BirthdayPageShimmer();
       },
       listener: (context, state) {},
     );
@@ -96,6 +61,7 @@ class BirthdayPageBody extends StatelessWidget {
   final bool hasReachedMax;
   final bool enableControlRefresh;
   final bool enableControlLoad;
+  final bool fromCache;
 
   BirthdayPageBody({
     @required this.listModel,
@@ -103,6 +69,7 @@ class BirthdayPageBody extends StatelessWidget {
     @required this.hasReachedMax,
     this.enableControlRefresh = true,
     this.enableControlLoad = true,
+    this.fromCache = false
   });
 
   @override
@@ -110,13 +77,15 @@ class BirthdayPageBody extends StatelessWidget {
     return SmartRefresherWidget(
         enableControlRefresh: enableControlRefresh,
         enableControlLoad: enableControlLoad,
-        hasReachedMax: hasReachedMax,
         onRefresh: () => BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent()),
         onLoading: () => BlocProvider.of<BirthdayBloc>(context).add(FetchBirthdayEvent()),
+        hasReachedMax: hasReachedMax,
         child: CustomScrollView(
+          controller: GlobalState.hideAppNavigationBarController,
           slivers: <Widget>[
             SliverList(
               delegate: SliverChildListDelegate([
+                DataFromCacheMessageWidget(fromCache: fromCache),
                 Container(
                   color: Colors.grey[200],
                   child: Padding(
@@ -141,7 +110,7 @@ class BirthdayPageBody extends StatelessWidget {
               ),
             ),
           ],
-        )
+        ),
     );
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 
 class BirthdayPageShimmer extends StatelessWidget {
@@ -13,6 +16,7 @@ class BirthdayPageShimmer extends StatelessWidget {
     return SmartRefresherWidget(
       enableControlRefresh: true,
       enableControlLoad: false,
+      onRefresh: () => BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent()),
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(

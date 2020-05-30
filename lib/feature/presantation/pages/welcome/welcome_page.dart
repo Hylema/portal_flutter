@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/animation/wave_animation.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/news_portal_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/news_portal_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -78,6 +80,8 @@ class BuildBodyState extends State with TickerProviderStateMixin{
   VideoGalleryBloc _videoGalleryBloc;
   PastPollsBloc _pastPollsBloc;
   CurrentPollsBloc _currentPollsBloc;
+  ProfileBloc _profileBloc;
+  AuthBloc _authBloc;
 
   @override
   void initState() {
@@ -121,19 +125,13 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     _videoGalleryBloc = BlocProvider.of<VideoGalleryBloc>(context);
     _pastPollsBloc = BlocProvider.of<PastPollsBloc>(context);
     _currentPollsBloc = BlocProvider.of<CurrentPollsBloc>(context);
-
-    BlocSupervisor.delegate = SupervisorWelcomePage(
-        snackBar: Scaffold.of(context).showSnackBar,
-        blocAuth: BlocProvider.of<AuthBloc>(context),
-        pageLoadingBloc: BlocProvider.of<PageLoadingBloc>(context),
-        context: context
-    );
+    _profileBloc = BlocProvider.of<ProfileBloc>(context);
+    _authBloc = BlocProvider.of<AuthBloc>(context);
   }
 
   @override
   void dispose() {
     super.dispose();
-
   }
 
   Future _auth({@required context}) async {
@@ -148,21 +146,33 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     Navigator.pushNamed(context, '/auth');
   }
 
-  _loadingData(){
-    _birthdayBloc.add(ResetFilterBirthdayEvent());
-    _mainBloc.add(GetPositionPagesEvent());
+  _start(){
+    _authBloc.add(CheckAuthEvent());
+  }
+
+  _loadData(){
+    _birthdayBloc.add(UpdateBirthdayEvent());
+    _mainBloc.add(GetPositionWidgetsEvent());
     _newsBloc.add(UpdateNewsEvent());
     _videoGalleryBloc.add(UpdateVideosEvent());
     _currentPollsBloc.add(FetchCurrentPolls());
     _pastPollsBloc.add(FetchPastPolls());
-//    BlocProvider.of<ProfileBloc>(context).add(GetProfileFromNetworkEvent());
-//    BlocProvider.of<NewsPortalBloc>(context).add(ResetFilterNewsEvent());
-//    BlocProvider.of<VideoGalleryBloc>(context).add(Vide());
+    _profileBloc.add(GetProfileEvent());
   }
 
   Future _finish() async {
     _btnController.success();
+    _loadData();
+    await Future.delayed(Duration(milliseconds: 1000), () {});
 
+    setState(() {
+      _moveNextPage = true;
+    });
+  }
+
+  Future _finishWithError() async {
+    _btnController.error();
+    _loadData();
     await Future.delayed(Duration(milliseconds: 1000), () {});
 
     setState(() {
@@ -179,14 +189,10 @@ class BuildBodyState extends State with TickerProviderStateMixin{
         BlocListener<AuthBloc, AuthState>(
           listener: (BuildContext context, AuthState state) async {
             if(state is NeedAuthState) await _auth(context: context);
-            else if (state is AuthCompletedState) await _loadingData();
+            else if(state is AuthCompletedState) await _finish();
+            else if(state is AuthFailedState) await _finishWithError();
           },
         ),
-        BlocListener<PageLoadingBloc, PageLoadingState>(
-          listener: (BuildContext context, PageLoadingState state) async {
-            if(state is AllPageLoaded) await _finish();
-          },
-        )
       ],
       child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -217,9 +223,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
                             scale: _scaleAnimation.value,
                             child: _moveNextPage == false ? CustomRoundedLoadingButton(
                               child: Text('Начать', style: TextStyle(color: Colors.white)),
-                              onPressed: () {
-                                _loadingData();
-                              },
+                              onPressed: () => _start(),
                               controller: _btnController,
                               color: Color.fromRGBO(238, 0, 38, 1),
                             ) : Container(
@@ -240,83 +244,6 @@ class BuildBodyState extends State with TickerProviderStateMixin{
             ],
           )
       ),
-    );
-  }
-}
-
-class SupervisorWelcomePage extends BlocDelegate {
-
-  final Function snackBar;
-  final AuthBloc blocAuth;
-  final PageLoadingBloc pageLoadingBloc;
-  final BuildContext context;
-
-  SupervisorWelcomePage({
-    @required this.snackBar,
-    @required this.blocAuth,
-    @required this.pageLoadingBloc,
-    @required this.context
-  });
-
-  @override
-  void onEvent(Bloc bloc, Object event) {
-    super.onEvent(bloc, event);
-    print(event);
-  }
-
-  @override
-  void onTransition(Bloc bloc, Transition transition) {
-    super.onTransition(bloc, transition);
-    print(transition.nextState);
-
-    if(transition.nextState is LoadedBirthdayState){
-      pageLoadingBloc.add(SuccessLoading(state: LoadingBirthdayState));
-    }
-  }
-
-  @override
-  void onError(Bloc bloc, Object error, StackTrace stacktrace) async {
-    super.onError(bloc, error, stacktrace);
-    if(error is AuthException) {
-      Navigator.pushNamed(context, '/auth');
-      //Navigator.pushReplacementNamed(context, '/auth');
-      return;
-    } else if(error is ServerException){
-      Navigator.pushNamed(context, '/auth');
-      return;
-    } else if(error is NetworkException){
-      pageLoadingBloc.add(AllPageLoadedEvent());
-    }
-
-    print(error);
-
-    int seconds;
-    String errorMessage = error.toString();
-
-    if(error is ServerException) errorMessage = error.message;
-    if(error is NetworkException) errorMessage = error.message;
-    if(error is UnknownException) errorMessage = error.message + ' ${error.code}';
-
-    final int errorMessageLength = errorMessage.length;
-
-    if(errorMessageLength > 20 && errorMessageLength < 40) seconds = 3;
-    else if(errorMessageLength > 40 && errorMessageLength < 60) seconds = 4;
-    else if(errorMessageLength > 69 && errorMessageLength < 80) seconds = 5;
-    else if(errorMessageLength > 80 && errorMessageLength < 100) seconds = 6;
-    else if(errorMessageLength > 100 && errorMessageLength < 120) seconds = 7;
-    else if(errorMessageLength > 120 && errorMessageLength < 140) seconds = 8;
-    else if(errorMessageLength > 140 && errorMessageLength < 160) seconds = 9;
-    else seconds = 15;
-
-    snackBar(
-        SnackBar(
-          content: Text(errorMessage),
-          duration: Duration(seconds: seconds),
-          action: SnackBarAction(
-            label: 'Закрыть',
-            onPressed: () {},
-          ),
-        )
     );
   }
 }

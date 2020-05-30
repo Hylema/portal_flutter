@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
+import 'package:flutter_architecture_project/core/global_state.dart';
 import 'package:flutter_architecture_project/feature/data/models/polls/polls_model.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/polls/archive_polls_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/polls/polls_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/polls/widgets/polls_item.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 
 class PollsBody extends StatelessWidget {
@@ -16,6 +20,7 @@ class PollsBody extends StatelessWidget {
       enableControlRefresh: false,
       hasReachedMax: false,
       child: CustomScrollView(
+        controller: GlobalState.hideAppNavigationBarController,
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate([

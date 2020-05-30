@@ -15,12 +15,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> mapEventToState(
     AuthEvent event,
   ) async* {
-    if(event is NeedAuthEvent) yield NeedAuthState();
-    else if(event is AuthCodeEvent) yield* _authUser(code: event.code);
+    if(event is AuthCodeEvent) yield* _authUser(code: event.code);
+    if(event is CheckAuthEvent) yield await authRepository.checkAuth();
   }
 
 
   Stream<AuthState> _authUser({@required String code}) async* {
-    if(await authRepository.getToken(code: code)) yield AuthCompletedState();
+    if(await authRepository.authUser(code: code)) yield AuthCompletedState();
   }
 }

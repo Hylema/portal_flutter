@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/api/api.dart';
+import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/response_handler.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
@@ -8,7 +9,11 @@ import 'package:http/http.dart' as http;
 
 abstract class IBirthdayRemoteDataSource {
 
-  Future<List<BirthdayModel>> getBirthdayWithParams({
+  Future<List<BirthdayModel>> getStartEndDayBirthdayWithParams({
+    @required BirthdayParams birthdayParams
+  });
+
+  Future<List<BirthdayModel>> getConcreteDayBirthdayWithParams({
     @required BirthdayParams birthdayParams
   });
 }
@@ -23,7 +28,7 @@ class BirthdayRemoteDataSource with ResponseHandler implements IBirthdayRemoteDa
   });
 
   @override
-  Future<List<BirthdayModel>> getBirthdayWithParams({
+  Future<List<BirthdayModel>> getStartEndDayBirthdayWithParams({
     @required BirthdayParams birthdayParams,
   }) async {
     String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays/filter', birthdayParams.toMap()).toString();
@@ -36,6 +41,23 @@ class BirthdayRemoteDataSource with ResponseHandler implements IBirthdayRemoteDa
         },
     );
 
-    return responseHandler<BirthdayModel>(response: response, model: BirthdayModel.fromJson, key: 'data');
+    return listModels<BirthdayModel>(response: response, model: BirthdayModel.fromJson, key: 'data');
+  }
+
+  @override
+  Future<List<BirthdayModel>> getConcreteDayBirthdayWithParams({
+    @required BirthdayParams birthdayParams,
+  }) async {
+    String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays', birthdayParams.toMap()).toString();
+
+    final response = await http.get(
+      uri,
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ${storage.secondToken}',
+      },
+    );
+
+    return listModels<BirthdayModel>(response: response, model: BirthdayModel.fromJson, key: 'data');
   }
 }

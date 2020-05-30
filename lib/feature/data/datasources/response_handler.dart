@@ -6,23 +6,38 @@ import 'package:flutter_architecture_project/core/error/exceptions.dart';
 
 class ResponseHandler {
 
-  List<Type> responseHandler<Type>({@required response, @required model, @required String key}){
-    switch(response.statusCode){
-      case 200 :
-        final data = jsonDecode(utf8.decode(response.bodyBytes));
+  Type model<Type>({@required response, @required model, String key}){
+    if(response.statusCode != 200) _throwError(statusCode: response.statusCode);
 
-        final raws = data[key] as List;
+    final _data = jsonDecode(utf8.decode(response.bodyBytes));
+    var _raw;
 
-        List<Type> listModels = List<Type>.from(raws.map((raw) => model(raw)));
+    if(key != null) _raw = _data[key];
+    else _raw = _data;
 
-        return listModels;
+    Type result = model(_raw);
 
-        break;
+    return result;
+  }
+
+  List<Type> listModels<Type>({@required response, @required model, @required String key}){
+    if(response.statusCode != 200) return _throwError(statusCode: response.statusCode);
+
+    final _data = jsonDecode(utf8.decode(response.bodyBytes));
+    final _raws = _data[key] as List;
+
+    List<Type> _listModels = List<Type>.from(_raws.map((raw) => model(raw)));
+
+    return _listModels;
+  }
+
+  _throwError({@required statusCode}){
+    switch(statusCode){
       case 400 : throw BadRequestException(); break;
       case 401 : throw AuthException(); break;
       case 500 : throw ServerException(); break;
       default: throw UnknownException(
-          code: response.statusCode
+          code: statusCode
       );
     }
   }

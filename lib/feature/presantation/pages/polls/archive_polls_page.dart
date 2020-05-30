@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
 import 'package:flutter_architecture_project/feature/data/models/polls/polls_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page_parameters.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/polls/widgets/polls_body.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,9 +33,9 @@ class ArchivePollsPage extends StatelessWidget {
                         bottom: 7
                     ),
                     child: IconButton(
-                        onPressed: (){
-                          Navigator.push(context, ScaleRoute(page: BirthdayPageParameters()));
-                        },
+//                        onPressed: (){
+//                          Navigator.push(context, ScaleRoute(page: BirthdayPageParameters()));
+//                        },
                         icon: Image.asset(
                           'assets/icons/change.png',
                         )

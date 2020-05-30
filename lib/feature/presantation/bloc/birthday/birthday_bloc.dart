@@ -1,13 +1,14 @@
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
+import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params_response.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_event.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
-import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import './bloc.dart';
 
@@ -29,29 +30,12 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
       );
 
   @override
-  BirthdayState get initialState => _initialState();
-
-  BirthdayState _initialState() {
-    try {
-      List<BirthdayModel> listModels = repository.getBirthdayFromCache();
-
-      return BirthdayFromCacheState(birthdays: listModels);
-    } catch(e){
-      return BirthdayFromCacheState(birthdays: []);
-    }
+  void onError(Object error, StackTrace stacktrace){
+    add(GetBirthdayFromCache());
   }
 
-  BirthdayParams _params = BirthdayParams(
-      pageIndex: 1,
-      pageSize: BIRTHDAY_PAGE_SIZE,
-      startDayNumber: DateTime.now().day,
-      endDayNumber: DateTime.now().day,
-      startMonthNumber: DateTime.now().month,
-      endMonthNumber: DateTime.now().month,
-      searchString: null
-  );
-
-  String _title = 'Сегодня';
+  @override
+  BirthdayState get initialState => _birthdayFromCache();
 
   @override
   Stream<BirthdayState> mapEventToState(
@@ -60,88 +44,72 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
     final currentState = state;
 
     if(await networkInfo.isConnected){
-      if(event is SetFilterBirthdayEvent)
-        yield* _setParamsFetchBirthday(event: event);
+      if(event is SetNewBirthdayFilter) {
+        yield LoadingBirthdayState();
+        _params = event.params;
+        yield* _firstFetchBirthday();
+      }
 
-      if(event is UpdateBirthdayEvent)
-        yield* _updateParamsFetchBirthday(event: event);
+      else if(event is UpdateBirthdayEvent) {
+        _params.pageIndex = 1;
+        yield* _firstFetchBirthday();
+      }
 
-      if(event is ResetFilterBirthdayEvent)
-        yield* _resetParamsFetchBirthday(event: event);
+      else if(event is FetchBirthdayEvent && !_hasReachedMax(currentState)) {
+        _params.pageIndex++;
+        yield* _fetchBirthday();
+      }
 
-      if(event is FetchBirthdayEvent && !_hasReachedMax(currentState))
-        yield* _fetchBirthdayWithParams(event: event);
+      else if(event is GetBirthdayFromCache)
+        yield _birthdayFromCache();
+
     } else {
       throw NetworkException();
     }
   }
 
-  Stream<BirthdayState> _setParamsFetchBirthday({@required SetFilterBirthdayEvent event}) async* {
-    yield LoadingBirthdayState();
+  BirthdayState _birthdayFromCache() {
+    try {
+      BirthdayResponse result = repository.getBirthdayFromCache();
 
-    _params = BirthdayParams(
-        pageIndex: 1,
-        pageSize: BIRTHDAY_PAGE_SIZE,
-        startDayNumber: event.startDayNumber,
-        endDayNumber: event.endDayNumber,
-        startMonthNumber: event.startMonthNumber,
-        endMonthNumber: event.endMonthNumber,
-        searchString: event.fio
-    );
-
-    _title = event.title;
-
-    yield* _updateBirthday(params: _params);
+      return BirthdayFromCacheState(birthdays: result.listModels, title: result.title);
+    } catch(e){
+      return BirthdayFromCacheState(birthdays: [], title: 'Нет сохраненных данных в кэшэ');
+    }
   }
 
-  Stream<BirthdayState> _updateParamsFetchBirthday({@required UpdateBirthdayEvent event}) async* {
-    _params.pageIndex = 1;
-    yield* _updateBirthday(params: _params);
+  BirthdayParams _params = BirthdayParams(
+      pageIndex: 1,
+      pageSize: BIRTHDAY_PAGE_SIZE,
+      dayNumber: DateTime.now().day,
+      monthNumber: DateTime.now().month,
+      startDayNumber: null,
+      endDayNumber: null,
+      startMonthNumber: null,
+      endMonthNumber: null,
+      searchString: null
+  );
+
+  Stream<BirthdayState> _firstFetchBirthday() async* {
+    BirthdayResponse repositoryResult =
+    await repository.fetchBirthday(params: _params, update: true);
+
+    yield LoadedBirthdayState(birthdays: repositoryResult.listModels, hasReachedMax: false, title: repositoryResult.title);
   }
 
-  Stream<BirthdayState> _resetParamsFetchBirthday({@required ResetFilterBirthdayEvent event}) async* {
-    yield LoadingBirthdayState();
-
-    _params = BirthdayParams(
-        pageIndex: 1,
-        pageSize: BIRTHDAY_PAGE_SIZE,
-        startDayNumber: DateTime.now().day,
-        endDayNumber: DateTime.now().day,
-        startMonthNumber: DateTime.now().month,
-        endMonthNumber: DateTime.now().month,
-        searchString: null
-    );
-
-    _title = 'Сегодня';
-
-    yield* _updateBirthday(params: _params);
-  }
-
-  Stream<BirthdayState> _fetchBirthdayWithParams({@required FetchBirthdayEvent event}) async* {
-    _params.pageIndex++;
-    yield* _fetchBirthday(params: _params);
-  }
-
-  Stream<BirthdayState> _updateBirthday({@required BirthdayParams params}) async* {
-    List<BirthdayModel> repositoryResult =
-    await repository.updateBirthday(params: params);
-
-    yield LoadedBirthdayState(birthdays: repositoryResult, hasReachedMax: false, title: _title);
-  }
-
-  Stream<BirthdayState> _fetchBirthday({@required BirthdayParams params}) async* {
+  Stream<BirthdayState> _fetchBirthday() async* {
     final currentState = state;
 
     if(currentState is LoadedBirthdayState){
-      List<BirthdayModel> repositoryResult =
-      await repository.fetchBirthday(params: params);
+      BirthdayResponse repositoryResult =
+      await repository.fetchBirthday(params: _params);
 
-      yield repositoryResult.isEmpty
+      yield repositoryResult.listModels.isEmpty
           ? currentState.copyWith(hasReachedMax: true)
           : LoadedBirthdayState(
-          birthdays: currentState.birthdays + repositoryResult,
+          birthdays: currentState.birthdays + repositoryResult.listModels,
           hasReachedMax: false,
-          title: _title
+          title: repositoryResult.title,
       );
     }
   }

@@ -1,106 +1,88 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/core/global_state.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page_shimmer.dart';
-import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
-import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_cupertino_indicator_widget.dart';
-import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_items_widget.dart';
-import 'package:flutter_architecture_project/feature/presantation/widgets/pagesWidgets/newsPortal/news_portal_title_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_item_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_main_item_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/data_from_cache_message.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-var _news;
 
 class NewsPortalPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BuildPageNewsPortal()
-    );
-  }
-}
-
-
-class BuildPageNewsPortal extends StatefulWidget {
-
-  @override
-  State<StatefulWidget> createState() => BuildPageNewsPortalState();
-}
-class BuildPageNewsPortalState extends State<BuildPageNewsPortal> {
-
-  @override
-  Widget build(BuildContext context) {
     return BlocConsumer<NewsPortalBloc, NewsPortalState>(
+      // ignore: missing_return
       builder: (context, state) {
-        if (state is EmptyNewsPortal) {
-          return NewsPortalPageShimmer();
-
-        } else if (state is LoadingNewsPortal) {
+        if (state is LoadingNewsPortal) {
           return NewsPortalPageShimmer();
 
         } else if (state is LoadedNewsPortal) {
-          _news = state.listModels;
-          return NewsPortalBody();
+          return NewsPortalBody(listModels: state.listModels, hasReachedMax: state.hasReachedMax);
 
-        } else if (state is ErrorNewsPortal) {
-          return NewsPortalPageShimmer();
-        } else {
-          return Container();
-        }
+        } else if (state is NewsFromCacheState){
+          return NewsPortalBody(listModels: state.listModels, fromCache: true, enableControlLoad: false);
+
+        } else return NewsPortalPageShimmer();
       },
       listener: (context, state) {},
     );
   }
 }
 
-class NewsPortalBody extends StatefulWidget {
+class NewsPortalBody extends StatelessWidget{
 
-  @override
-  NewsPortalBodyState createState() => NewsPortalBodyState();
-}
+  final List<NewsModel> listModels;
+  final bool hasReachedMax;
+  final bool fromCache;
+  final bool enableControlLoad;
+  final bool enableControlRefresh;
 
-class NewsPortalBodyState extends State<NewsPortalBody> with AutomaticKeepAliveClientMixin{
-  @override
-  bool get wantKeepAlive => true;
-
-
-  @override
-  void dispose(){
-    super.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  NewsPortalBody({
+    @required this.listModels,
+    this.hasReachedMax = false,
+    this.fromCache = false,
+    this.enableControlLoad = true,
+    this.enableControlRefresh = true,
+  });
 
   @override
   Widget build(BuildContext context) {
+    print('BUILD!@!!!!!!!!!!!!!!!!!');
     return SmartRefresherWidget(
-      enableControlLoad: true,
-      enableControlRefresh: true,
-      hasReachedMax: false,
+      enableControlLoad: enableControlLoad,
+      enableControlRefresh: enableControlRefresh,
+      hasReachedMax: hasReachedMax,
+      onRefresh: () => BlocProvider.of<NewsPortalBloc>(context).add(UpdateNewsEvent()),
+      onLoading: () => BlocProvider.of<NewsPortalBloc>(context).add(FetchNewsEvent()),
       child: CustomScrollView(
+        controller: GlobalState.hideAppNavigationBarController,
         slivers: <Widget>[
+          SliverList(
+            delegate: SliverChildListDelegate([
+              DataFromCacheMessageWidget(fromCache: fromCache),
+            ]),
+          ),
           SliverAppBar(
               backgroundColor: Colors.black26,
               pinned: false,
               automaticallyImplyLeading: false,
               expandedHeight: 245,
-              flexibleSpace: NewsPortalTitle(news: _news[0])
+              flexibleSpace: NewsPortalMainItem(news: listModels[0])
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate((BuildContext context, int index){
               index++;
-              final news = _news[index];
+              final news = listModels[index];
 
-              return NewsPortalItems(news: news, index: index);
+              return NewsPortalItem(news: news, index: index);
             },
-                childCount: (_news.length - 1)
+                childCount: (listModels.length - 1)
             ),
           ),
         ],

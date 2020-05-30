@@ -1,27 +1,43 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/feature/data/models/auth/current_user_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class IAuthLocalDataSource {
+  saveData();
   saveTokens();
 }
 
 class AuthLocalDataSource implements IAuthLocalDataSource {
-  final FlutterSecureStorage flutterSecureStorage;
+  final SharedPreferences sharedPreferences;
   final Storage storage;
+  final String cachedNameFirstToken;
+  final String cachedNameSecondToken;
+  final String cachedNameCurrentUser;
 
   AuthLocalDataSource({
-    @required this.flutterSecureStorage,
+    @required this.sharedPreferences,
     @required this.storage,
+    @required this.cachedNameFirstToken,
+    @required this.cachedNameSecondToken,
+    @required this.cachedNameCurrentUser,
   });
 
   @override
-  saveTokens({@required String firstToken, @required String secondToken}) async {
-    await flutterSecureStorage.write(key: JWT_TOKEN, value: firstToken);
+  void saveTokens({@required String firstToken, @required String secondToken}) {
+    sharedPreferences.setString(cachedNameFirstToken, json.encode(firstToken));
+    sharedPreferences.setString(cachedNameSecondToken, json.encode(secondToken));
     ///Декодирование jwt token, может понадобится в будущем
     //await flutterSecureStorage.write(key: JWT_DECODE, value: jsonEncode(Jwt.parseJwt(token)));
-    await flutterSecureStorage.write(key: JWT_TOKEN_SECOND, value: secondToken);
-    storage.updateData();
+  }
+
+  @override
+  void saveData({@required CurrentUserModel currentUserModel}) {
+    sharedPreferences.setString(cachedNameCurrentUser, json.encode(currentUserModel.toJson()));
   }
 }
+

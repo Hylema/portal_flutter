@@ -1,41 +1,38 @@
 import 'package:flutter/material.dart';
 
-class HeaderAppMainBar extends StatefulWidget{
+class HeaderAppBar extends StatelessWidget with PreferredSizeWidget{
 
-  HeaderAppMainBar({
+  HeaderAppBar({
     this.titleColor = Colors.black54,
     this.backgroundColor = Colors.white,
-    this.titleText,
-    this.action,
+    this.title,
+    this.actions,
     this.automaticallyImplyLeading = false,
-  }){
-    assert(this.titleText != null);
-  }
+  });
+
   final Color titleColor;
   final Color backgroundColor;
-  final String titleText;
-  final List<Widget> action;
+  final String title;
+  final List<Widget> actions;
   final bool automaticallyImplyLeading;
 
   @override
-  HeaderAppMainBarState createState() => HeaderAppMainBarState();
-}
-
-class HeaderAppMainBarState extends State<HeaderAppMainBar> {
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
   double oldValue;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: widget.automaticallyImplyLeading,
-      backgroundColor: widget.backgroundColor,
+      automaticallyImplyLeading: automaticallyImplyLeading,
+      backgroundColor: backgroundColor,
       elevation: 1.0,
       title: Text(
-        widget.titleText,
-        style: TextStyle(color: widget.titleColor),
+        title ?? '',
+        style: TextStyle(color: titleColor),
       ),
-      actions: widget.action,
+      actionsIconTheme: IconThemeData(color: Colors.black),
+      actions: actions,
       centerTitle: true,
     );
   }

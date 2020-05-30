@@ -16,7 +16,6 @@ import 'package:flutter_architecture_project/feature/data/datasources/profile/pr
 import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/auth/auth_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/birthday/birthday_repository.dart';
-import 'package:flutter_architecture_project/feature/data/repositories/error_catcher.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/polls/polls_repository.dart';
@@ -27,18 +26,20 @@ import 'package:flutter_architecture_project/feature/domain/repositoriesInterfac
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/main/main_params_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/news/news_portal_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/polls/polls_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/profile/profile_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/videoGallery/video_gallery_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/navigationBar/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/likeNews/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/news_portal_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -54,6 +55,12 @@ Future<void> init() async {
 
   ///! BLOCS
 
+  /// navigation bar
+  sl.registerFactory(() => NavigationBarBloc());
+  sl.registerFactory(() => LikeNewsBloc(
+    repository: sl()
+  ));
+
   /// news portal
   sl.registerFactory(() => NewsPortalBloc(
     networkInfo: sl(),
@@ -65,17 +72,15 @@ Future<void> init() async {
       authRepository: sl()
   ));
 
-  ///pageLoading
-  sl.registerFactory(() => PageLoadingBloc());
 
-//  /// profile
-//  sl.registerFactory(
-//        () => ProfileBloc(
-//        getProfileFormNetwork: sl(),
-//        getProfileFromCache: sl()
-//    ),
-//  );
-//
+  /// profile
+  sl.registerFactory(
+        () => ProfileBloc(
+          networkInfo: sl(),
+          repository: sl()
+    ),
+  );
+
   /// main params page
   sl.registerFactory(
         () => MainBloc(
@@ -129,30 +134,22 @@ Future<void> init() async {
       networkInfo: sl(),
     ),
   );
-//
-//  /// profile
-//  sl.registerLazySingleton<IProfileRepository>(
-//        () => ProfileRepository(
-//      remoteDataSource: sl(),
-//      localDataSource: sl(),
-//      networkInfo: sl(),
-//    ),
-//  );
-//
+
+  /// profile
+  sl.registerLazySingleton<IProfileRepository>(
+        () => ProfileRepository(
+      remoteDataSource: sl(),
+      localDataSource: sl(),
+      networkInfo: sl(),
+    ),
+  );
+
   /// main params page
   sl.registerLazySingleton<IMainParamsRepository>(
         () => MainParamsRepository(
       localDataSource: sl(),
     ),
   );
-//
-//  /// likes/seen
-//  sl.registerLazySingleton<INewsPopularityRepository>(
-//        () => NewsPopularityRepository(
-//        networkInfo: sl(),
-//        remoteDataSource: sl()
-//    ),
-//  );
 
   /// video gallery
   sl.registerLazySingleton<IVideoGalleryRepository>(
@@ -160,11 +157,13 @@ Future<void> init() async {
         remoteDataSource: sl()
     ),
   );
+
   /// auth
   sl.registerLazySingleton<AuthRepository>(
         () => AuthRepository(
-      remoteDataSource: sl(),
-      localDataSource: sl(),
+        remoteDataSource: sl(),
+        localDataSource: sl(),
+        profileRemoteDataSource: sl()
     ),
   );
 
@@ -205,13 +204,13 @@ Future<void> init() async {
   sl.registerLazySingleton<ProfileRemoteDataSource>(
         () => ProfileRemoteDataSource(
         client: sl(),
-        parser: sl(),
         storage: sl()
     ),
   );
   sl.registerLazySingleton<ProfileLocalDataSource>(
         () => ProfileLocalDataSource(
-      sharedPreferences: sl(),
+        sharedPreferences: sl(),
+        cachedName: CACHE_PROFILE
     ),
   );
 
@@ -248,13 +247,17 @@ Future<void> init() async {
   /// auth
   sl.registerLazySingleton<AuthRemoteDataSource>(
         () => AuthRemoteDataSource(
-        client: sl()
+        client: sl(),
+          storage: sl()
     ),
   );
   sl.registerLazySingleton<AuthLocalDataSource>(
         () => AuthLocalDataSource(
-          flutterSecureStorage: sl(),
-          storage: sl()
+          sharedPreferences: sl(),
+          storage: sl(),
+          cachedNameFirstToken: JWT_TOKEN,
+          cachedNameSecondToken: JWT_TOKEN_SECOND,
+          cachedNameCurrentUser: CURRENT_USER
     ),
   );
 
@@ -268,11 +271,14 @@ Future<void> init() async {
 
 
   ///! CORE
-  sl.registerLazySingleton<Storage>(() => Storage());
+  sl.registerLazySingleton<Storage>(() => Storage(
+    cachedNameFirstToken: JWT_TOKEN,
+    cachedNameSecondToken: JWT_TOKEN_SECOND,
+    cachedNameCurrentUser: CURRENT_USER,
+    sharedPreferences: sl(),
+  ));
   sl.registerLazySingleton<FlutterSecureStorage>(() => FlutterSecureStorage());
-  sl.registerLazySingleton<ProfileParser>(() => ProfileParser());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
-  sl.registerLazySingleton<ErrorCatcher>(() => ErrorCatcher(networkInfo: sl()));
 
 
 

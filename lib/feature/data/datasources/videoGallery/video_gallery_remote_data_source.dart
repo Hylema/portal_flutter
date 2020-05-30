@@ -2,8 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/api/api.dart';
-import 'package:flutter_architecture_project/core/error/exceptions.dart';
-import 'package:flutter_architecture_project/core/error/failure.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/response_handler.dart';
 import 'package:flutter_architecture_project/feature/data/models/videoGallery/video_gallery_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
@@ -37,6 +35,6 @@ class VideoGalleryRemoteDataSource with ResponseHandler implements IVideoGallery
       },
     );
 
-    return responseHandler<VideosGalleryModel>(response: response, model: VideosGalleryModel.fromJson, key: 'data');
+    return listModels<VideosGalleryModel>(response: response, model: VideosGalleryModel.fromJson, key: 'data');
   }
 }

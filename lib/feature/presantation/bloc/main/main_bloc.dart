@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_architecture_project/core/mixins/bloc_helper.dart';
 import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/main/main_params_repository_interface.dart';
 import './bloc.dart';
@@ -37,18 +36,15 @@ class MainBloc extends Bloc<MainEvent, MainState> {
 
   @override
   Stream<MainState> mapEventToState(MainEvent event) async* {
-
-    if(event is GetPositionPagesEvent){
+    if(event is GetPositionWidgetsEvent){
       final MainParamsModel repositoryResult =
       repository.getPositionPages();
 
       yield LoadedMainParams(model: repositoryResult);
 
-    } else if(event is SetPositionPagesEvent){
+    } else if(event is SavePositionWidgetsEvent){
       await repository.setPositionPages(model: event.model);
 
-      yield LoadedMainParams(model: event.model);
-    } else if(event is UpdateMainParams){
       yield LoadedMainParams(model: event.model);
     }
   }

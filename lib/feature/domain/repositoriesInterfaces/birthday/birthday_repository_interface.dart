@@ -1,17 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
+import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params_response.dart';
 
 abstract class IBirthdayRepository {
-  Future<List<BirthdayModel>> fetchBirthday({
+  Future<BirthdayResponse> fetchBirthday({
     @required BirthdayParams params,
+    bool update = false
   });
 
-  Future<List<BirthdayModel>> updateBirthday({
-    @required BirthdayParams params,
-  });
-
-  List<BirthdayModel> getBirthdayFromCache();
+  BirthdayResponse getBirthdayFromCache();
 
   Future<void> saveBirthdayToCache();
   Future<void> updateBirthdayCache();

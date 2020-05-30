@@ -4,18 +4,17 @@ import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/navigationBar/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
-
-
-import 'package:flutter_architecture_project/feature/presantation/bloc/news/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/pageLoading/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/likeNews/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/news_portal_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/welcome/welcome_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'injection_container.dart' as di;
@@ -28,8 +27,6 @@ void main() async {
           providers: [
             BlocProvider<AuthBloc>(
                 create: (BuildContext context) => di.sl<AuthBloc>()),
-            BlocProvider<PageLoadingBloc>(
-                create: (BuildContext context) => di.sl<PageLoadingBloc>()),
             BlocProvider<BirthdayBloc>(
               create: (BuildContext context) => di.sl<BirthdayBloc>()),
             BlocProvider<NewsPortalBloc>(
@@ -38,14 +35,18 @@ void main() async {
               create: (BuildContext context) => di.sl<SelectedIndexBloc>()),
             BlocProvider<MainBloc>(
                 create: (BuildContext context) => di.sl<MainBloc>()),
-            BlocProvider<NewsPortalBloc>(
-                create: (BuildContext context) => di.sl<NewsPortalBloc>()),
             BlocProvider<VideoGalleryBloc>(
                 create: (BuildContext context) => di.sl<VideoGalleryBloc>()),
             BlocProvider<PastPollsBloc>(
                 create: (BuildContext context) => di.sl<PastPollsBloc>()),
             BlocProvider<CurrentPollsBloc>(
                 create: (BuildContext context) => di.sl<CurrentPollsBloc>()),
+            BlocProvider<ProfileBloc>(
+                create: (BuildContext context) => di.sl<ProfileBloc>()),
+            BlocProvider<NavigationBarBloc>(
+                create: (BuildContext context) => di.sl<NavigationBarBloc>()),
+            BlocProvider<LikeNewsBloc>(
+                create: (BuildContext context) => di.sl<LikeNewsBloc>()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

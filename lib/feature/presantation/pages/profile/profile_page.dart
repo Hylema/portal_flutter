@@ -1,105 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/global_state.dart';
+import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
+import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/profile/profile_page_shimmer.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/data_from_cache_message.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-var _profile;
-
-class ProfilePage extends StatefulWidget {
-  _ProfilePageState createState() => _ProfilePageState();
-}
-
-class _ProfilePageState extends State<ProfilePage> {
-
-  @override
-  void initState(){
-    super.initState();
-  }
-
-
+class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
-    return ProfilePageBody(data: _profile,);
-//    return BlocConsumer<ProfileBloc, ProfileState>(
-//      builder: (context, state) {
-//        if (state is EmptyProfile) {
-//          return ProfilePageShimmer();
-//
-//        } else if (state is LoadingProfile) {
-//          return ProfilePageShimmer();
-//        } else if (state is LoadedProfile) {
-//          print('В пофиле получена модель');
-//          _profile = state.model.profile;
-//          return ProfilePageBody(data: _profile,);
-//        } else if (state is ErrorProfile) {
-//
-//          return ProfilePageShimmer();
-//        }
-//        return Container();
-//      },
-//      listener: (context, state) {},
-//    );
+    return BlocConsumer<ProfileBloc, ProfileState>(
+      builder: (context, state) {
+        if (state is InitialProfileState) {
+          return ProfilePageShimmer();
+        } else if (state is LoadingProfileState) {
+          return ProfilePageShimmer();
+        } else if (state is LoadedProfileState) {
+          return ProfilePageBody(data: state.model,);
+        } else if (state is ErrorProfileState) {
+          return ProfilePageShimmer();
+        } else if(state is LoadedProfileFromCacheState) {
+          if(state.data != null) return ProfilePageBody(data: state.data, fromCache: true);
+          else return Center(child: Text('Нет ранее сохраненных данных'));
+        }
+        return Container();
+      },
+      listener: (context, state) {},
+    );
   }
 }
 
 class ProfilePageBody extends StatelessWidget {
-  final data;
-  ProfilePageBody({this.data});
-
-//  final List listData = [
-//    {
-//      'value': 'Прямая структура подчинения',
-//      'key': 'department',
-//    },
-//    {
-//      'value': 'Дата начала работы в организации',
-//      'key': 'startWork',
-//    },
-//    {
-//      'value': 'Внутренний телефон',
-//      'key': 'workPhone',
-//    },
-//    {
-//      'value': 'День рождения',
-//      'key': 'birthday',
-//    },
-//    {
-//      'value': 'Электронная почта',
-//      'key': 'email',
-//    },
-//  ];
-
-  final List listData = [
-    {
-      'value': 'Прямая структура подчинения',
-      'key': 'Группа мобильной разработки',
-    },
-    {
-      'value': 'Дата начала работы в организации',
-      'key': '-',
-    },
-    {
-      'value': 'Внутренний телефон',
-      'key': '-',
-    },
-    {
-      'value': 'День рождения',
-      'key': '-',
-    },
-    {
-      'value': 'Электронная почта',
-      'key': 'g.shalaikin@jsa-group.ru',
-    },
-  ];
+  final ProfileModel data;
+  final bool fromCache;
+  ProfilePageBody({@required this.data, this.fromCache = false});
 
   @override
   Widget build(BuildContext context) {
+    final List listData = [
+      {
+        'key': 'Прямая структура подчинения',
+        'value': '${data.department}',
+      },
+      {
+        'key': 'Дата начала работы в организации',
+        'value': '${data.startWork}',
+      },
+      {
+        'key': 'Внутренний телефон',
+        'value': '${data.workPhone}',
+      },
+      {
+        'key': 'День рождения',
+        'value': '${data.birthday}',
+      },
+      {
+        'key': 'Электронная почта',
+        'value': '${data.email}',
+      },
+    ];
+
     return SmartRefresherWidget(
       enableControlLoad: false,
       enableControlRefresh: true,
-      hasReachedMax: false,
+      hasReachedMax: true,
+      onRefresh: () => BlocProvider.of<ProfileBloc>(context).add(GetProfileEvent()),
       child: CustomScrollView(
+        controller: GlobalState.hideAppNavigationBarController,
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildListDelegate([
+              DataFromCacheMessageWidget(fromCache: fromCache),
               Container(
                 child: Stack(
                   alignment: Alignment.bottomCenter,
@@ -174,7 +147,7 @@ class ProfilePageBody extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'Шалайкин Глеб Николаевич',
+                      data.name,
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 24.0
@@ -187,7 +160,7 @@ class ProfilePageBody extends StatelessWidget {
               Container(
                   alignment: Alignment.center,
                   child: Text(
-                    'web разработчик',
+                    data.position,
                     style: TextStyle(
                         fontSize: 16.0,
                         color: Color.fromRGBO(119, 134, 147, 1)
@@ -199,23 +172,20 @@ class ProfilePageBody extends StatelessWidget {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate((BuildContext context, index){
-              return _buildLine(listData[index]['value'], listData[index]['key']);
-//              return _buildLine(listData[index]['value'], data[listData[index]['key']]);
+              return _buildLine(key: listData[index]['key'], value: listData[index]['value']);
             },
                 childCount: listData.length
             ),
           ),
-          SliverList(
-            delegate: SliverChildListDelegate([
-              SizedBox(height: MediaQuery.of(context).size.height/7,),
-            ]),
-          )
         ],
       ),
     );
   }
 
-  Widget _buildLine(String title, body) {
+  Widget _buildLine({@required String key, @required String value}) {
+    if(value == ''){
+      return Container();
+    }
     return Container(
       padding: EdgeInsets.only(left: 15, right: 15, top: 15),
       child: Column(
@@ -224,7 +194,7 @@ class ProfilePageBody extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Text(
-            title,
+            key,
             style: TextStyle(
                 color: Color.fromRGBO(119, 134, 147, 1),
                 fontSize: 14
@@ -233,7 +203,7 @@ class ProfilePageBody extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(bottom: 10, top: 10),
             child: Text(
-              body,
+              value,
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 16,

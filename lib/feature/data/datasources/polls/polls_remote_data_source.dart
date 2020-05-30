@@ -35,7 +35,7 @@ class PollsRemoteDataSource with ResponseHandler implements IPollsRemoteDataSour
       },
     );
 
-    return responseHandler<PollsModel>(response: response, model: PollsModel.fromJson, key: 'data');
+    return listModels<PollsModel>(response: response, model: PollsModel.fromJson, key: 'data');
   }
 
   @override
@@ -50,6 +50,6 @@ class PollsRemoteDataSource with ResponseHandler implements IPollsRemoteDataSour
       },
     );
 
-    return responseHandler<PollsModel>(response: response, model: PollsModel.fromJson, key: 'data');
+    return listModels<PollsModel>(response: response, model: PollsModel.fromJson, key: 'data');
   }
 }

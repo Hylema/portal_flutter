@@ -5,16 +5,10 @@ import 'package:meta/meta.dart';
 @immutable
 abstract class MainEvent {}
 
-class GetPositionPagesEvent extends MainEvent {}
+class GetPositionWidgetsEvent extends MainEvent {}
 
-class UpdateMainParams extends MainEvent {
+class SavePositionWidgetsEvent extends MainEvent {
   final MainParamsModel model;
 
-  UpdateMainParams({@required this.model});
-}
-
-class SetPositionPagesEvent extends MainEvent {
-  final MainParamsModel model;
-
-  SetPositionPagesEvent({@required this.model});
+  SavePositionWidgetsEvent({@required this.model});
 }

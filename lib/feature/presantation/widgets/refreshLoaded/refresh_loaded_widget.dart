@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
@@ -147,7 +148,7 @@ class SmartRefresherWidget extends StatefulWidget {
     this.hasReachedMax = true,
     this.onRefresh,
     this.onLoading,
-    this.noDataText = 'Данных больше нету'
+    this.noDataText = 'Данных больше нету',
   });
 
   @override
@@ -159,6 +160,7 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> {
   RefreshController _refreshController;
   StreamSubscription _subscription;
   bool _connection = true;
+  bool _needUpdate = false;
 
   @override
   void initState() {
@@ -167,15 +169,17 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> {
     _refreshController = RefreshController();
 
     _subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      print('connection: $result');
       if(result == ConnectivityResult.none){
-        setState(() {
-          _connection = false;
-        });
+        _connection = false;
+        _needUpdate = true;
       } else {
-        setState(() {
-          _connection = true;
-        });
+        _connection = true;
+      }
+
+      if(_connection == true && _needUpdate){
+        widget.onRefresh();
+
+        _needUpdate = false;
       }
     });
   }
@@ -220,13 +224,10 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> {
       controller: _refreshController,
       child: widget.child,
       onRefresh: () {
-        if(_connection) widget.onRefresh();
-        else _refreshController.refreshCompleted();
+        widget.onRefresh();
       },
       onLoading: () {
-        if(_connection) widget.onLoading();
-        else _refreshController.loadComplete();
-        print('onLoading');
+        widget.onLoading();
       },
     );
   }

@@ -5,6 +5,7 @@ class Api {
   static const String GET_TOKEN_URL = 'https://login.microsoftonline.com/12f6ad44-d1ba-410f-97d4-6c966e38421b/oauth2/token';
   static const String GET_PROFILE_URL = "https://metalloinvest.sharepoint.com/sites/portal/oemk/_api//SP.UserProfiles.PeopleManager/GetMyProperties";
   static const String HOST_URL = "mi-portal-mobile.westeurope.cloudapp.azure.com:8080";
+  static const String NEWS_URL = "mi-portal-mobile.westeurope.cloudapp.azure.com:8080";
   //static const String HOST_URL = "http://mi-portal-mobile.westeurope.cloudapp.azure.com:8080";
 }
 

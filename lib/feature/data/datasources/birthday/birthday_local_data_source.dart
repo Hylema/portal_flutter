@@ -1,15 +1,15 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_architecture_project/feature/data/datasources/local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
+import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class IBirthdayLocalDataSource {
-  List<BirthdayModel> getBirthdayFromCache();
+  BirthdayResponse getBirthdayFromCache();
 
-  Future<void> saveBirthdayToCache({@required List<BirthdayModel> listModels});
-  Future<void> updateBirthdayCache({@required List<BirthdayModel> listModels});
+  Future<void> saveBirthdayToCache({@required BirthdayResponse response});
+  Future<void> updateBirthdayCache({@required BirthdayResponse response});
 }
 
 class BirthdayLocalDataSource implements IBirthdayLocalDataSource {
@@ -22,29 +22,34 @@ class BirthdayLocalDataSource implements IBirthdayLocalDataSource {
   });
 
   @override
-  List<BirthdayModel> getBirthdayFromCache() {
+  BirthdayResponse getBirthdayFromCache() {
     final jsonString = sharedPreferences.getString(cachedName);
-    final List<dynamic> listBirthday = json.decode(jsonString);
+    final Map listBirthday = json.decode(jsonString);
 
-    List<BirthdayModel> listModels = List<BirthdayModel>.from(listBirthday.map((raw) => BirthdayModel.fromJson(raw)));
+    List<BirthdayModel> listModels = List<BirthdayModel>.from(listBirthday['listModels'].map((raw) => BirthdayModel.fromJson(raw)));
 
-    return listModels;
+    return BirthdayResponse(listModels: listModels, title: listBirthday['title']);
   }
 
   @override
-  Future<void> saveBirthdayToCache({@required List<BirthdayModel> listModels}) {
-    List<BirthdayModel> _listModels = getBirthdayFromCache();
+  Future<void> saveBirthdayToCache({@required BirthdayResponse response}) {
+    BirthdayResponse _response = getBirthdayFromCache();
+
+    BirthdayResponse _newModel = new BirthdayResponse(
+      listModels: [..._response.listModels, ...response.listModels],
+      title: _response.title
+    );
 
     return sharedPreferences.setString(
       cachedName,
-      json.encode([..._listModels, ...listModels]),
+      json.encode(_newModel.toJson()),
     );
   }
 
   @override
-  Future<void> updateBirthdayCache({@required List<BirthdayModel> listModels}) =>
+  Future<void> updateBirthdayCache({@required BirthdayResponse response}) =>
       sharedPreferences.setString(
         cachedName,
-        json.encode(listModels),
+        json.encode(response.toJson()),
       );
 }
