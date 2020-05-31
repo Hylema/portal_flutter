@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/data/models/polls/polls_model.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+//import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 class PollsItem extends StatelessWidget {
   final PollsModel currentPoll;
@@ -10,19 +10,19 @@ class PollsItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () =>
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => WebviewScaffold(
-                    appBar: AppBar(
-                      automaticallyImplyLeading: true,
-                      backgroundColor: Colors.red[800],
-                    ),
-                    url: currentPoll.link
-                ),
-              )
-          ),
+//      onTap: () =>
+//          Navigator.push(
+//              context,
+//              MaterialPageRoute(
+//                builder: (context) => WebviewScaffold(
+//                    appBar: AppBar(
+//                      automaticallyImplyLeading: true,
+//                      backgroundColor: Colors.red[800],
+//                    ),
+//                    url: currentPoll.link
+//                ),
+//              )
+//          ),
       dense: true,
       title: Text(
           '${currentPoll.title}',

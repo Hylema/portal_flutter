@@ -9,7 +9,7 @@ import 'package:flutter_architecture_project/feature/presantation/pages/news/wid
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+//import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
@@ -174,21 +174,21 @@ class NewsPortalCardInformationPage extends StatelessWidget {
                             fontSize: 17
                         ),
                         padding: EdgeInsets.all(8.0),
-                        onLinkTap: (url) =>
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => WebviewScaffold(
-                                      appBar: AppBar(backgroundColor: Colors.black54,),
-                                      enableAppScheme: true,
-                                      withZoom: true,
-                                      withLocalStorage: true,
-                                      hidden: true,
-                                      withOverviewMode: true,
-                                      url: url,
-                                    ),
-                                )
-                            ),
+//                        onLinkTap: (url) =>
+//                            Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                    builder: (context) => WebviewScaffold(
+//                                      appBar: AppBar(backgroundColor: Colors.black54,),
+//                                      enableAppScheme: true,
+//                                      withZoom: true,
+//                                      withLocalStorage: true,
+//                                      hidden: true,
+//                                      withOverviewMode: true,
+//                                      url: url,
+//                                    ),
+//                                )
+//                            ),
                       ),
                     ])
                 )
