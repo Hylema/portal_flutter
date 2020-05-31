@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/news/bloc/listNews/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_state.dart';

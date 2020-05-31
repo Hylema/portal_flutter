@@ -8,8 +8,8 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/videoGall
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/video_gallery_parameters.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/widgets/video_gallery_item_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/videogallery/widgets/video_gallery_item_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:video_player/video_player.dart';

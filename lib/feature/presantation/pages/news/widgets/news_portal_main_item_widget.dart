@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_card_information.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/news/widgets/news_portal_image_network_widget.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/news/widgets/news_portal_likes_seen_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_image_network_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_likes_seen_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/title_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/date_time_widget.dart';
 

@@ -5,9 +5,9 @@ import 'package:flutter_architecture_project/feature/domain/repositoriesInterfac
 import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/likeNews/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_card_information_viewmodel.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_likes_seen_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_main_item_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/news/widgets/news_portal_main_item_widget.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:get_it/get_it.dart';

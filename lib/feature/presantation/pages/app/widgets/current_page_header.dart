@@ -4,10 +4,10 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/selectedT
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/filter/birthday_page_filter.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/filter/main_page_filter.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_model_sheet_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/polls/archive_polls_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/video_gallery_parameters.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/news/widgets/news_portal_model_sheet_widget.dart';
 import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

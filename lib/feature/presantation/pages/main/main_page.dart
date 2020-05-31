@@ -4,13 +4,13 @@ import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/global_state.dart';
 import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/main/widgets/birthday_main_page_swipe_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/main/widgets/block_main_page_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/main/widgets/news_main_page_swipe_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/main/widgets/polls_main_page_custom_swipe_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/widgets/vidoes_main_page_swipe_stack_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/main/widgets/birthday_main_page_swipe_widget.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/main/widgets/block_main_page_widget.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/main/widgets/news_main_page_swipe_widget.dart';
-import 'file:///C:/code/portal_flutter/lib/feature/presantation/pages/main/widgets/polls_main_page_custom_swipe_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
