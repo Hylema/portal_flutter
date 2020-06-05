@@ -11,7 +11,7 @@ import 'package:flutter_architecture_project/feature/presantation/pages/app/app_
 import 'package:flutter_architecture_project/feature/presantation/pages/welcome/welcome_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+//import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -23,12 +23,12 @@ class AuthPage extends StatefulWidget {
 }
 
 class AuthPagebState extends State<AuthPage> {
-  final flutterWebviewPlugin = new FlutterWebviewPlugin();
+  //final flutterWebviewPlugin = new FlutterWebviewPlugin();
   var authBloc;
 
   StreamSubscription _onDestroy;
   StreamSubscription<String> _onUrlChanged;
-  StreamSubscription<WebViewStateChanged> _onStateChanged;
+  //StreamSubscription<WebViewStateChanged> _onStateChanged;
 
   String code;
 
@@ -37,8 +37,8 @@ class AuthPagebState extends State<AuthPage> {
     // Every listener should be canceled, the same should be done with this stream.
     _onDestroy.cancel();
     _onUrlChanged.cancel();
-    _onStateChanged.cancel();
-    flutterWebviewPlugin.dispose();
+    //_onStateChanged.cancel();
+    //flutterWebviewPlugin.dispose();
     super.dispose();
   }
 
@@ -46,24 +46,24 @@ class AuthPagebState extends State<AuthPage> {
   void initState() {
     super.initState();
     authBloc = BlocProvider.of<AuthBloc>(context);
-    flutterWebviewPlugin.close();
+    //flutterWebviewPlugin.close();
 
     // Add a listener to on destroy WebView, so you can make came actions.
-    _onDestroy = flutterWebviewPlugin.onDestroy.listen((_) {
-      print("destroy");
-    });
-
-    _onStateChanged =
-        flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {});
+//    _onDestroy = flutterWebviewPlugin.onDestroy.listen((_) {
+//      print("destroy");
+//    });
+//
+//    _onStateChanged =
+//        flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged state) {});
 
     // Add a listener to on url changed
-    _onUrlChanged = flutterWebviewPlugin.onUrlChanged.listen((String url) async {
-      if (mounted) {
-        RegExp regExp = new RegExp("code=(.*)\&");
-        code = regExp.firstMatch(url)?.group(1);
-        if(code != null) authBloc.add(AuthCodeEvent(code: code));
-      }
-    });
+//    _onUrlChanged = flutterWebviewPlugin.onUrlChanged.listen((String url) async {
+//      if (mounted) {
+//        RegExp regExp = new RegExp("code=(.*)\&");
+//        code = regExp.firstMatch(url)?.group(1);
+//        if(code != null) authBloc.add(AuthCodeEvent(code: code));
+//      }
+//    });
   }
 
   @override
@@ -74,16 +74,16 @@ class AuthPagebState extends State<AuthPage> {
          Navigator.pop(context);
        }
       },
-      child: WebviewScaffold(
-          url: Api.AUTH_URL,
-          appBar: AppBar(
-            automaticallyImplyLeading: true,
-            title: Text("Авторизация"),
-            backgroundColor: Colors.red[800],
-          ),
-        withLocalStorage: true,
-        withZoom: true,
-      ),
+//      child: WebviewScaffold(
+//          url: Api.AUTH_URL,
+//          appBar: AppBar(
+//            automaticallyImplyLeading: true,
+//            title: Text("Авторизация"),
+//            backgroundColor: Colors.red[800],
+//          ),
+//        withLocalStorage: true,
+//        withZoom: true,
+//      ),
     );
   }
 }

@@ -107,6 +107,21 @@ class NewsPortalCardInformationPageState extends State<NewsPortalCardInformation
                                   ),
                                 )
                             ),
+//                        onLinkTap: (url) =>
+//                            Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                    builder: (context) => WebviewScaffold(
+//                                      appBar: AppBar(backgroundColor: Colors.black54,),
+//                                      enableAppScheme: true,
+//                                      withZoom: true,
+//                                      withLocalStorage: true,
+//                                      hidden: true,
+//                                      withOverviewMode: true,
+//                                      url: url,
+//                                    ),
+//                                )
+//                            ),
                       ),
                     ])
                 )
