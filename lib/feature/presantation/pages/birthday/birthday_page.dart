@@ -24,11 +24,13 @@ class BirthdayPage extends StatelessWidget {
     return BlocConsumer<BirthdayBloc, BirthdayState>(
       // ignore: missing_return
       builder: (context, state) {
+        Widget currentViewOnPage = BirthdayPageShimmer();
+
         if (state is BirthdayFromCacheState) {
           if(state.birthdays.length == 0)
-            return Center(child: Text('Нет ранее сохраненных данных'));
+            currentViewOnPage = Center(child: Text('Нет ранее сохраненных данных'));
 
-          return BirthdayPageBody(
+          currentViewOnPage = BirthdayPageBody(
             listModel: state.birthdays,
             title: state.title,
             enableControlLoad: false,
@@ -36,19 +38,24 @@ class BirthdayPage extends StatelessWidget {
             hasReachedMax: true,
           );
         } else if (state is LoadingBirthdayState) {
-          return BirthdayPageShimmer();
+          currentViewOnPage = BirthdayPageShimmer();
         } else if (state is LoadedBirthdayState) {
           if(state.birthdays.length == 0)
-            return Center(child: Text('По вашему запросу ничего не было найдено'));
+            currentViewOnPage = Center(child: Text('По вашему запросу ничего не было найдено'));
 
-          return BirthdayPageBody(
+          currentViewOnPage = BirthdayPageBody(
               listModel: state.birthdays,
               title: state.title,
               hasReachedMax: state.hasReachedMax
           );
         } else if (state is ErrorBirthdayState) {
-          return BirthdayPageShimmer();
+          currentViewOnPage = BirthdayPageShimmer();
         }
+
+        return AnimatedSwitcher(
+          duration: Duration(milliseconds: 200),
+          child: currentViewOnPage,
+        );
       },
       listener: (context, state) {},
     );

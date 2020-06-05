@@ -6,8 +6,8 @@ import 'package:flutter_architecture_project/feature/data/datasources/response_h
 import 'package:flutter_architecture_project/feature/data/models/news/like_news_model.dart';
 
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
+import 'package:flutter_architecture_project/feature/data/params/news/news_params.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
-import 'package:flutter_architecture_project/feature/domain/params/news/news_params.dart';
 import 'package:http/http.dart' as http;
 
 abstract class INewsPortalRemoteDataSource {
@@ -28,7 +28,7 @@ class NewsPortalRemoteDataSource with ResponseHandler implements INewsPortalRemo
 
   @override
   Future<List<NewsModel>> getNewsWithParams({@required NewsParams params}) async {
-
+    print('params ======================================== ${params.pageIndex}');
     String uri = Uri.http('${Api.HOST_URL}', '/api/news', params.toMap()).toString();
 
     final response = await http.get(

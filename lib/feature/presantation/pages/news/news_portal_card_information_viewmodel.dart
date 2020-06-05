@@ -2,24 +2,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/feature/data/models/auth/current_user_model.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/likeNews/bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
 
 class NewsPortalCardInformationViewModel extends BaseViewModel {
 
-
   NewsModel news;
-  final LikeNewsBloc likeNewsBloc;
-  final getIt = GetIt.instance;
+  final NewsPortalBloc newsBloc;
+  final int index;
+  final ScrollController scrollController;
 
-  NewsPortalCardInformationViewModel({@required this.news, @required this.likeNewsBloc}){
-    final Storage storage = getIt<Storage>();
+  NewsPortalCardInformationViewModel({@required this.news, @required this.newsBloc, @required this.index, @required this.scrollController}){
 
-    likeNewsBloc.listen((state) {
-      if(state is LoadedLikesState) {
-        news.likesCount = state.likes;
-        news.likedBy.add(storage.currentUserModel.id);
+    newsBloc.listen((state) {
+      if(state is LoadedNewsPortal) {
         notifyListeners();
       }
     });
@@ -40,12 +37,10 @@ class NewsPortalCardInformationViewModel extends BaseViewModel {
   }
   Storage storage;
 
-  ScrollController scrollController = new ScrollController();
-
   bool show = false;
 
   void like(String id, String guid) {
-    if(news.isLike()) likeNewsBloc.add(removeLikeEvent(guid: guid, id: id));
-    else likeNewsBloc.add(likeNewEvent(guid: guid, id: id));
+    if(news.isLike()) newsBloc.add(RemoveLikeEvent(guid: guid, id: id, index: index));
+    else newsBloc.add(LikeNewsEvent(guid: guid, id: id, index: index));
   }
 }

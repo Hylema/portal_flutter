@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/global_state.dart';
 import 'package:flutter_architecture_project/feature/data/models/profile/profile_model.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/profile/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/profile/profile_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/data_from_cache_message.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';

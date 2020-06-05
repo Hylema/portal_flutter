@@ -3,7 +3,7 @@ import 'package:flutter_architecture_project/feature/data/datasources/news/news_
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/like_news_model.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
-import 'package:flutter_architecture_project/feature/domain/params/news/news_params.dart';
+import 'package:flutter_architecture_project/feature/data/params/news/news_params.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/news/news_portal_repository_interface.dart';
 
 import 'package:meta/meta.dart';
@@ -31,11 +31,11 @@ class NewsPortalRepository implements INewsPortalRepository{
   }
 
   @override
-  Future<LikeNewsModel> likeNew({@required String guid, @required String id}) async =>
+  Future<LikeNewsModel> likeNews({@required String guid, @required String id}) async =>
       await remoteDataSource.likeNew(guid: guid, id: id);
 
   @override
-  Future<LikeNewsModel> removeLikeNew({@required String guid, @required String id}) async =>
+  Future<LikeNewsModel> removeLikeNews({@required String guid, @required String id}) async =>
       await remoteDataSource.removeLikeNew(guid: guid, id: id);
 
   @override

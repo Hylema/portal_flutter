@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/api/api.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/response_handler.dart';
 import 'package:flutter_architecture_project/feature/data/models/videoGallery/video_gallery_model.dart';
+import 'package:flutter_architecture_project/feature/data/params/videoGallery/video_gallery_params.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
-import 'package:flutter_architecture_project/feature/domain/params/videoGallery/video_gallery_params.dart';
 import 'package:http/http.dart' as http;
 
 abstract class IVideoGalleryRemoteDataSource {

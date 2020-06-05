@@ -4,7 +4,6 @@ import 'package:flutter_architecture_project/feature/data/datasources/response_h
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/data/models/polls/polls_model.dart';
 import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
-import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
 import 'package:http/http.dart' as http;
 
 abstract class IPollsRemoteDataSource {

@@ -10,10 +10,10 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/news_portal_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/news_portal_event.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/profile/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -82,6 +82,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
   CurrentPollsBloc _currentPollsBloc;
   ProfileBloc _profileBloc;
   AuthBloc _authBloc;
+  PhoneBookBloc _phoneBookBloc;
 
   @override
   void initState() {
@@ -127,6 +128,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     _currentPollsBloc = BlocProvider.of<CurrentPollsBloc>(context);
     _profileBloc = BlocProvider.of<ProfileBloc>(context);
     _authBloc = BlocProvider.of<AuthBloc>(context);
+    _phoneBookBloc = BlocProvider.of<PhoneBookBloc>(context);
   }
 
   @override
@@ -158,6 +160,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     _currentPollsBloc.add(FetchCurrentPolls());
     _pastPollsBloc.add(FetchPastPolls());
     _profileBloc.add(GetProfileEvent());
+    _phoneBookBloc.add(FetchPhoneBookEvent());
   }
 
   Future _finish() async {

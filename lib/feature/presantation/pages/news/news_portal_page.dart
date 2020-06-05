@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/global_state.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_item_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_main_item_widget.dart';
@@ -76,12 +76,8 @@ class NewsPortalBody extends StatelessWidget{
               flexibleSpace: NewsPortalMainItem(news: listModels[0])
           ),
           SliverList(
-            delegate: SliverChildBuilderDelegate((BuildContext context, int index){
-              index++;
-              final news = listModels[index];
-
-              return NewsPortalItem(news: news, index: index);
-            },
+            delegate: SliverChildBuilderDelegate((BuildContext context, int index) =>
+                NewsPortalItem(news: listModels[++index], index: index),
                 childCount: (listModels.length - 1)
             ),
           ),

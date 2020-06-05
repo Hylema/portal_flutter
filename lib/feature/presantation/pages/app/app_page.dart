@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:expandable_bottom_bar/expandable_bottom_bar.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_architecture_project/core/animation/fade_animation.dart';
 import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/global_state.dart';
@@ -19,11 +20,11 @@ class AppPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    BlocSupervisor.delegate = SupervisorAppPage(
-        snackBar: Scaffold.of(context).showSnackBar,
-        blocAuth: BlocProvider.of<AuthBloc>(context),
-        context: context
-    );
+//    BlocSupervisor.delegate = SupervisorAppPage(
+//        snackBar: Scaffold.of(context).showSnackBar,
+//        blocAuth: BlocProvider.of<AuthBloc>(context),
+//        context: context
+//    );
 
     return ViewModelBuilder<AppPageViewModel>.nonReactive(
       builder: (context, model, child) => DefaultBottomBarController(

@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
-import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
-import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/news/news_portal_repository_interface.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/likeNews/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_card_information_viewmodel.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_likes_seen_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/likeSeen/news_portal_likes_seen_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_main_item_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,9 +12,9 @@ import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart';
 import 'package:stacked/stacked.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
 
-
-class NewsPortalCardInformationPage extends StatelessWidget {
+class NewsPortalCardInformationPage extends StatefulWidget{
 
   final NewsModel news;
   final int index;
@@ -29,147 +26,68 @@ class NewsPortalCardInformationPage extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  State<StatefulWidget> createState() => NewsPortalCardInformationPageState();
+}
 
+class NewsPortalCardInformationPageState extends State<NewsPortalCardInformationPage>{
+
+  ScrollController scrollController;
+
+  @override
+  void initState() {
+    scrollController = new ScrollController();
+
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return ViewModelBuilder<NewsPortalCardInformationViewModel>.reactive(
       builder: (context, model, child) => Scrollbar(
           child: Scaffold(
             body: CustomScrollView(
-              controller: model.scrollController,
+              controller: scrollController,
               slivers: <Widget>[
                 SliverAppBar(
                   backgroundColor: Colors.black54,
                   pinned: true,
                   automaticallyImplyLeading: true,
                   expandedHeight: 300,
-                  flexibleSpace: NewsPortalMainItem(news: news, index: index, fromCard: true),
+                  flexibleSpace: NewsPortalMainItem(news: widget.news, index: widget.index, fromCard: true),
                   actions: <Widget>[
-                    AnimatedOpacity(
-                      alwaysIncludeSemantics: true,
-                      duration: Duration(milliseconds: 200),
-                      child: Container(
-                        padding: EdgeInsets.only(left: 20, top: 10),
-                        child: Row(
-                          children: <Widget>[
-                            Icon(
-                                Icons.remove_red_eye,
-                                size: 30,
-                                color: Colors.white
-                            ),
-                            Text(
-                              ' ${news.viewedCount}',
-                              style: TextStyle(
-                                fontSize: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      opacity: model.show ? 1 : 0,
-                    ),
-                    SizedBox(width: 20,),
-                    BlocConsumer<LikeNewsBloc, LikeNewsState>(
-                      // ignore: missing_return
-                      bloc: LikeNewsBloc(
-                          repository: getIt<INewsPortalRepository>()
-                      ),
-                      builder: (context, state) {
-                        int likeCount = news.likesCount;
-
-                        if(state is LoadedLikesState) likeCount = state.likes;
-
-                        return AnimatedOpacity(
-                          alwaysIncludeSemantics: true,
+                    Container(
+                        margin: EdgeInsets.only(right: 20),
+                        child: AnimatedOpacity(
+                          child: LikesSeenWidget(likeFunc: model.like, news: widget.news, color: Colors.white,),
                           duration: Duration(milliseconds: 200),
-                          child: Container(
-                            padding: EdgeInsets.only(right: 20, top: 10),
-                            child: GestureDetector(
-                              child: Row(
-                                children: <Widget>[
-                                  Icon(
-                                      !news.isLike() ? Icons.favorite_border : Icons.favorite,
-                                      size: 30,
-                                      color: Colors.white
-                                  ),
-                                  Text(
-                                    ' $likeCount',
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-//                              onTap: () => model.like(guid: news.guid, id: news.id),
-                            ),
-                          ),
                           opacity: model.show ? 1 : 0,
-                        );
-                      },
-                      listener: (context, state) {},
+                        )
                     ),
                   ],
                 ),
                 SliverList(
                     delegate: SliverChildListDelegate([
-//                      Container(
-//                        color: Colors.white,
-//                        child: Row(
-//                          mainAxisAlignment: MainAxisAlignment.end,
-//                          children: <Widget>[
-//                            Container(
-//                              padding: EdgeInsets.only(left: 20, top: 10),
-//                              child: Row(
-//                                children: <Widget>[
-//                                  Icon(
-//                                    Icons.remove_red_eye,
-//                                    size: 30,
-//                                    color: !model.show ? Colors.grey[300] : Colors.white,
-//                                  ),
-//                                  Text(
-//                                    ' ${news.viewedCount}',
-//                                    style: TextStyle(
-//                                      fontSize: 15,
-//                                      color: !model.show ? Colors.black : Colors.white,
-//                                    ),
-//                                  ),
-//                                ],
-//                              ),
-//                            ),
-//                            SizedBox(width: 20,),
-//                            Container(
-//                              padding: EdgeInsets.only(right: 20, top: 10),
-//                              child: GestureDetector(
-//                                child: Row(
-//                                  children: <Widget>[
-//                                    Icon(
-//                                      !news.isLike() ? Icons.favorite_border : Icons.favorite,
-//                                      size: 30,
-//                                      color: !model.show ? (!news.isLike() ? Colors.grey[300] : Color.fromRGBO(238, 0, 38, 1)) : Colors.white,
-//                                    ),
-//                                    Text(
-//                                      ' ${news.likesCount}',
-//                                      style: TextStyle(
-//                                        fontSize: 15,
-//                                        color: !model.show ? Colors.black : Colors.white,
-//                                      ),
-//                                    ),
-//                                  ],
-//                                ),
-//                                onTap: () => model.like(guid: news.guid, id: news.id),
-//                              ),
-//                            )
-//                          ],
-//                        ),
-//                      ),
-                    Container(
-                      color: Colors.white,
-                      margin: EdgeInsets.only(right: 20, top: 10),
-                      child: LikesSeenWidget(likeFunc: model.like, news: news, color: Colors.grey,),
-                    ),
-//                      SelectableText(document.outerHtml, showCursor: true, cursorWidth: 5,),
+                      Container(
+                        color: Colors.white,
+                        margin: EdgeInsets.only(right: 20, top: 10),
+                        child: AnimatedOpacity(
+                          child: LikesSeenWidget(likeFunc: model.like, news: widget.news, color: Colors.grey,),
+                          duration: Duration(milliseconds: 200),
+                          opacity: model.show ? 0 : 1,
+                        )
+                      ),
                       Html(
                         backgroundColor: Colors.white,
-                        data: news.body,
+                        data: widget.news.body,
                         defaultTextStyle: TextStyle(
                             fontSize: 17
                         ),
@@ -178,15 +96,15 @@ class NewsPortalCardInformationPage extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => WebviewScaffold(
-                                      appBar: AppBar(backgroundColor: Colors.black54,),
-                                      enableAppScheme: true,
-                                      withZoom: true,
-                                      withLocalStorage: true,
-                                      hidden: true,
-                                      withOverviewMode: true,
-                                      url: url,
-                                    ),
+                                  builder: (context) => WebviewScaffold(
+                                    appBar: AppBar(backgroundColor: Colors.black54,),
+                                    enableAppScheme: true,
+                                    withZoom: true,
+                                    withLocalStorage: true,
+                                    hidden: true,
+                                    withOverviewMode: true,
+                                    url: url,
+                                  ),
                                 )
                             ),
                       ),
@@ -197,8 +115,10 @@ class NewsPortalCardInformationPage extends StatelessWidget {
           )
       ),
       viewModelBuilder: () => NewsPortalCardInformationViewModel(
-        news: news,
-        likeNewsBloc: BlocProvider.of<LikeNewsBloc>(context),
+          news: widget.news,
+          newsBloc: BlocProvider.of<NewsPortalBloc>(context),
+          index: widget.index,
+        scrollController: scrollController
       ),
     );
   }

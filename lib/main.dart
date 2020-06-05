@@ -7,14 +7,14 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc
 import 'package:flutter_architecture_project/feature/presantation/bloc/navigationBar/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/auth/auth_page.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/likeNews/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/news_portal_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/profile/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/welcome/welcome_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'injection_container.dart' as di;
@@ -45,8 +45,8 @@ void main() async {
                 create: (BuildContext context) => di.sl<ProfileBloc>()),
             BlocProvider<NavigationBarBloc>(
                 create: (BuildContext context) => di.sl<NavigationBarBloc>()),
-            BlocProvider<LikeNewsBloc>(
-                create: (BuildContext context) => di.sl<LikeNewsBloc>()),
+            BlocProvider<PhoneBookBloc>(
+                create: (BuildContext context) => di.sl<PhoneBookBloc>()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

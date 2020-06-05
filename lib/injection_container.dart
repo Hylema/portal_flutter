@@ -10,6 +10,7 @@ import 'package:flutter_architecture_project/feature/data/datasources/birthday/b
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/phoneBook/phone_book_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/polls/polls_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_remote_data_source.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_architecture_project/feature/data/repositories/auth/auth
 import 'package:flutter_architecture_project/feature/data/repositories/birthday/birthday_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/phoneBook/phone_book_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/polls/polls_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/profile/profile_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/videoGallery/video_gallery_repository.dart';
@@ -25,6 +27,7 @@ import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/main/main_params_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/news/news_portal_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/phoneBook/phone_book_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/polls/polls_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/profile/profile_repository_interface.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/videoGallery/video_gallery_repository_interface.dart';
@@ -34,13 +37,11 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc
 import 'package:flutter_architecture_project/feature/presantation/bloc/navigationBar/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/likeNews/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/listNews/news_portal_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/news_portal_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/profile/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/bloc/bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -55,16 +56,20 @@ Future<void> init() async {
 
   ///! BLOCS
 
-  /// navigation bar
-  sl.registerFactory(() => NavigationBarBloc());
-  sl.registerFactory(() => LikeNewsBloc(
+  /// phone book
+  sl.registerFactory(() => PhoneBookBloc(
+    networkInfo: sl(),
     repository: sl()
   ));
+
+  /// navigation bar
+  sl.registerFactory(() => NavigationBarBloc());
 
   /// news portal
   sl.registerFactory(() => NewsPortalBloc(
     networkInfo: sl(),
-    repository: sl()
+    repository: sl(),
+    storage: sl()
   ));
 
   /// auth
@@ -125,6 +130,13 @@ Future<void> init() async {
 
 
   ///! REPOSITORY
+
+  /// phone book
+  sl.registerLazySingleton<PhoneBookRepository>(
+        () => PhoneBookRepository(
+        remoteDataSource: sl()
+    ),
+  );
 
   /// news portal
   sl.registerLazySingleton<INewsPortalRepository>(
@@ -188,6 +200,17 @@ Future<void> init() async {
 
 
   ///! DATA SOURCE
+
+  /// phone book
+  sl.registerLazySingleton<PhoneBookRemoteDataSource>(
+        () => PhoneBookRemoteDataSource(
+          client: sl(),
+          storage: sl()
+    ),
+  );
+//  sl.registerLazySingleton<NewsPortalLocalDataSource>(
+//        () => NewsPortalLocalDataSource(sharedPreferences: sl(), cachedName: CACHE_NEWS),
+//  );
 
   /// news portal
   sl.registerLazySingleton<NewsPortalRemoteDataSource>(

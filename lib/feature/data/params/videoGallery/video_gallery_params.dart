@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_architecture_project/feature/domain/params/params.dart';
+import 'package:flutter_architecture_project/feature/data/params/params.dart';
 
-class NewsParams extends Params{
+class VideoGalleryParams extends Params{
   int pageIndex;
   int pageSize;
 
-  NewsParams({
+  VideoGalleryParams({
     @required this.pageIndex,
     @required this.pageSize,
   });

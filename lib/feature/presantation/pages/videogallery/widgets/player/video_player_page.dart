@@ -18,40 +18,42 @@ class VideoPlayerPage extends StatelessWidget {
           builder: (context, orientation) {
             return Scaffold(
               backgroundColor: Colors.black,
-              appBar: Orientation.portrait == orientation ? HeaderAppBar(
-                title: videoData.title,
+              appBar: Orientation.portrait == orientation ? AppBar(
+                title: Text(videoData.title, style: TextStyle(color: Colors.white),),
                 automaticallyImplyLeading: true,
+                backgroundColor: Colors.black,
               ) : null,
               //body: MyHomePage(),
               //body: MyHomePage(),
-              body: YoutubePlayer(
-                controlsTimeOut: Duration(seconds: 60),
-                onReady: () => model.playerReady = true,
-                controller: model.controller,
-                showVideoProgressIndicator: true,
-                thumbnailUrl: videoData.previewUrl,
-                topActions: <Widget>[
-                  Expanded(
-                    flex: 2,
-                      child: Container()
-                  ),
-                  Icon(Icons.volume_mute, color: Colors.white, size: 25),
-                  Expanded(
-                    flex: 6,
-                    child: Slider(
-                      inactiveColor: Colors.grey,
-                      activeColor: Colors.white,
-                      value: model.volume,
-                      min: 0.0,
-                      max: 100.0,
-                      onChanged: (newValue) => model.changeVolume(newValue),
+              body: Center(
+                child: YoutubePlayer(
+                  controlsTimeOut: Duration(seconds: 60),
+                  onReady: () => model.playerReady = true,
+                  controller: model.controller,
+                  showVideoProgressIndicator: true,
+                  thumbnailUrl: videoData.previewUrl,
+                  topActions: <Widget>[
+                    Expanded(
+                        flex: 2,
+                        child: Container()
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Container()
-                  ),
-                ],
+                    Icon(Icons.volume_mute, color: Colors.white, size: 25),
+                    Expanded(
+                      flex: 6,
+                      child: Slider(
+                        inactiveColor: Colors.grey,
+                        activeColor: Colors.white,
+                        value: model.volume,
+                        min: 0.0,
+                        max: 100.0,
+                        onChanged: (newValue) => model.changeVolume(newValue),
+                      ),
+                    ),
+                    Expanded(
+                        flex: 2,
+                        child: Container()
+                    ),
+                  ],
 //                bottomActions: <Widget>[
 //                  Expanded(
 //                    flex: 1,
@@ -139,7 +141,8 @@ class VideoPlayerPage extends StatelessWidget {
 //                      ),
 //                  ),
 //                ],
-              ),
+                ),
+              )
             );
           }
       ),

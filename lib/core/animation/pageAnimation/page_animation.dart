@@ -26,6 +26,33 @@ class SlideRightRoute extends PageRouteBuilder {
   );
 }
 
+class SlideLeftRoute extends PageRouteBuilder {
+  final Widget page;
+  SlideLeftRoute({this.page}) : super(
+    pageBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        ) =>
+    page,
+    transitionDuration: const Duration(milliseconds: 200),
+    transitionsBuilder: (
+        BuildContext context,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+        Widget child,
+        ) =>
+        SlideTransition(
+          position: Tween<Offset>(
+            begin: const Offset(1, 0),
+//            begin: const Offset(-1, 0),
+            end: Offset.zero,
+          ).animate(animation),
+          child: child,
+        ),
+  );
+}
+
 class FadeRoute extends PageRouteBuilder {
   final Widget page;
   FadeRoute({this.page})
@@ -116,6 +143,7 @@ class EnterExitRoute extends PageRouteBuilder {
         Animation<double> secondaryAnimation,
         ) =>
     enterPage,
+    transitionDuration: const Duration(milliseconds: 300),
     transitionsBuilder: (
         BuildContext context,
         Animation<double> animation,
@@ -127,7 +155,7 @@ class EnterExitRoute extends PageRouteBuilder {
             SlideTransition(
               position: new Tween<Offset>(
                 begin: const Offset(0.0, 0.0),
-                end: const Offset(-1.0, 0.0),
+                end: const Offset(-0.3, 0.0),
               ).animate(animation),
               child: exitPage,
             ),

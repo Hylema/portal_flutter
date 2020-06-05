@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
-import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
+import 'package:flutter_architecture_project/feature/data/params/birthday/birthday_params.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';

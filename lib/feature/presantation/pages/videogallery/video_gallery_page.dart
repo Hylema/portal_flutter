@@ -3,10 +3,7 @@ import 'package:flutter_architecture_project/core/animation/pageAnimation/page_a
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/global_state.dart';
 import 'package:flutter_architecture_project/feature/data/models/videoGallery/video_gallery_model.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_event.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/video_gallery_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/video_gallery_parameters.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/widgets/video_gallery_item_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';

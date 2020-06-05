@@ -11,9 +11,9 @@ class MainFloatingActionButtonWidgetState extends State<MainFloatingActionButton
 
   bool isOpened = false;
   AnimationController _animationController;
-  Animation<Color> _animateColor;
+
   Animation<double> _animateIcon;
-  Curve _curve = Curves.easeOut;
+
 
   @override
   initState() {
@@ -24,17 +24,7 @@ class MainFloatingActionButtonWidgetState extends State<MainFloatingActionButton
       });
     _animateIcon =
         Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
-    _animateColor = ColorTween(
-      begin: Colors.blue,
-      end: Colors.red,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Interval(
-        0.00,
-        1.00,
-        curve: _curve,
-      ),
-    ));
+
 
     super.initState();
   }

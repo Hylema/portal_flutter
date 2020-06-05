@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/animation/fade_animation.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
@@ -165,7 +166,6 @@ class SmartRefresherWidgetState extends State<SmartRefresherWidget> {
   @override
   void initState() {
     super.initState();
-
     _refreshController = RefreshController();
 
     _subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {

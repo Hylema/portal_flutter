@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/profile/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_state.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/phone_book_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/polls/polls_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/profile/profile_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/video_gallery_page.dart';
@@ -45,12 +42,18 @@ class CurrentPageBody extends StatelessWidget {
       POLLS_PAGE_INDEX_NUMBER: {
         PAGE: PollsPage()
       },
+      PHONE_BOOK_PAGE_INDEX_NUMBER: {
+        PAGE: PhoneBookPage()
+      },
     };
 
     return BlocConsumer<SelectedIndexBloc, SelectedIndexState>(
       builder: (context, state) {
         if (state is LoadedSelectedIndexState) {
-          return BodyAppWidgetBuild(pages: _pageOptions[state.index]);
+          return AnimatedSwitcher(
+            duration: Duration(milliseconds: 200),
+            child: _pageOptions[state.index][PAGE],
+          );
         } else {
           return Container(
             child: Center(
@@ -63,22 +66,3 @@ class CurrentPageBody extends StatelessWidget {
     );
   }
 }
-
-class BodyAppWidgetBuild extends StatelessWidget {
-
-  final Map pages;
-  BodyAppWidgetBuild({@required this.pages}) {
-    assert(pages != null);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-//    return Scrollbar(
-//      child: pages[PAGE]
-//    );
-
-
-  return pages[PAGE];
-  }
-}
-//);

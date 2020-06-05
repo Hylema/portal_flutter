@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
-import 'package:flutter_architecture_project/feature/domain/params/birthday/birthday_params.dart';
 import 'package:meta/meta.dart';
 
 @immutable

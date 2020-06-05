@@ -17,6 +17,7 @@ const int PROFILE_PAGE_INDEX_NUMBER = 2;
 const int BIRTHDAY_PAGE_INDEX_NUMBER = 3;
 const int POLLS_PAGE_INDEX_NUMBER = 4;
 const int VIDEO_PAGE_INDEX_NUMBER = 5;
+const int PHONE_BOOK_PAGE_INDEX_NUMBER = 6;
 
 ///Different
 const String UPDATE_FOOTER = 'footer';

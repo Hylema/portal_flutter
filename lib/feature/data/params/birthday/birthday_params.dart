@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_architecture_project/feature/domain/params/params.dart';
+import 'package:flutter_architecture_project/feature/data/params/params.dart';
 
 class BirthdayParams extends Params{
   int pageIndex;

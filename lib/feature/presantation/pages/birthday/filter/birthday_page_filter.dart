@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/core/animation/fade_animation.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/filter/birthday_page_filter_viewmodel.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

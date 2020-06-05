@@ -4,9 +4,9 @@ import 'package:flutter_architecture_project/feature/data/models/news/news_porta
 import 'package:meta/meta.dart';
 
 @immutable
-abstract class NewsPortalState extends Equatable{
-  @override
-  List<Object> get props => [];
+abstract class NewsPortalState {
+//  @override
+//  List<Object> get props => [];
 }
 
 class EmptyNewsPortal extends NewsPortalState {}
@@ -27,8 +27,8 @@ class LoadedNewsPortal extends NewsPortalState {
     );
   }
 
-  @override
-  List<Object> get props => [listModels, hasReachedMax];
+//  @override
+//  List<Object> get props => [listModels, hasReachedMax];
 }
 
 class ErrorNewsPortal extends NewsPortalState {

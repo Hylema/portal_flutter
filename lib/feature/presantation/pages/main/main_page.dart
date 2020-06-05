@@ -18,26 +18,30 @@ class MainPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return BlocConsumer<MainBloc, MainState>(
       listener: (context, state) {},
       builder: (context, state) {
+        Widget currentViewOnPage = Container();
+
         if(state is EmptyMainState){
-          return Center(child: Text('Ошибка...'),);
+          currentViewOnPage = Center(child: Text('Ошибка...'),);
 
         } else if(state is LoadedMainParams){
           if(state.model.params.length == 0){
-            return Container(
+            currentViewOnPage = Container(
               child: Center(
                 child: Text('Вы ничего не выбрали'),
               ),
             );
           } else {
-            return MainPageBody(model: state.model);
+            currentViewOnPage = MainPageBody(model: state.model);
           }
-        } else {
-          return Container();
         }
+
+        return AnimatedSwitcher(
+          duration: Duration(milliseconds: 200),
+          child: currentViewOnPage,
+        );
       },
     );
   }

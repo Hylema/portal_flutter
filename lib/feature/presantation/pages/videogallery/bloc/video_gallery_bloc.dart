@@ -5,10 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/feature/data/models/videoGallery/video_gallery_model.dart';
-import 'package:flutter_architecture_project/feature/domain/params/videoGallery/video_gallery_params.dart';
-import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/birthday/birthday_repository_interface.dart';
+import 'package:flutter_architecture_project/feature/data/params/videoGallery/video_gallery_params.dart';
 import 'package:flutter_architecture_project/feature/domain/repositoriesInterfaces/videoGallery/video_gallery_repository_interface.dart';
-import './bloc.dart';
+import 'bloc.dart';
 
 class VideoGalleryBloc extends Bloc<VideoGalleryEvent, VideoGalleryState>{
   final IVideoGalleryRepository repository;

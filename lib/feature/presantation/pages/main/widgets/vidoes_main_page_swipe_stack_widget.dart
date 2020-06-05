@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/feature/data/models/videoGallery/video_gallery_model.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/videoGallery/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/video_gallery_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/widgets/video_gallery_item_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -25,8 +24,9 @@ class VideosMainPageSwipeStackWidget extends StatelessWidget {
   }
 }
 
+@immutable
 class VideoGallerySwipeBody extends StatelessWidget {
-  List<VideosGalleryModel> listModels;
+  final List<VideosGalleryModel> listModels;
   VideoGallerySwipeBody({@required this.listModels});
 
   @override
