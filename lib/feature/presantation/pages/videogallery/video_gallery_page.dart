@@ -49,12 +49,6 @@ class VideoGalleryPageBody extends StatelessWidget {
         slivers: <Widget>[
           SliverList(
             delegate: SliverChildBuilderDelegate((BuildContext context, index){
-              print(listModels[index].videoUrl);
-              final _videoPlayerController1 = VideoPlayerController.network(
-                  listModels[index].videoUrl);
-              final _videoPlayerController2 = VideoPlayerController.network(
-                  'https://www.sample-videos.com/video123/mp4/480/asdasdas.mp4');
-
 //              return Container(height: MediaQuery.of(context).size.width, child: ChewieDemo(
 //                  url: 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'
 //              ),);

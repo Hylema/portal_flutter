@@ -3,7 +3,7 @@ import 'package:flutter_architecture_project/feature/data/models/polls/polls_mod
 import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/date_time_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-//import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 class PollsMainPageCustomSwipeWidget extends StatelessWidget {
 
@@ -113,18 +113,18 @@ class PollsMainPageItemWidget extends StatelessWidget {
       child: Card(
         child: ListTile(
           dense: true,
-//            onTap: () => Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                  builder: (context) => WebviewScaffold(
-//                      appBar: AppBar(
-//                        automaticallyImplyLeading: true,
-//                        backgroundColor: Colors.red[800],
-//                      ),
-//                      url: poll.link
-//                  ),
-//                )
-//            ),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WebviewScaffold(
+                      appBar: AppBar(
+                        automaticallyImplyLeading: true,
+                        backgroundColor: Colors.red[800],
+                      ),
+                      url: poll.link
+                  ),
+                )
+            ),
             title: Text(
               '${poll.title}',
               style: TextStyle(fontWeight: FontWeight.bold),

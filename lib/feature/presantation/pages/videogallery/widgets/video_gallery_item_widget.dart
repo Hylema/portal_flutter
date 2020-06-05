@@ -5,7 +5,7 @@ import 'package:flutter_architecture_project/feature/data/storage/storage.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/widgets/player/video_player_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/date_time_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/title_widget.dart';
-//import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:video_player/video_player.dart';
@@ -95,6 +95,22 @@ class VideoGalleryItemWidget extends StatelessWidget {
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: GestureDetector(
           onTap: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WebviewScaffold(
+                    url: videoData.videoUrl,
+                    headers: {
+                      'Accept': 'application/json',
+                      'Authorization': 'Bearer ${storage.token}',
+                    },
+                    appBar: AppBar(
+                      automaticallyImplyLeading: true,
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
+                )
+            );
 //            videoData.fromYoutube() ? Navigator.push(
 //                context,
 //                MaterialPageRoute(
@@ -111,7 +127,7 @@ class VideoGalleryItemWidget extends StatelessWidget {
 //                      },
 //                      appBar: AppBar(
 //                        automaticallyImplyLeading: true,
-//                        backgroundColor: Colors.red[800],
+//                        backgroundColor: Colors.transparent,
 //                      ),
 //                    ),
 //                )

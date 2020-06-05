@@ -11,7 +11,7 @@ import 'package:flutter_architecture_project/feature/presantation/pages/app/app_
 import 'package:flutter_architecture_project/feature/presantation/pages/welcome/welcome_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-//import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -74,16 +74,16 @@ class AuthPagebState extends State<AuthPage> {
          Navigator.pop(context);
        }
       },
-//      child: WebviewScaffold(
-//          url: Api.AUTH_URL,
-//          appBar: AppBar(
-//            automaticallyImplyLeading: true,
-//            title: Text("Авторизация"),
-//            backgroundColor: Colors.red[800],
-//          ),
-//        withLocalStorage: true,
-//        withZoom: true,
-//      ),
+      child: WebviewScaffold(
+          url: Api.AUTH_URL,
+          appBar: AppBar(
+            automaticallyImplyLeading: true,
+            title: Text("Авторизация"),
+            backgroundColor: Colors.red[800],
+          ),
+        withLocalStorage: true,
+        withZoom: true,
+      ),
     );
   }
 }
