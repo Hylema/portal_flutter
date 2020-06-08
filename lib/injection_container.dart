@@ -1,8 +1,10 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/core/global_state.dart';
 import 'package:flutter_architecture_project/core/network/network_info.dart';
 import 'package:flutter_architecture_project/core/parsers/profile_parser.dart';
+import 'package:flutter_architecture_project/core/singleton_blocs.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/auth/auth_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/auth/auth_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_local_data_source.dart';
@@ -36,11 +38,10 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/navigationBar/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/news_portal_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/polls/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/profile/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/bloc/bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -113,13 +114,8 @@ Future<void> init() async {
   sl.registerFactory(() => SelectedIndexBloc());
 
   ///polls
-  sl.registerFactory(() => PastPollsBloc(
-    networkInfo: sl(),
+  sl.registerFactory(() => PollsBloc(
     repository: sl()
-  ));
-  sl.registerFactory(() => CurrentPollsBloc(
-      networkInfo: sl(),
-      repository: sl()
   ));
 
 
@@ -303,6 +299,16 @@ Future<void> init() async {
   ));
   sl.registerLazySingleton<FlutterSecureStorage>(() => FlutterSecureStorage());
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton<SingletonBlocs>(() => SingletonBlocs(
+    authBloc: sl(),
+    birthdayBloc: sl(),
+    mainBloc: sl(),
+    profileBloc: sl(),
+    videoGalleryBloc: sl(),
+    newsPortalBloc: sl(),
+    phoneBookBloc: sl(),
+    pollsBloc: sl()
+  ));
 
 
 

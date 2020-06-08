@@ -8,21 +8,29 @@ import 'package:flutter_architecture_project/feature/presantation/widgets/easy_r
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 class ProfilePage extends StatelessWidget {
+  final ProfileBloc bloc;
+  ProfilePage({@required this.bloc});
+
+
   Widget build(BuildContext context) {
     return BlocConsumer<ProfileBloc, ProfileState>(
+      bloc: bloc,
       builder: (context, state) {
+        print('state is ${state.runtimeType}');
+
         if (state is InitialProfileState) {
           return ProfilePageShimmer();
         } else if (state is LoadingProfileState) {
           return ProfilePageShimmer();
         } else if (state is LoadedProfileState) {
-          return ProfilePageBody(data: state.model,);
+          return ProfilePageBody(data: state.model, bloc: bloc,);
         } else if (state is ErrorProfileState) {
           return ProfilePageShimmer();
         } else if(state is LoadedProfileFromCacheState) {
-          if(state.data != null) return ProfilePageBody(data: state.data, fromCache: true);
+          if(state.data != null) return ProfilePageBody(data: state.data, fromCache: true, bloc: bloc,);
           else return Center(child: Text('Нет ранее сохраненных данных'));
         }
         return Container();
@@ -35,7 +43,8 @@ class ProfilePage extends StatelessWidget {
 class ProfilePageBody extends StatelessWidget {
   final ProfileModel data;
   final bool fromCache;
-  ProfilePageBody({@required this.data, this.fromCache = false});
+  final ProfileBloc bloc;
+  ProfilePageBody({@required this.data, @required this.bloc, this.fromCache = false});
 
   @override
   Widget build(BuildContext context) {
@@ -62,122 +71,127 @@ class ProfilePageBody extends StatelessWidget {
       },
     ];
 
-    return SmartRefresherWidget(
-      enableControlLoad: false,
-      enableControlRefresh: true,
-      hasReachedMax: true,
-      onRefresh: () => BlocProvider.of<ProfileBloc>(context).add(GetProfileEvent()),
-      child: CustomScrollView(
-        controller: GlobalState.hideAppNavigationBarController,
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildListDelegate([
-              DataFromCacheMessageWidget(fromCache: fromCache),
-              Container(
-                child: Stack(
-                  alignment: Alignment.bottomCenter,
-                  overflow: Overflow.visible,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                            height: 230.0,
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black12,
-                                    blurRadius: 10.0,
-                                    spreadRadius: 0.5,
-                                    offset: Offset(
-                                      10.0, // horizontal, move right 10
-                                      10.0, // vertical, move down 10
-                                    ),
+    return Scaffold(
+      appBar: HeaderAppBar(
+        title: 'Профиль',
+      ),
+      body: SmartRefresherWidget(
+        enableControlLoad: false,
+        enableControlRefresh: true,
+        hasReachedMax: true,
+        onRefresh: () => bloc.add(GetProfileEvent()),
+        child: CustomScrollView(
+          controller: GlobalState.hideAppNavigationBarController,
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildListDelegate([
+                DataFromCacheMessageWidget(fromCache: fromCache),
+                Container(
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    overflow: Overflow.visible,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              height: 230.0,
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black12,
+                                      blurRadius: 10.0,
+                                      spreadRadius: 0.5,
+                                      offset: Offset(
+                                        10.0, // horizontal, move right 10
+                                        10.0, // vertical, move down 10
+                                      ),
+                                    )
+                                  ],
+                                  image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: NetworkImage('https://avatars.mds.yandex.net/get-pdb/1356811/4c2cf9f4-389b-46b2-aec8-ee02a92815a5/s1200')
                                   )
-                                ],
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: NetworkImage('https://avatars.mds.yandex.net/get-pdb/1356811/4c2cf9f4-389b-46b2-aec8-ee02a92815a5/s1200')
-                                )
+                              ),
                             ),
+                          )
+                        ],
+                      ),
+                      Positioned(
+                        top: 150.0,
+                        child: Container(
+                          height: 150.0,
+                          width: 150.0,
+                          child: Center(
+                            child: Image.asset('assets/images/noPhoto.png', width: 70,),
                           ),
-                        )
-                      ],
-                    ),
-                    Positioned(
-                      top: 150.0,
-                      child: Container(
-                        height: 150.0,
-                        width: 150.0,
-                        child: Center(
-                          child: Image.asset('assets/images/noPhoto.png', width: 70,),
-                        ),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 10.0,
-                                spreadRadius: 0.5,
-                                offset: Offset(
-                                  10.0, // horizontal, move right 10
-                                  10.0, // vertical, move down 10
-                                ),
-                              )
-                            ],
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 10.0,
+                                  spreadRadius: 0.5,
+                                  offset: Offset(
+                                    10.0, // horizontal, move right 10
+                                    10.0, // vertical, move down 10
+                                  ),
+                                )
+                              ],
 //                                    image: DecorationImage(
 //                                      fit: BoxFit.cover,
 //                                      image: apiWidgets.imageNetworkProfile(data['pictureUrl']),
 //                                    ),
-                            border: Border.all(
-                                color: Colors.white,
-                                width: 6.0
-                            )
+                              border: Border.all(
+                                  color: Colors.white,
+                                  width: 6.0
+                              )
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                alignment: Alignment.bottomCenter,
-                height: 150.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      data.name,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24.0
+                Container(
+                  alignment: Alignment.bottomCenter,
+                  height: 150.0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        data.name,
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24.0
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 12.0,),
-              Container(
-                  alignment: Alignment.center,
-                  child: Text(
-                    data.position,
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        color: Color.fromRGBO(119, 134, 147, 1)
-                    ),
-                  )
-              ),
-              SizedBox(height: 22.0),
-            ]),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate((BuildContext context, index){
-              return _buildLine(key: listData[index]['key'], value: listData[index]['value']);
-            },
-                childCount: listData.length
+                SizedBox(height: 12.0,),
+                Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      data.position,
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          color: Color.fromRGBO(119, 134, 147, 1)
+                      ),
+                    )
+                ),
+                SizedBox(height: 22.0),
+              ]),
             ),
-          ),
-        ],
+            SliverList(
+              delegate: SliverChildBuilderDelegate((BuildContext context, index){
+                return _buildLine(key: listData[index]['key'], value: listData[index]['value']);
+              },
+                  childCount: listData.length
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

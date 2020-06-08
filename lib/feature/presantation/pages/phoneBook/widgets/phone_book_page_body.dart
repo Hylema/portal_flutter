@@ -17,26 +17,24 @@ class PhoneBookPageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    ScrollController hideButtonController = new ScrollController();
-    bool isVisible = true;
-
-    hideButtonController.addListener(() {
-      if (hideButtonController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        if(isVisible) BlocProvider.of<NavigationBarBloc>(context).add(hideNavigationBarEvent());
-        print('isNotVisible');
-        isVisible = false;
-      }
-      if (hideButtonController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        if(!isVisible) BlocProvider.of<NavigationBarBloc>(context).add(showNavigationBarEvent());
-        print('isVisible');
-        isVisible = true;
-      }
-    });
+//    ScrollController hideButtonController = new ScrollController();
+//    bool isVisible = true;
+//
+//    hideButtonController.addListener(() {
+//      if (hideButtonController.position.userScrollDirection ==
+//          ScrollDirection.reverse) {
+//        if(isVisible) BlocProvider.of<NavigationBarBloc>(context).add(hideNavigationBarEvent());
+//        isVisible = false;
+//      }
+//      if (hideButtonController.position.userScrollDirection ==
+//          ScrollDirection.forward) {
+//        if(!isVisible) BlocProvider.of<NavigationBarBloc>(context).add(showNavigationBarEvent());
+//        isVisible = true;
+//      }
+//    });
 
     return CustomScrollView(
-      controller: hideButtonController,
+//      controller: hideButtonController,
       slivers: <Widget>[
         SliverList(
           delegate: SliverChildListDelegate([
@@ -45,7 +43,7 @@ class PhoneBookPageBody extends StatelessWidget {
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate((BuildContext context, index){
-            return PhoneBookCreateItem(phoneBookModel: listPhoneBook[index], that: that != null ? that : AppPage());
+            return PhoneBookCreateItem(phoneBookModel: listPhoneBook[index], that: that);
           },
               childCount: listPhoneBook.length
           ),

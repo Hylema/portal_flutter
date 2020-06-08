@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/data/models/news/news_portal_model.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_card_information.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/likeSeen/news_portal_likes_seen_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_image_network_widget.dart';
@@ -11,6 +12,7 @@ class NewsPortalItem extends StatelessWidget {
   final NewsModel news;
   final int index;
   final bool vertical;
+  final NewsPortalBloc bloc;
 
   int flexImage = 5;
   int flexBody = 7;
@@ -18,6 +20,7 @@ class NewsPortalItem extends StatelessWidget {
   NewsPortalItem({
     @required this.news,
     @required this.index,
+    @required this.bloc,
     this.vertical = false,
   }){
     assert(this.news != null);
@@ -73,7 +76,7 @@ class NewsPortalItem extends StatelessWidget {
                       dataTime: news.published,
                       color: Colors.grey[600],
                     ),
-                    LikesSeenWidget(news: news, color: Colors.grey, dense: true,)
+                    LikesSeenWidget(news: news, color: Colors.grey, dense: true, bloc: bloc)
                   ],
                 ),
               ],
@@ -91,8 +94,9 @@ class NewsPortalItem extends StatelessWidget {
               context,
               MaterialPageRoute(
                   builder: (context) => NewsPortalCardInformationPage(
-                    index: index,
-                    news: news,
+                      index: index,
+                      news: news,
+                      bloc: bloc
                   )
               )
           );

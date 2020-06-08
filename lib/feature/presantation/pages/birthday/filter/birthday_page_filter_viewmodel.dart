@@ -1,12 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/core/singleton_blocs.dart';
 import 'package:flutter_architecture_project/feature/data/params/birthday/birthday_params.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/pickersModels/date_picker_birthday_model.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:stacked/stacked.dart';
 
@@ -14,7 +16,9 @@ BirthdayParams params;
 BirthdayParams oldParams;
 
 class BirthdayPageFilterViewModel extends BaseViewModel {
-  BirthdayPageFilterViewModel({@required this.birthdayBloc, @required this.navigation}) {
+  BirthdayPageFilterViewModel({@required this.navigation}) {
+    final SingletonBlocs singletonBlocs = getIt<SingletonBlocs>();
+    birthdayBloc = singletonBlocs.birthdayBloc;
 
     if(params == null) {
       params = new BirthdayParams(
@@ -57,8 +61,9 @@ class BirthdayPageFilterViewModel extends BaseViewModel {
     }
   }
 
-  final BirthdayBloc birthdayBloc;
+  BirthdayBloc birthdayBloc;
   final NavigatorState navigation;
+  final getIt = GetIt.instance;
 
   TextEditingController fio = TextEditingController();
   TextEditingController concreteDate = TextEditingController();

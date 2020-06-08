@@ -6,12 +6,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class BirthdayMainPageSwipeWidget extends StatelessWidget {
+  final BirthdayBloc bloc;
+  BirthdayMainPageSwipeWidget({@required this.bloc});
 
   @override
   Widget build(BuildContext context) {
 
     return BlocConsumer<BirthdayBloc, BirthdayState>(
-      listener: (context, state) {},
+      bloc: bloc,
       builder: (context, state) {
         if(state is LoadedBirthdayState){
           return BirthdayMainPageSwipeWidgetStateBuild(listModel: state.birthdays,);
@@ -19,6 +21,7 @@ class BirthdayMainPageSwipeWidget extends StatelessWidget {
           return Container();
         }
       },
+      listener: (context, state) {},
     );
   }
 }

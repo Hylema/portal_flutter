@@ -9,6 +9,7 @@ import 'package:flutter_architecture_project/feature/data/models/birthday/birthd
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/filter/birthday_page_filter.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/data_from_cache_message.dart';
@@ -19,10 +20,12 @@ import 'package:get_it/get_it.dart';
 import 'package:flutter_architecture_project/injection_container.dart' as di;
 
 class BirthdayPage extends StatelessWidget {
+  final BirthdayBloc bloc;
+  BirthdayPage({@required this.bloc});
 
   Widget build(BuildContext context) {
     return BlocConsumer<BirthdayBloc, BirthdayState>(
-      // ignore: missing_return
+      bloc: bloc,
       builder: (context, state) {
         Widget currentViewOnPage = BirthdayPageShimmer();
 
@@ -36,6 +39,7 @@ class BirthdayPage extends StatelessWidget {
             enableControlLoad: false,
             fromCache: true,
             hasReachedMax: true,
+            bloc: bloc,
           );
         } else if (state is LoadingBirthdayState) {
           currentViewOnPage = BirthdayPageShimmer();
@@ -44,17 +48,42 @@ class BirthdayPage extends StatelessWidget {
             currentViewOnPage = Center(child: Text('По вашему запросу ничего не было найдено'));
 
           currentViewOnPage = BirthdayPageBody(
-              listModel: state.birthdays,
-              title: state.title,
-              hasReachedMax: state.hasReachedMax
+            listModel: state.birthdays,
+            title: state.title,
+            hasReachedMax: state.hasReachedMax,
+            bloc: bloc,
           );
         } else if (state is ErrorBirthdayState) {
           currentViewOnPage = BirthdayPageShimmer();
         }
 
-        return AnimatedSwitcher(
-          duration: Duration(milliseconds: 200),
-          child: currentViewOnPage,
+        return Scaffold(
+          appBar: HeaderAppBar(
+            title: 'Дни рождения',
+            actions: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(
+                    right: 15.0,
+                    top: 7,
+                    bottom: 7
+                ),
+                child: IconButton(
+                    onPressed: (){
+                      Navigator.push(context, EnterExitRoute(exitPage: AppPage(), enterPage: BirthdayPageFilter()));
+                    },
+                    icon: Image.asset(
+                      'assets/icons/change.png',
+                    )
+                ),
+              ),
+            ],
+          ),
+          body: Scrollbar(
+            child: AnimatedSwitcher(
+              duration: Duration(milliseconds: 200),
+              child: currentViewOnPage,
+            ),
+          )
         );
       },
       listener: (context, state) {},
@@ -69,11 +98,13 @@ class BirthdayPageBody extends StatelessWidget {
   final bool enableControlRefresh;
   final bool enableControlLoad;
   final bool fromCache;
+  final BirthdayBloc bloc;
 
   BirthdayPageBody({
     @required this.listModel,
     @required this.title,
     @required this.hasReachedMax,
+    @required this.bloc,
     this.enableControlRefresh = true,
     this.enableControlLoad = true,
     this.fromCache = false
@@ -84,8 +115,8 @@ class BirthdayPageBody extends StatelessWidget {
     return SmartRefresherWidget(
         enableControlRefresh: enableControlRefresh,
         enableControlLoad: enableControlLoad,
-        onRefresh: () => BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent()),
-        onLoading: () => BlocProvider.of<BirthdayBloc>(context).add(FetchBirthdayEvent()),
+        onRefresh: () => bloc.add(UpdateBirthdayEvent()),
+        onLoading: () => bloc.add(FetchBirthdayEvent()),
         hasReachedMax: hasReachedMax,
         child: CustomScrollView(
           controller: GlobalState.hideAppNavigationBarController,

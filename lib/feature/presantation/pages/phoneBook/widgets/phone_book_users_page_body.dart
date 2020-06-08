@@ -18,7 +18,7 @@ class PhoneBookUsersPageBody extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return CustomScrollView(
-      controller: GlobalState.hideAppNavigationBarController,
+//      controller: GlobalState.hideAppNavigationBarController,
       slivers: <Widget>[
         SliverList(
           delegate: SliverChildListDelegate([

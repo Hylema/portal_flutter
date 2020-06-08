@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/feature/data/models/polls/polls_model.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/polls/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/date_time_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 
 class PollsMainPageCustomSwipeWidget extends StatelessWidget {
+  final PollsBloc bloc;
+  PollsMainPageCustomSwipeWidget({@required this.bloc});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CurrentPollsBloc, CurrentPollsState>(
-      // ignore: missing_return
+    return BlocConsumer<PollsBloc, PollsState>(
+      bloc: bloc,
       builder: (context, state) {
-        if(state is EmptyCurrentPolls) {
+        if(state is InitialPollsState) {
           return Container();
         }
-        if(state is LoadedCurrentPolls) {
-          if(state.listCurrentPolls.length > 0) {
-            return PollsMainPageCustomSwipeBodyWidget(listPolls: state.listCurrentPolls);
+        if(state is LoadedPollsState) {
+          if(state.listPolls.length > 0) {
+            return PollsMainPageCustomSwipeBodyWidget(listPolls: state.listPolls);
           } else {
             return Center(child: Text('Нет текущих опросов'),);
           }

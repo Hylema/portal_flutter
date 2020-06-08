@@ -8,17 +8,20 @@ import 'package:flutter_architecture_project/injection_container.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
 class NewsMainPageSwipeWidget extends StatelessWidget{
+  final NewsPortalBloc bloc;
+  NewsMainPageSwipeWidget({@required this.bloc});
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NewsPortalBloc, NewsPortalState>(
+      bloc: bloc,
       builder: (context, state) {
         if (state is EmptyNewsPortal) {
           return Container();
         } else if (state is LoadingNewsPortal) {
           return Container();
         } else if (state is LoadedNewsPortal) {
-          return NewsMainPageSwipeWidgetBody(news: state.listModels,);
+          return NewsMainPageSwipeWidgetBody(news: state.listModels, bloc: bloc,);
         } else if (state is ErrorNewsPortal) {
           return Container(
             child: Center(
@@ -35,7 +38,8 @@ class NewsMainPageSwipeWidget extends StatelessWidget{
 
 class NewsMainPageSwipeWidgetBody extends StatelessWidget {
   final news;
-  NewsMainPageSwipeWidgetBody({this.news});
+  final NewsPortalBloc bloc;
+  NewsMainPageSwipeWidgetBody({this.news, @required this.bloc});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +50,7 @@ class NewsMainPageSwipeWidgetBody extends StatelessWidget {
           autoplayDelay: 5000,
           itemBuilder: (BuildContext context, int index) {
             return Container(
-              child: NewsPortalItem(vertical: true, news: news[index], index: index,),
+              child: NewsPortalItem(vertical: true, news: news[index], index: index, bloc: bloc),
             );
           },
           itemCount: news.length,

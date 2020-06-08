@@ -54,8 +54,6 @@ class PhoneBookRemoteDataSource with ResponseHandler implements IPhoneBookRemote
       },
     );
 
-    print('response ================== ${response.body}');
-
     return listModels<PhoneBookUserModel>(response: response, model: PhoneBookUserModel.fromJson, key: 'data');
   }
 }

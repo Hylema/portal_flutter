@@ -9,14 +9,18 @@ class HeaderAppBar extends StatelessWidget with PreferredSizeWidget{
     this.actions,
     this.automaticallyImplyLeading = false,
     this.leading,
+    this.backButtonColor = Colors.white,
+    this.customNavigation,
   });
 
   final Color titleColor;
   final Color backgroundColor;
+  final Color backButtonColor;
   final String title;
   final List<Widget> actions;
   final bool automaticallyImplyLeading;
   final Widget leading;
+  final GlobalKey<NavigatorState> customNavigation;
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -36,7 +40,10 @@ class HeaderAppBar extends StatelessWidget with PreferredSizeWidget{
       actionsIconTheme: IconThemeData(color: Colors.black),
       actions: actions,
       centerTitle: true,
-      leading: leading,
+      leading: leading ?? automaticallyImplyLeading ? IconButton(
+        icon: Icon(Icons.arrow_back, color: backButtonColor),
+        onPressed: () => customNavigation == null ? Navigator.of(context).pop() : customNavigation.currentState.pop(),
+      ) : null
     );
   }
 }

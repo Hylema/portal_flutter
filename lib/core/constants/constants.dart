@@ -18,6 +18,8 @@ const int BIRTHDAY_PAGE_INDEX_NUMBER = 3;
 const int POLLS_PAGE_INDEX_NUMBER = 4;
 const int VIDEO_PAGE_INDEX_NUMBER = 5;
 const int PHONE_BOOK_PAGE_INDEX_NUMBER = 6;
+const int CALENDAR_PAGE_INDEX_NUMBER = 7;
+const int BOOKING_PAGE_INDEX_NUMBER = 8;
 
 ///Different
 const String UPDATE_FOOTER = 'footer';

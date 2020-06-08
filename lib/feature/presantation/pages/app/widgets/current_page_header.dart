@@ -5,7 +5,7 @@ import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/app/widgets/current_page_body.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/app/widgets/current_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/filter/birthday_page_filter.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/filter/main_page_filter.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/widgets/news_portal_model_sheet_widget.dart';

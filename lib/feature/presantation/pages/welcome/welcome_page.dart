@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/animation/wave_animation.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
+import 'package:flutter_architecture_project/core/singleton_blocs.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_state.dart';
@@ -8,14 +9,14 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/polls/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/profile/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -63,6 +64,9 @@ class BuildBody extends StatefulWidget {
 }
 
 class BuildBodyState extends State with TickerProviderStateMixin{
+  final getIt = GetIt.instance;
+  SingletonBlocs singletonBlocs;
+
   AnimationController _rippleController;
   AnimationController _scaleController;
 
@@ -74,16 +78,6 @@ class BuildBodyState extends State with TickerProviderStateMixin{
   bool _moveNextPage = false;
   bool _buttonPulse = false;
 
-  BirthdayBloc _birthdayBloc;
-  MainBloc _mainBloc;
-  NewsPortalBloc _newsBloc;
-  VideoGalleryBloc _videoGalleryBloc;
-  PastPollsBloc _pastPollsBloc;
-  CurrentPollsBloc _currentPollsBloc;
-  ProfileBloc _profileBloc;
-  AuthBloc _authBloc;
-  PhoneBookBloc _phoneBookBloc;
-
   @override
   void initState() {
     super.initState();
@@ -93,7 +87,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
         duration: Duration(milliseconds: 500)
     )..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Navigator.pushNamed(context, '/app');
+        Navigator.pushReplacementNamed(context, '/app');
         //Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AppPage()));
       }
     });
@@ -120,19 +114,13 @@ class BuildBodyState extends State with TickerProviderStateMixin{
 
     _btnController = CustomRoundedLoadingButtonController();
 
-    _birthdayBloc = BlocProvider.of<BirthdayBloc>(context);
-    _mainBloc = BlocProvider.of<MainBloc>(context);
-    _newsBloc = BlocProvider.of<NewsPortalBloc>(context);
-    _videoGalleryBloc = BlocProvider.of<VideoGalleryBloc>(context);
-    _pastPollsBloc = BlocProvider.of<PastPollsBloc>(context);
-    _currentPollsBloc = BlocProvider.of<CurrentPollsBloc>(context);
-    _profileBloc = BlocProvider.of<ProfileBloc>(context);
-    _authBloc = BlocProvider.of<AuthBloc>(context);
-    _phoneBookBloc = BlocProvider.of<PhoneBookBloc>(context);
+    singletonBlocs = getIt<SingletonBlocs>();
   }
 
   @override
   void dispose() {
+    _rippleController.dispose();
+    _scaleController.dispose();
     super.dispose();
   }
 
@@ -149,18 +137,17 @@ class BuildBodyState extends State with TickerProviderStateMixin{
   }
 
   _start(){
-    _authBloc.add(CheckAuthEvent());
+    singletonBlocs.authBloc.add(CheckAuthEvent());
   }
 
   _loadData(){
-    _birthdayBloc.add(UpdateBirthdayEvent());
-    _mainBloc.add(GetPositionWidgetsEvent());
-    _newsBloc.add(UpdateNewsEvent());
-    _videoGalleryBloc.add(UpdateVideosEvent());
-    _currentPollsBloc.add(FetchCurrentPolls());
-    _pastPollsBloc.add(FetchPastPolls());
-    _profileBloc.add(GetProfileEvent());
-    _phoneBookBloc.add(FirstFetchPhoneBookEvent());
+    singletonBlocs.birthdayBloc.add(UpdateBirthdayEvent());
+    singletonBlocs.mainBloc.add(GetPositionWidgetsEvent());
+    singletonBlocs.newsPortalBloc.add(UpdateNewsEvent());
+    singletonBlocs.videoGalleryBloc.add(UpdateVideosEvent());
+    singletonBlocs.pollsBloc.add(FetchCurrentPollsEvent());
+    singletonBlocs.profileBloc.add(GetProfileEvent());
+    singletonBlocs.phoneBookBloc.add(FirstFetchPhoneBookEvent());
   }
 
   Future _finish() async {
@@ -187,16 +174,13 @@ class BuildBodyState extends State with TickerProviderStateMixin{
   Widget build(BuildContext context) {
     if(_moveNextPage) _scaleController.forward();
 
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<AuthBloc, AuthState>(
-          listener: (BuildContext context, AuthState state) async {
-            if(state is NeedAuthState) await _auth(context: context);
-            else if(state is AuthCompletedState) await _finish();
-            else if(state is AuthFailedState) await _finishWithError();
-          },
-        ),
-      ],
+    return BlocListener<AuthBloc, AuthState>(
+      bloc: singletonBlocs.authBloc,
+      listener: (BuildContext context, AuthState state) async {
+        if(state is NeedAuthState) await _auth(context: context);
+        else if(state is AuthCompletedState) await _finish();
+        else if(state is AuthFailedState) await _finishWithError();
+      },
       child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Stack(

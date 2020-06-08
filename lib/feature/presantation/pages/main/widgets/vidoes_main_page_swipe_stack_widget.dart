@@ -7,10 +7,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class VideosMainPageSwipeStackWidget extends StatelessWidget {
+  final VideoGalleryBloc bloc;
+  VideosMainPageSwipeStackWidget({@required this.bloc});
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<VideoGalleryBloc, VideoGalleryState>(
+      bloc: bloc,
       builder: (context, state) {
         if (state is EmptyVideoGalleryState) {}
         else if (state is LoadingVideoGalleryState) {}

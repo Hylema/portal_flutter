@@ -98,7 +98,6 @@ class MainPageFilter extends StatelessWidget {
         ),
       ),
       viewModelBuilder: () => MainPageFilterViewModel(
-        mainBloc: BlocProvider.of<MainBloc>(context),
         navigation: Navigator.of(context),
       ),
     );

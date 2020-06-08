@@ -144,7 +144,7 @@ class EnterExitRoute extends PageRouteBuilder {
         Animation<double> secondaryAnimation,
         ) =>
     enterPage,
-    transitionDuration: const Duration(milliseconds: 200),
+    transitionDuration: const Duration(milliseconds: 300),
     transitionsBuilder: (
         BuildContext context,
         Animation<double> animation,

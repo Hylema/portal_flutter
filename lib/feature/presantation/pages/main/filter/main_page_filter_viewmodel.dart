@@ -1,13 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture_project/core/singleton_blocs.dart';
 import 'package:flutter_architecture_project/feature/data/models/main/main_params_model.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:stacked/stacked.dart';
 
 class MainPageFilterViewModel extends BaseViewModel {
-  final MainBloc mainBloc;
+  final getIt = GetIt.instance;
+  MainBloc mainBloc;
   final NavigatorState navigation;
 
-  MainPageFilterViewModel({@required this.mainBloc, @required this.navigation,}){
+  MainPageFilterViewModel({@required this.navigation,}){
+    final SingletonBlocs singletonBlocs = getIt<SingletonBlocs>();
+    mainBloc = singletonBlocs.mainBloc;
     MainState mainState = mainBloc.state;
     if(mainState is LoadedMainParams) {
       listVisibleWidgets = mainState.model.listVisibleWidgets;

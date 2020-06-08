@@ -147,7 +147,7 @@ class VideoGalleryParametersState extends State<VideoGalleryParameters> {
             child: Icon(Icons.close, color: Colors.black),
           ),
           backgroundColor: Colors.white,
-          title: Text('Параметры', style: TextStyle(color: Colors.black),),
+          title: Text('Нету для этого Api', style: TextStyle(color: Colors.black),),
           centerTitle: true,
           actions: [
             MaterialButton(

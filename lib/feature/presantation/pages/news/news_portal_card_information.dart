@@ -18,11 +18,13 @@ class NewsPortalCardInformationPage extends StatefulWidget{
 
   final NewsModel news;
   final int index;
+  final NewsPortalBloc bloc;
   final getIt = GetIt.instance;
 
   NewsPortalCardInformationPage({
     @required this.news,
     @required this.index,
+    @required this.bloc,
   });
 
   @override
@@ -62,12 +64,12 @@ class NewsPortalCardInformationPageState extends State<NewsPortalCardInformation
                   pinned: true,
                   automaticallyImplyLeading: true,
                   expandedHeight: 300,
-                  flexibleSpace: NewsPortalMainItem(news: widget.news, index: widget.index, fromCard: true),
+                  flexibleSpace: NewsPortalMainItem(news: widget.news, index: widget.index, fromCard: true, bloc: widget.bloc,),
                   actions: <Widget>[
                     Container(
                         margin: EdgeInsets.only(right: 20),
                         child: AnimatedOpacity(
-                          child: LikesSeenWidget(likeFunc: model.like, news: widget.news, color: Colors.white,),
+                          child: LikesSeenWidget(likeFunc: model.like, news: widget.news, color: Colors.white, bloc: widget.bloc),
                           duration: Duration(milliseconds: 200),
                           opacity: model.show ? 1 : 0,
                         )
@@ -80,7 +82,7 @@ class NewsPortalCardInformationPageState extends State<NewsPortalCardInformation
                         color: Colors.white,
                         margin: EdgeInsets.only(right: 20, top: 10),
                         child: AnimatedOpacity(
-                          child: LikesSeenWidget(likeFunc: model.like, news: widget.news, color: Colors.grey,),
+                          child: LikesSeenWidget(likeFunc: model.like, news: widget.news, color: Colors.grey, bloc: widget.bloc),
                           duration: Duration(milliseconds: 200),
                           opacity: model.show ? 0 : 1,
                         )
@@ -116,9 +118,9 @@ class NewsPortalCardInformationPageState extends State<NewsPortalCardInformation
       ),
       viewModelBuilder: () => NewsPortalCardInformationViewModel(
           news: widget.news,
-          newsBloc: BlocProvider.of<NewsPortalBloc>(context),
+          newsBloc: widget.bloc,
           index: widget.index,
-        scrollController: scrollController
+          scrollController: scrollController
       ),
     );
   }

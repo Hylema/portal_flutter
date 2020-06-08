@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_architecture_project/core/constants/constants.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
-import 'package:flutter_architecture_project/feature/presantation/widgets/easy_refresh_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
-
-class PhoneBookUsersPageShimmer extends StatelessWidget {
+class PollsPageShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int offset = 0;
@@ -16,7 +10,6 @@ class PhoneBookUsersPageShimmer extends StatelessWidget {
     return SmartRefresherWidget(
       enableControlRefresh: true,
       enableControlLoad: false,
-//      onRefresh: () => BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent()),
       child: CustomScrollView(
         slivers: <Widget>[
           SliverList(
@@ -73,27 +66,27 @@ class ShimmerLayout extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          Container(
-            height: 65,
-            width: 65,
-            padding: EdgeInsets.only(right: 15),
-            child: CircleAvatar(),
-          ),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 20,
-                  color: Colors.grey,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 20,
+                    color: Colors.grey,
+                  ),
                 ),
                 SizedBox(height: 10,),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: 15,
-                  color: Colors.grey,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: 15,
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ),
@@ -103,3 +96,4 @@ class ShimmerLayout extends StatelessWidget {
     );
   }
 }
+

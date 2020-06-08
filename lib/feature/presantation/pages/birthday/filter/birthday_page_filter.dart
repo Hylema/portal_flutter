@@ -15,7 +15,7 @@ class BirthdayPageFilter extends StatelessWidget {
         appBar: AppBar(
             leading: GestureDetector(
               onTap: () => model.goBack(),
-              child: Icon(Icons.close, color: Colors.black),
+              child: Icon(Icons.arrow_back, color: Colors.black),
             ),
             backgroundColor: Colors.white,
             title: Text('Параметры', style: TextStyle(color: Colors.black),),
@@ -149,7 +149,6 @@ class BirthdayPageFilter extends StatelessWidget {
         ),
       ),
       viewModelBuilder: () => BirthdayPageFilterViewModel(
-        birthdayBloc: BlocProvider.of<BirthdayBloc>(context),
         navigation: Navigator.of(context)
       ),
     );

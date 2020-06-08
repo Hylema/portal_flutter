@@ -9,7 +9,7 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth
 import 'package:flutter_architecture_project/feature/presantation/bloc/navigationBar/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page_super_visor.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page_viewmodel.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/app/widgets/current_page_body.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/app/widgets/current_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/widgets/current_page_header.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/appBottomNavigationBar/expandeble_navigation_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/appBottomNavigationBar/floating_action_button.dart';
@@ -32,8 +32,7 @@ class AppPage extends StatelessWidget{
           snap: true,
           child: Scaffold(
               extendBody: true,
-              appBar: CurrentPageHeader(),
-              body: CurrentPageBody(),
+              body: CurrentPage(),
               floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
               floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
               floatingActionButton: BlocConsumer<NavigationBarBloc, NavigationBarState>(

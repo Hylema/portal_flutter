@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/animation/pageAnimation/page_animation.dart';
 import 'package:flutter_architecture_project/core/api/api.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
+import 'package:flutter_architecture_project/core/singleton_blocs.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_state.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_architecture_project/feature/presantation/pages/welcome/
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:get_it/get_it.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:page_transition/page_transition.dart';
 
@@ -23,8 +25,9 @@ class AuthPage extends StatefulWidget {
 }
 
 class AuthPagebState extends State<AuthPage> {
+  final getIt = GetIt.instance;
+  SingletonBlocs singletonBlocs;
   final flutterWebviewPlugin = new FlutterWebviewPlugin();
-  var authBloc;
 
   StreamSubscription _onDestroy;
   StreamSubscription<String> _onUrlChanged;
@@ -45,9 +48,9 @@ class AuthPagebState extends State<AuthPage> {
   @override
   void initState() {
     super.initState();
-    authBloc = BlocProvider.of<AuthBloc>(context);
     flutterWebviewPlugin.close();
 
+    singletonBlocs = getIt<SingletonBlocs>();
      //Add a listener to on destroy WebView, so you can make came actions.
     _onDestroy = flutterWebviewPlugin.onDestroy.listen((_) {
       print("destroy");
@@ -61,7 +64,7 @@ class AuthPagebState extends State<AuthPage> {
       if (mounted) {
         RegExp regExp = new RegExp("code=(.*)\&");
         code = regExp.firstMatch(url)?.group(1);
-        if(code != null) authBloc.add(AuthCodeEvent(code: code));
+        if(code != null) singletonBlocs.authBloc.add(AuthCodeEvent(code: code));
       }
     });
   }
@@ -69,6 +72,7 @@ class AuthPagebState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
+      bloc: singletonBlocs.authBloc,
       listener: (context, state) {
        if(state is AuthCompletedState) {
          Navigator.pop(context);

@@ -22,8 +22,8 @@ class PhoneBookBloc extends Bloc<PhoneBookEvent, PhoneBookState> {
     PhoneBookEvent event,
   ) async* {
     if(event is FirstFetchPhoneBookEvent) yield LoadedPhoneBookState(phoneBooks: await repository.firstFetchPhoneBook(params: _phoneBookParams));
-    if(event is FetchPhoneBookEvent) yield* _fetchPhoneBook(event);
-    if(event is FetchPhoneBookUserEvent) yield* _fetchPhoneUserBook(event);
+    else if(event is FetchPhoneBookEvent) yield* _fetchPhoneBook(event);
+    else if(event is FetchPhoneBookUserEvent) yield* _fetchPhoneUserBook(event);
   }
 
   PhoneBookParams _phoneBookParams = new PhoneBookParams(parentCode: null);

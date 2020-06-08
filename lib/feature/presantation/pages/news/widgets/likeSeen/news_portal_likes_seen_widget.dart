@@ -16,8 +16,9 @@ class LikesSeenWidget extends StatelessWidget{
   final NewsModel news;
   final Function likeFunc;
   final bool dense;
+  final NewsPortalBloc bloc;
 
-  LikesSeenWidget({@required this.news, @required this.color, this.likeFunc, this.dense = false});
+  LikesSeenWidget({@required this.news, @required this.color, @required this.bloc, this.likeFunc, this.dense = false});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +83,7 @@ class LikesSeenWidget extends StatelessWidget{
       viewModelBuilder: () => NewsPortalLikeSeenWidgetViewModel(
         likeFunc: likeFunc,
         news: news,
-        newsBloc: BlocProvider.of<NewsPortalBloc>(context),
+        newsBloc: bloc,
       ),
     );
   }

@@ -5,8 +5,6 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/navigationBar/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/polls/current/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/bloc/polls/past/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
@@ -25,28 +23,10 @@ void main() async {
   runApp(
       MultiBlocProvider(
           providers: [
-            BlocProvider<AuthBloc>(
-                create: (BuildContext context) => di.sl<AuthBloc>()),
-            BlocProvider<BirthdayBloc>(
-              create: (BuildContext context) => di.sl<BirthdayBloc>()),
-            BlocProvider<NewsPortalBloc>(
-              create: (BuildContext context) => di.sl<NewsPortalBloc>()),
             BlocProvider<SelectedIndexBloc>(
               create: (BuildContext context) => di.sl<SelectedIndexBloc>()),
-            BlocProvider<MainBloc>(
-                create: (BuildContext context) => di.sl<MainBloc>()),
-            BlocProvider<VideoGalleryBloc>(
-                create: (BuildContext context) => di.sl<VideoGalleryBloc>()),
-            BlocProvider<PastPollsBloc>(
-                create: (BuildContext context) => di.sl<PastPollsBloc>()),
-            BlocProvider<CurrentPollsBloc>(
-                create: (BuildContext context) => di.sl<CurrentPollsBloc>()),
-            BlocProvider<ProfileBloc>(
-                create: (BuildContext context) => di.sl<ProfileBloc>()),
             BlocProvider<NavigationBarBloc>(
                 create: (BuildContext context) => di.sl<NavigationBarBloc>()),
-            BlocProvider<PhoneBookBloc>(
-                create: (BuildContext context) => di.sl<PhoneBookBloc>()),
           ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,

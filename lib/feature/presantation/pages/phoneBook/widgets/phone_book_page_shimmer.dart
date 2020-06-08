@@ -15,7 +15,7 @@ class PhoneBookPageShimmer extends StatelessWidget {
     return SmartRefresherWidget(
       enableControlRefresh: true,
       enableControlLoad: false,
-      onRefresh: () => BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent()),
+//      onRefresh: () => BlocProvider.of<BirthdayBloc>(context).add(UpdateBirthdayEvent()),
       child: CustomScrollView(
         slivers: <Widget>[
 //          SliverList(
@@ -77,16 +77,22 @@ class ShimmerLayout extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 20,
-                  color: Colors.grey,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: 20,
+                    color: Colors.grey,
+                  ),
                 ),
                 SizedBox(height: 10,),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  height: 15,
-                  color: Colors.grey,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width / 2,
+                    height: 15,
+                    color: Colors.grey,
+                  ),
                 ),
               ],
             ),
