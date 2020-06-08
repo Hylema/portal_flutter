@@ -160,7 +160,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     _currentPollsBloc.add(FetchCurrentPolls());
     _pastPollsBloc.add(FetchPastPolls());
     _profileBloc.add(GetProfileEvent());
-    _phoneBookBloc.add(FetchPhoneBookEvent());
+    _phoneBookBloc.add(FirstFetchPhoneBookEvent());
   }
 
   Future _finish() async {

@@ -10,6 +10,7 @@ import 'package:flutter_architecture_project/feature/data/datasources/birthday/b
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/phoneBook/phone_book_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/phoneBook/phone_book_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/polls/polls_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/profile/profile_local_data_source.dart';
@@ -58,7 +59,6 @@ Future<void> init() async {
 
   /// phone book
   sl.registerFactory(() => PhoneBookBloc(
-    networkInfo: sl(),
     repository: sl()
   ));
 
@@ -134,7 +134,8 @@ Future<void> init() async {
   /// phone book
   sl.registerLazySingleton<PhoneBookRepository>(
         () => PhoneBookRepository(
-        remoteDataSource: sl()
+        remoteDataSource: sl(),
+          localDataSource:  sl()
     ),
   );
 
@@ -208,9 +209,9 @@ Future<void> init() async {
           storage: sl()
     ),
   );
-//  sl.registerLazySingleton<NewsPortalLocalDataSource>(
-//        () => NewsPortalLocalDataSource(sharedPreferences: sl(), cachedName: CACHE_NEWS),
-//  );
+  sl.registerLazySingleton<PhoneBookLocalDataSource>(
+        () => PhoneBookLocalDataSource(sharedPreferences: sl(), cachedName: CACHE_PHONE_BOOKS_CODES),
+  );
 
   /// news portal
   sl.registerLazySingleton<NewsPortalRemoteDataSource>(

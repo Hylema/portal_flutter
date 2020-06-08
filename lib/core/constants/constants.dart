@@ -92,6 +92,7 @@ const String CACHE_BIRTHDAY = 'cache_birthday';
 const String CACHE_POSITION_PAGES = 'cache_position_pages';
 const String CACHE_NEWS = 'cache_news';
 const String CACHE_PROFILE = 'cache_profile';
+const String CACHE_PHONE_BOOKS_CODES = 'cache_phone_books_codes';
 
 
 const int BIRTHDAY_PAGE_SIZE = 15;

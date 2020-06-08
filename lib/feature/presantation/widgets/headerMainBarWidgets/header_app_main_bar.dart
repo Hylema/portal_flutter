@@ -8,6 +8,7 @@ class HeaderAppBar extends StatelessWidget with PreferredSizeWidget{
     this.title,
     this.actions,
     this.automaticallyImplyLeading = false,
+    this.leading,
   });
 
   final Color titleColor;
@@ -15,6 +16,7 @@ class HeaderAppBar extends StatelessWidget with PreferredSizeWidget{
   final String title;
   final List<Widget> actions;
   final bool automaticallyImplyLeading;
+  final Widget leading;
 
   @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
@@ -34,6 +36,7 @@ class HeaderAppBar extends StatelessWidget with PreferredSizeWidget{
       actionsIconTheme: IconThemeData(color: Colors.black),
       actions: actions,
       centerTitle: true,
+      leading: leading,
     );
   }
 }

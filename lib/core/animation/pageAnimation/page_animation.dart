@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/app/widgets/current_page_header.dart';
 
 class SlideRightRoute extends PageRouteBuilder {
   final Widget page;
@@ -143,7 +144,7 @@ class EnterExitRoute extends PageRouteBuilder {
         Animation<double> secondaryAnimation,
         ) =>
     enterPage,
-    transitionDuration: const Duration(milliseconds: 300),
+    transitionDuration: const Duration(milliseconds: 200),
     transitionsBuilder: (
         BuildContext context,
         Animation<double> animation,
@@ -152,10 +153,11 @@ class EnterExitRoute extends PageRouteBuilder {
         ) =>
         Stack(
           children: <Widget>[
+            CurrentPageHeader(),
             SlideTransition(
               position: new Tween<Offset>(
                 begin: const Offset(0.0, 0.0),
-                end: const Offset(-0.3, 0.0),
+                end: const Offset(-0.5, 0.0),
               ).animate(animation),
               child: exitPage,
             ),

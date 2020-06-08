@@ -94,23 +94,26 @@ class VideoGalleryItemWidget extends StatelessWidget {
       height: MediaQuery.of(context).size.height/3,
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: GestureDetector(
-          onTap: (){
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WebviewScaffold(
-                    url: videoData.videoUrl,
-                    headers: {
-                      'Accept': 'application/json',
-                      'Authorization': 'Bearer ${storage.token}',
-                    },
-                    appBar: AppBar(
-                      automaticallyImplyLeading: true,
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ),
-                )
-            );
+        onTap: (){
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OrientationBuilder(
+                    builder: (context, orientation) =>
+                        WebviewScaffold(
+                          url: videoData.videoUrl,
+                          headers: {
+                            'Accept': 'application/json',
+                            'Authorization': 'Bearer ${storage.token}',
+                          },
+                          appBar: Orientation.portrait == orientation ? AppBar(
+                            automaticallyImplyLeading: true,
+                            backgroundColor: Colors.transparent,
+                          ) : null,
+                        ),
+                  )
+              )
+          );
 //            videoData.fromYoutube() ? Navigator.push(
 //                context,
 //                MaterialPageRoute(
@@ -132,7 +135,7 @@ class VideoGalleryItemWidget extends StatelessWidget {
 //                    ),
 //                )
 //            );
-          },
+        },
         child: Card(
           color: Colors.white,
           shape: RoundedRectangleBorder(

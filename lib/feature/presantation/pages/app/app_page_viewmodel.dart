@@ -16,11 +16,13 @@ class AppPageViewModel extends BaseViewModel {
       if (hideButtonController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         if(isVisible) navigationBar.add(hideNavigationBarEvent());
+        print('isNotVisible');
         isVisible = false;
       }
       if (hideButtonController.position.userScrollDirection ==
           ScrollDirection.forward) {
         if(!isVisible) navigationBar.add(showNavigationBarEvent());
+        print('isVisible');
         isVisible = true;
       }
     });
