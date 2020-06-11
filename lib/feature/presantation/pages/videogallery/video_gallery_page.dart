@@ -44,7 +44,7 @@ class VideoGalleryPage extends StatelessWidget {
                 ),
                 child: IconButton(
                     onPressed: (){
-                      Navigator.push(context, ScaleRoute(page: VideoGalleryParameters()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => VideoGalleryParameters()));
                     },
                     icon: Image.asset(
                       'assets/icons/change.png',

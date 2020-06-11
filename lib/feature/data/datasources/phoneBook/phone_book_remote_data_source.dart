@@ -44,6 +44,7 @@ class PhoneBookRemoteDataSource with ResponseHandler implements IPhoneBookRemote
   Future<List<PhoneBookUserModel>> getPhoneBookUsersWithParams({
     @required PhoneBookUserParams params,
   }) async {
+    print('params        ${params.toMap()}');
     String uri = Uri.http('${Api.HOST_URL}', '/api/v2/users', params.toMap()).toString();
 
     final response = await http.get(

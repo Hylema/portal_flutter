@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/feature/data/models/birthday/birthday_model.dart';
 import 'package:flutter_architecture_project/feature/data/models/phoneBook/phone_book_model.dart';
 import 'package:flutter_architecture_project/feature/data/models/phoneBook/phone_book_user_model.dart';
@@ -27,21 +28,21 @@ class PhoneBookLocalDataSource implements IPhoneBookLocalDataSource {
   });
 
   @override
-  List<PhoneBookModel> getPhoneBooksFromCache(String code) {
+  List<PhoneBookModel> getPhoneBooksFromCache(String key) {
     final Map codes = _getMapObject();
-    if(codes[code] == null) return null;
+    if(codes[key] == null) return null;
 
-    final List<PhoneBookModel> listModels = List<PhoneBookModel>.from(codes[code].map((raw) => PhoneBookModel.fromJson(raw)));
+    final List<PhoneBookModel> listModels = List<PhoneBookModel>.from(codes[key].map((raw) => PhoneBookModel.fromJson(raw)));
 
     return listModels;
   }
 
   @override
-  List<PhoneBookUserModel> getPhoneBooksUserFromCache(String code) {
+  List<PhoneBookUserModel> getPhoneBooksUserFromCache(String key) {
     final Map codes = _getMapObject();
-    if(codes[code] == null) return null;
+    if(codes[key] == null) return null;
 
-    final List<PhoneBookUserModel> listModels = List<PhoneBookUserModel>.from(codes[code].map((raw) => PhoneBookUserModel.fromJson(raw)));
+    final List<PhoneBookUserModel> listModels = List<PhoneBookUserModel>.from(codes[key].map((raw) => PhoneBookUserModel.fromJson(raw)));
 
     return listModels;
   }

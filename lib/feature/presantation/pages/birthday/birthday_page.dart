@@ -69,7 +69,7 @@ class BirthdayPage extends StatelessWidget {
                 ),
                 child: IconButton(
                     onPressed: (){
-                      Navigator.push(context, EnterExitRoute(exitPage: AppPage(), enterPage: BirthdayPageFilter()));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => BirthdayPageFilter()));
                     },
                     icon: Image.asset(
                       'assets/icons/change.png',

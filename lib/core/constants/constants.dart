@@ -27,6 +27,9 @@ const String UPDATE_HEADER = 'header';
 
 const String PAGE = 'page';
 
+const String PHONE_BOOK_USER_CACHE_KEY = 'phone_book_user_cache_key';
+const String PHONE_BOOK_CACHE_KEY = 'phone_book_cache_key';
+
 ///bottomNavigationBar
 const double BOTTOM_NAVIGATION_BAR_ICON_SIZE = 30;
 const double BOTTOM_NAVIGATION_BAR_TEXT_SIZE = 12;
@@ -99,6 +102,8 @@ const String CACHE_PHONE_BOOKS_CODES = 'cache_phone_books_codes';
 
 const int BIRTHDAY_PAGE_SIZE = 15;
 const int NEWS_PAGE_SIZE = 15;
+const int PHONE_BOOK_PAGE_SIZE = 30;
+const int PHONE_BOOK_USERS_PAGE_SIZE = 30;
 
 ///Errors
 const String CACHE_EXCEPTION_MESSAGE = 'Ошибка при получении данных из кэша';

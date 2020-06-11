@@ -5,7 +5,9 @@ import 'package:flutter_architecture_project/core/global_state.dart';
 import 'package:flutter_architecture_project/core/singleton_blocs.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_state.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page_super_visor.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/calendar/calendar_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
@@ -24,6 +26,11 @@ class CurrentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final SingletonBlocs singletonBlocs = getIt<SingletonBlocs>();
 
+    BlocSupervisor.delegate = SupervisorAppPage(
+        snackBar: Scaffold.of(context).showSnackBar,
+        context: context
+    );
+
     Map _pageOptions = {
       MAIN_PAGE_INDEX_NUMBER: MainPage(bloc: singletonBlocs.mainBloc),
       NEWS_PAGE_INDEX_NUMBER: NewsPortalPage(bloc: singletonBlocs.newsPortalBloc),
@@ -32,11 +39,8 @@ class CurrentPage extends StatelessWidget {
       VIDEO_PAGE_INDEX_NUMBER: VideoGalleryPage(bloc: singletonBlocs.videoGalleryBloc),
       POLLS_PAGE_INDEX_NUMBER: PollsPage(bloc: singletonBlocs.pollsBloc),
       PHONE_BOOK_PAGE_INDEX_NUMBER: PhoneBookPage(bloc: singletonBlocs.phoneBookBloc),
-      7: Scaffold(
-        appBar: AppBar(title: Text('Календарь событий'),),
-        body: Center(child: Text('Эта страница в разработке'),),
-      ),
-      8: Scaffold(
+      CALENDAR_PAGE_INDEX_NUMBER: CalendarPage(),
+      BOOKING_PAGE_INDEX_NUMBER: Scaffold(
         appBar: AppBar(title: Text('Бронирование переговорных'),),
         body: Center(child: Text('Эта страница в разработке'),),
       ),

@@ -25,15 +25,19 @@ class PhoneBookUsersPageShimmer extends StatelessWidget {
                 color: Colors.grey[200],
                 child: Padding(
                     padding: EdgeInsets.only(left: 15, top: 10, bottom: 10, right: 15),
-                    child: Shimmer.fromColors(
-                      highlightColor: Colors.white,
-                      baseColor: Colors.grey[300],
-                      child: Container(
-                        height: 10,
-                        color: Colors.white,
-                        width: MediaQuery.of(context).size.width,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Shimmer.fromColors(
+                        highlightColor: Colors.white,
+                        baseColor: Colors.grey[300],
+                        child: Container(
+                          height: 30,
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width,
+                        ),
+                        period: Duration(milliseconds: time),
                       ),
-                      period: Duration(milliseconds: time),
+
                     )
                 ),
               ),

@@ -110,8 +110,7 @@ class MainPageBody extends StatelessWidget {
             ),
             child: IconButton(
                 onPressed: (){
-//                  Navigator.push(context, EnterExitRoute(exitPage: this, enterPage: MainPageFilter()));
-                  Navigator.push(context, FadeRoute(page: MainPageFilter()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MainPageFilter()));
                 },
                 icon: Image.asset(
                   'assets/icons/change.png',

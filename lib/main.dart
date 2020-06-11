@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
@@ -31,7 +32,16 @@ void main() async {
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             initialRoute: Routes.welcome,
-            theme: ThemeData(highlightColor: Color.fromRGBO(238, 0, 38, 0.5).withOpacity(0.1)),
+            theme: ThemeData(
+                highlightColor: Color.fromRGBO(238, 0, 38, 0.5).withOpacity(0.1),
+                pageTransitionsTheme: PageTransitionsTheme(
+                    builders: {
+                      //TargetPlatform.android: OpenUpwardsPageTransitionsBuilder(),
+                      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+                      TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+                    }
+                )
+            ),
             routes: {
               Routes.welcome: (context) {
                 return Scaffold(
@@ -53,3 +63,4 @@ void main() async {
       )
   );
 }
+

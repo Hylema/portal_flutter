@@ -9,6 +9,7 @@ import 'package:flutter_architecture_project/feature/presantation/pages/phoneBoo
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/views/phoneBook/phone_book_page_body.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/views/phoneBookUsers/phone_book_users_page_body.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/views/shimmers/phone_book_page_shimmer.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/views/shimmers/phone_book_remote_search_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/views/shimmers/phone_book_users_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/widgets/search/remote/phone_book_remote_search.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/data_from_cache_message.dart';
@@ -17,36 +18,27 @@ import 'package:flutter_architecture_project/feature/presantation/widgets/refres
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animations/animations.dart';
 import 'package:get_it/get_it.dart';
-class PhoneBookPage extends StatelessWidget {
+class PhoneBookShowListPage extends StatelessWidget {
   final PhoneBookBloc bloc;
-  final bool automaticallyImplyLeading;
-  final bool childrenExists;
   final String title;
+  final String departmentCode;
   final getIt = GetIt.instance;
-  PhoneBookPage({@required this.bloc, this.title, this.automaticallyImplyLeading, this.childrenExists = false});
+  PhoneBookShowListPage({@required this.bloc, this.title, @required this.departmentCode});
 
   Widget build(BuildContext context) {
     return BlocConsumer<PhoneBookBloc, PhoneBookState>(
       bloc: bloc,
       builder: (context, state) {
-        Widget currentViewOnPage = Container();
-
-        if(!childrenExists) currentViewOnPage = Container(color: Colors.white, child: PhoneBookUsersPageShimmer());
-        else currentViewOnPage = Container(color: Colors.white, child: PhoneBookPageShimmer());
-
-        if(state is LoadedPhoneBookState){
-          currentViewOnPage = PhoneBookPageBody(listPhoneBook: state.phoneBooks, bloc: bloc);
-        }
+        Widget currentViewOnPage = PhoneBookRemoteSearchPageShimmer();
 
         if(state is LoadedPhoneBookUserState){
-//          if(state.phoneBooksUser.length == 0) currentViewOnPage = Center(child: Text('Нет данных'));
-          currentViewOnPage = PhoneBookUsersPageBody(listPhoneUsersBook: state.phoneBooksUser, bloc: bloc, hasReachedMax: state.hasReachedMax,);
+          currentViewOnPage = PhoneBookUsersPageBody(listPhoneUsersBook: state.phoneBooksUser, bloc: bloc, localSearch: false, hasReachedMax: state.hasReachedMax);
         }
 
         return Scaffold(
           appBar: HeaderAppBar(
             title: title ?? 'Телефонный справочник',
-            automaticallyImplyLeading: automaticallyImplyLeading ?? false,
+            automaticallyImplyLeading: true,
             backButtonColor: Colors.black,
             actions: <Widget>[
               IconButton(
@@ -59,28 +51,19 @@ class PhoneBookPage extends StatelessWidget {
                   );
                 },
               ),
-//              OpenContainer(
-//                transitionType: ContainerTransitionType.fade,
-//                openBuilder: (BuildContext context, VoidCallback _) => PhoneBookRemoteSearchPage(bloc: getIt<PhoneBookBloc>(),),
-//                tappable: true,
-//                closedBuilder: (BuildContext context, VoidCallback _) =>
-//                    IconButton(
-//                      icon: Icon(Icons.search),
-//                      onPressed: () {
-//                        Navigator.push(context,
-//                            MaterialPageRoute(
-//                                builder: (context) => PhoneBookRemoteSearchPage(bloc: getIt<PhoneBookBloc>(),),
-//                            )
-//                        );
-//                      },
-//                    )
-//              ),
             ],
           ),
           body: Scrollbar(
             child: AnimatedSwitcher(
               duration: Duration(milliseconds: 200),
-              child: currentViewOnPage,
+              child: Column(
+                children: <Widget>[
+                  PhoneBookRemoteSearch(bloc: bloc, departmentCode: departmentCode),
+                  Expanded(
+                    child: currentViewOnPage,
+                  )
+                ],
+              ),
             ),
           )
         );

@@ -26,6 +26,7 @@ dependencies:
   flutter_bloc: ^3.2.0
   # Value equality
   equatable: ^0.4.0
+  flutter_clean_calendar: ^1.0.2+1
   # Functional programming thingies
   dartz: ^0.8.6
   # Remote API
@@ -71,6 +72,7 @@ dependencies:
   flutter_easyrefresh: ^2.0.9
   flutter_datetime_picker: ^1.3.8
   stacked: ^1.4.3
+  animations: ^1.1.0
   cached_network_image: ^2.2.0+1
   # The best swiper for flutter , with multiple layouts, infinite loop. Compatible with Android & iOS.
   flutter_swiper: ^1.1.6

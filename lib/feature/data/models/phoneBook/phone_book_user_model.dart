@@ -26,6 +26,9 @@ class PhoneBookUserModel {
   final String rootDepartmentName;
   final String startWorkDate;
   final tabNumber;
+  ///For search
+  String searchStringName;
+  String searchStringDepartment;
 
   PhoneBookUserModel({
     @required this.id,

@@ -19,4 +19,8 @@ abstract class IPhoneBookRepository {
   Future<List<PhoneBookModel>> firstFetchPhoneBook({
     @required PhoneBookParams params,
   });
+
+  Future<List<PhoneBookUserModel>> searchPhoneBookUser({
+    @required PhoneBookUserParams params,
+  });
 }

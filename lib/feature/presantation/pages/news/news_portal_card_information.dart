@@ -94,6 +94,13 @@ class NewsPortalCardInformationPageState extends State<NewsPortalCardInformation
                             fontSize: 17
                         ),
                         padding: EdgeInsets.all(8.0),
+//                        customRender: (dom.Node node, List<Widget> children) {
+//                          List<TextSpan> list = [];
+//                          String text = node.text;
+//                          print('node =========== ${node.text}');
+//                          print('children =========== ${children}');
+//                          return SelectableText(node.text);
+//                        },
                         onLinkTap: (url) =>
                             Navigator.push(
                                 context,

@@ -16,6 +16,8 @@ class PhoneBookModel {
   final int parentId;
   final String parentName;
   final String unitTypeName;
+  /// For search
+  String searchString;
 
   PhoneBookModel({
     @required this.childrenCount,

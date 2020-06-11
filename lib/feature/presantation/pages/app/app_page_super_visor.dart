@@ -7,12 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SupervisorAppPage extends BlocDelegate {
 
   final Function snackBar;
-  final AuthBloc blocAuth;
   final BuildContext context;
 
   SupervisorAppPage({
     @required this.snackBar,
-    @required this.blocAuth,
     @required this.context
   });
 

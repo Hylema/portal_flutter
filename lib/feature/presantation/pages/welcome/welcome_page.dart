@@ -9,6 +9,7 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_event.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/polls/bloc/bloc.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_architecture_project/feature/presantation/pages/videogal
 import 'package:flutter_architecture_project/feature/presantation/widgets/roundedLoadingButton/custom_rounded_loading_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:page_transition/page_transition.dart';
 
 class WelcomePage extends StatelessWidget {
   @override
@@ -87,8 +89,8 @@ class BuildBodyState extends State with TickerProviderStateMixin{
         duration: Duration(milliseconds: 500)
     )..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        Navigator.pushReplacementNamed(context, '/app');
-        //Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AppPage()));
+        //Navigator.pushReplacementNamed(context, '/app');
+        Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AppPage()));
       }
     });
     _scaleAnimation = Tween<double>(

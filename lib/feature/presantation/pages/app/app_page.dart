@@ -20,12 +20,6 @@ class AppPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-//    BlocSupervisor.delegate = SupervisorAppPage(
-//        snackBar: Scaffold.of(context).showSnackBar,
-//        blocAuth: BlocProvider.of<AuthBloc>(context),
-//        context: context
-//    );
-
     return ViewModelBuilder<AppPageViewModel>.nonReactive(
       builder: (context, model, child) => DefaultBottomBarController(
           dragLength: 500,

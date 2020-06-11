@@ -33,10 +33,10 @@ class HeaderAppBar extends StatelessWidget with PreferredSizeWidget{
       automaticallyImplyLeading: automaticallyImplyLeading,
       backgroundColor: backgroundColor,
       elevation: 1.0,
-      title: Text(
-        title ?? '',
+      title: title != null ? Text(
+        title,
         style: TextStyle(color: titleColor),
-      ),
+      ) : null,
       actionsIconTheme: IconThemeData(color: Colors.black),
       actions: actions,
       centerTitle: true,

@@ -40,7 +40,7 @@ class PollsPage extends StatelessWidget {
                   ),
                   child: IconButton(
                       onPressed: (){
-                        Navigator.push(context, EnterExitRoute(exitPage: AppPage(), enterPage: ArchivePollsPage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ArchivePollsPage()));
                       },
                       icon: Image.asset(
                         'assets/icons/archivePolls.png',
