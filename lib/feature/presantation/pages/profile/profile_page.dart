@@ -72,9 +72,9 @@ class ProfilePageBody extends StatelessWidget {
     ];
 
     return Scaffold(
-      appBar: HeaderAppBar(
-        title: 'Профиль',
-      ),
+//      appBar: HeaderAppBar(
+//        title: 'Профиль',
+//      ),
       body: SmartRefresherWidget(
         enableControlLoad: false,
         enableControlRefresh: true,

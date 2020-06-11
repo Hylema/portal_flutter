@@ -8,8 +8,6 @@ import 'package:flutter_architecture_project/feature/presantation/pages/birthday
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/phone_book_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/phone_book_show_list_page.dart';
-import 'file:///C:/Develop/code/portal_flutter/lib/feature/presantation/pages/phoneBook/views/phoneBook/phone_book_page_body.dart';
-import 'file:///C:/Develop/code/portal_flutter/lib/feature/presantation/pages/phoneBook/views/shimmers/phone_book_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/widgets/phone_book_search_bold_text.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
