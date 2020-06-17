@@ -86,11 +86,11 @@ class BuildBodyState extends State with TickerProviderStateMixin{
 
     _scaleController = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 500)
+        duration: Duration(milliseconds: 300)
     )..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         //Navigator.pushReplacementNamed(context, '/app');
-        Navigator.push(context, PageTransition(type: PageTransitionType.fade, child: AppPage()));
+        Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.fade, child: AppPage()));
       }
     });
     _scaleAnimation = Tween<double>(

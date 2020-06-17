@@ -20,6 +20,7 @@ class AppPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    print('BUILD !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
     return ViewModelBuilder<AppPageViewModel>.nonReactive(
       builder: (context, model, child) => DefaultBottomBarController(
           dragLength: 500,

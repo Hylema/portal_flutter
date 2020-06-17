@@ -15,16 +15,16 @@ class PhoneBookBloc extends Bloc<PhoneBookEvent, PhoneBookState> {
 
   PhoneBookBloc({@required this.repository});
 
-  @override
-  Stream<PhoneBookState> transformEvents(
-      Stream<PhoneBookEvent> events,
-      Stream<PhoneBookState> Function(PhoneBookEvent event) next) =>
-      super.transformEvents(
-        events.debounceTime(
-          Duration(milliseconds: 700),
-        ),
-        next,
-      );
+//  @override
+//  Stream<PhoneBookState> transformEvents(
+//      Stream<PhoneBookEvent> events,
+//      Stream<PhoneBookState> Function(PhoneBookEvent event) next) =>
+//      super.transformEvents(
+//        events.debounceTime(
+//          Duration(milliseconds: 700),
+//        ),
+//        next,
+//      );
 
   @override
   PhoneBookState get initialState => InitialPhoneBookState();

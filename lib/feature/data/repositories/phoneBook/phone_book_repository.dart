@@ -26,7 +26,7 @@ class PhoneBookRepository implements IPhoneBookRepository{
     await localDataSource.updatePhoneBooksCache();
     _result = await remoteDataSource.getPhoneBookWithParams(params: params);
 
-    localDataSource.savePhoneBooksToCache(code: params.parentCode, listPhoneBooksOrUsers: _result);
+    localDataSource.savePhoneBooksToCache(code: '${params.parentCode}_$PHONE_BOOK_CACHE_KEY', listPhoneBooksOrUsers: _result);
 
     return _result;
   }
@@ -58,14 +58,17 @@ class PhoneBookRepository implements IPhoneBookRepository{
   }) async {
     List<PhoneBookUserModel> _result;
 
-    final String cacheKey = '${params.departmentCode}_$PHONE_BOOK_USER_CACHE_KEY';
-    final List<PhoneBookUserModel> _localDataSourceResponse = getPhoneBookUserFromCache(key: cacheKey);
+    List<PhoneBookUserModel> _localDataSourceResponse;
+
+    if(params.pageIndex == 1){
+      final String cacheKey = '${params.departmentCode}_$PHONE_BOOK_USER_CACHE_KEY';
+      _localDataSourceResponse = getPhoneBookUserFromCache(key: cacheKey);
+    }
 
     if(_localDataSourceResponse == null) {
       _result = await remoteDataSource.getPhoneBookUsersWithParams(params: params);
 
       localDataSource.savePhoneBooksToCache(code: '${params.departmentCode}_$PHONE_BOOK_USER_CACHE_KEY', listPhoneBooksOrUsers: _result);
-      print('getPhoneBookFromCache<PhoneBookUserModel>(key: cacheKey) ================= ${getPhoneBookFromCache(key: cacheKey)}');
     }
     else _result = _localDataSourceResponse;
 

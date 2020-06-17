@@ -15,15 +15,18 @@ class AppPageViewModel extends BaseViewModel {
     hideButtonController.addListener(() {
       if (hideButtonController.position.userScrollDirection ==
           ScrollDirection.reverse) {
-        if(isVisible) navigationBar.add(HideNavigationBarEvent());
-        print('isNotVisible');
+        if(isVisible) {
+          navigationBar.add(HideNavigationBarEvent());
+        }
+        offset = hideButtonController.offset.ceil();
         isVisible = false;
       }
       if (hideButtonController.position.userScrollDirection ==
           ScrollDirection.forward) {
-        if(!isVisible) navigationBar.add(ShowNavigationBarEvent());
-        print('isVisible');
-        isVisible = true;
+        if(!isVisible && (offset - hideButtonController.offset.ceil()) > 10) {
+          navigationBar.add(ShowNavigationBarEvent());
+          isVisible = true;
+        }
       }
     });
 
@@ -32,4 +35,5 @@ class AppPageViewModel extends BaseViewModel {
 
   ScrollController hideButtonController = new ScrollController();
   bool isVisible = true;
+  int offset = 0;
 }

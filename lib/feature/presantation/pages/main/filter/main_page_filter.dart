@@ -131,23 +131,26 @@ class RawParameter extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: GestureDetector(
-                  onTap: () => changePositionFunc(index, isVisible),
-                  child: Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(50.0),
-                          color: isVisible
-                              ? Color.fromRGBO(255, 59, 48, 1)
-                              : Color.fromRGBO(76, 217, 100, 1)
-                      ),
-                      width: 25,
-                      height: 25,
-                      child: !isVisible
-                          ? Icon(Icons.add, color: Colors.white, size: 15,)
-                          : Icon(Icons.remove, color: Colors.white, size: 15,)
-                  ),
+              GestureDetector(
+                onTap: () => changePositionFunc(index, isVisible),
+                child: Container(
+                  width: 50,
+                  height: 50,
+                  color: Colors.transparent,
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(50.0),
+                            color: isVisible
+                                ? Color.fromRGBO(255, 59, 48, 1)
+                                : Color.fromRGBO(76, 217, 100, 1)
+                        ),
+                        child: !isVisible
+                            ? Icon(Icons.add, color: Colors.white, size: 15,)
+                            : Icon(Icons.remove, color: Colors.white, size: 15,)
+                    ),
+                  )
                 ),
               ),
               Padding(
@@ -165,3 +168,4 @@ class RawParameter extends StatelessWidget {
     );
   }
 }
+
