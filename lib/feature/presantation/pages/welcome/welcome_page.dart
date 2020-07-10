@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_architecture_project/core/animation/wave_animation.dart';
+import 'package:flutter_architecture_project/core/constants/constants.dart';
 import 'package:flutter_architecture_project/core/error/exceptions.dart';
 import 'package:flutter_architecture_project/core/singleton_blocs.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
@@ -10,6 +11,8 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/listBookingRooms/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/polls/bloc/bloc.dart';
@@ -150,6 +153,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
     singletonBlocs.pollsBloc.add(FetchCurrentPollsEvent());
     singletonBlocs.profileBloc.add(GetProfileEvent());
     singletonBlocs.phoneBookBloc.add(FirstFetchPhoneBookEvent());
+    singletonBlocs.bookingBloc.add(GetListRoomsEvent(organization: METALLOINVEST));
   }
 
   Future _finish() async {
@@ -211,6 +215,7 @@ class BuildBodyState extends State with TickerProviderStateMixin{
                           builder: (context, child) => Transform.scale(
                             scale: _scaleAnimation.value,
                             child: _moveNextPage == false ? CustomRoundedLoadingButton(
+                              height: 60,
                               child: Text('Начать', style: TextStyle(color: Colors.white)),
                               onPressed: () => _start(),
                               controller: _btnController,

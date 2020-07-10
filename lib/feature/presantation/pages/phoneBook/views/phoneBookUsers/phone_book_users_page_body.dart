@@ -48,7 +48,10 @@ class PhoneBookUsersPageBody extends StatelessWidget {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate((BuildContext context, index){
-              return PhoneBookUserCreateItem(phoneBookUserModel: listPhoneUsersBook[index]);
+              return PhoneBookUserCreateItem(
+                  phoneBookUserModel: listPhoneUsersBook[index],
+                  last: listPhoneUsersBook.length == index + 1
+              );
             },
                 childCount: listPhoneUsersBook.length
             ),

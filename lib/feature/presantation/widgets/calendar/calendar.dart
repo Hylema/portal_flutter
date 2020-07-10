@@ -48,7 +48,7 @@ class Calendar extends StatelessWidget {
             ),
             ExpansionCrossFade(
               body: SimpleGestureDetector(
-                onVerticalSwipe: (SwipeDirection swipeDirection) => model.toggleExpanded(),
+                onVerticalSwipe: (SwipeDirection swipeDirection) => model.onVerticalSwipe(swipeDirection),
                 onHorizontalSwipe: (SwipeDirection swipeDirection) => model.onHorizontalSwipe(swipeDirection),
                 swipeConfig: SimpleSwipeConfig(
                   verticalThreshold: 10.0,
@@ -68,7 +68,7 @@ class Calendar extends StatelessWidget {
               isExpanded: model.isExpanded,
             ),
             SimpleGestureDetector(
-                onVerticalSwipe: (SwipeDirection swipeDirection) => model.toggleExpanded(),
+                onVerticalSwipe: (SwipeDirection swipeDirection) => model.onVerticalSwipe(swipeDirection),
                 onTap: model.toggleExpanded,
                 swipeConfig: SimpleSwipeConfig(
                   verticalThreshold: 10.0,

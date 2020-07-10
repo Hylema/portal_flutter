@@ -10,10 +10,8 @@ class NewsPortalCardInformationViewModel extends BaseViewModel {
 
   NewsModel news;
   final NewsPortalBloc newsBloc;
-  final int index;
-  final ScrollController scrollController;
 
-  NewsPortalCardInformationViewModel({@required this.news, @required this.newsBloc, @required this.index, @required this.scrollController}){
+  NewsPortalCardInformationViewModel({@required this.news, @required this.newsBloc}){
 
     newsBloc.listen((state) {
       if(state is LoadedNewsPortal) {
@@ -35,12 +33,8 @@ class NewsPortalCardInformationViewModel extends BaseViewModel {
       }
     });
   }
+
   Storage storage;
-
+  ScrollController scrollController = ScrollController();
   bool show = false;
-
-  void like(String id, String guid) {
-    if(news.isLike()) newsBloc.add(RemoveLikeEvent(guid: guid, id: id, index: index));
-    else newsBloc.add(LikeNewsEvent(guid: guid, id: id, index: index));
-  }
 }

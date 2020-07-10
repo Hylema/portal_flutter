@@ -6,7 +6,6 @@ import 'package:flutter_architecture_project/feature/data/models/videoGallery/vi
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page_shimmer.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/bloc/bloc.dart';
-import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/video_gallery_parameters.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/videogallery/widgets/video_gallery_item_widget.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/headerMainBarWidgets/header_app_main_bar.dart';
 import 'package:flutter_architecture_project/feature/presantation/widgets/refreshLoaded/refresh_loaded_widget.dart';
@@ -44,7 +43,7 @@ class VideoGalleryPage extends StatelessWidget {
                 ),
                 child: IconButton(
                     onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => VideoGalleryParameters()));
+                      //Navigator.push(context, MaterialPageRoute(builder: (context) => VideoGalleryParameters()));
                     },
                     icon: Image.asset(
                       'assets/icons/change.png',
@@ -84,20 +83,23 @@ class VideoGalleryPageBody extends StatelessWidget {
       child: CustomScrollView(
         controller: GlobalState.hideAppNavigationBarController,
         slivers: <Widget>[
-          SliverList(
+          MediaQuery.of(context).orientation == Orientation.portrait ? SliverList(
             delegate: SliverChildBuilderDelegate((BuildContext context, index){
-//              return Container(height: MediaQuery.of(context).size.width, child: ChewieDemo(
-//                  url: 'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4'
-//              ),);
-//              return VideoGalleryItemsWidget(
-//                  videoData: listModels[index]
-//              );
-//            return ChewieListItem(videoPlayerController: _videoPlayerController1);
-
               return VideoGalleryItemWidget(videoData: listModels[index]);
             },
-                childCount: listModels.length
+                childCount: listModels.length,
             ),
+          ) : SliverGrid(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 2.0,
+            ),
+            delegate: SliverChildBuilderDelegate(
+                  (BuildContext context, int index) =>
+                  VideoGalleryItemWidget(videoData: listModels[index]),
+              childCount: listModels.length,
+            ),
+
           ),
         ],
       ),

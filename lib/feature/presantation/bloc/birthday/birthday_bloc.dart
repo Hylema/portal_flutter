@@ -18,16 +18,16 @@ class BirthdayBloc extends Bloc<BirthdayEvent, BirthdayState> {
 
   BirthdayBloc({@required this.repository, @required this.networkInfo});
 
-  @override
-  Stream<BirthdayState> transformEvents(
-      Stream<BirthdayEvent> events,
-      Stream<BirthdayState> Function(BirthdayEvent event) next) =>
-      super.transformEvents(
-        events.debounceTime(
-          Duration(milliseconds: 500),
-        ),
-        next,
-      );
+//  @override
+//  Stream<Transition<BirthdayEvent, BirthdayState>> transformEvents(
+//      Stream<BirthdayEvent> events,
+//      TransitionFunction<BirthdayEvent, BirthdayState> Function(BirthdayEvent event) next) =>
+//      super.transformEvents(
+//        events.debounceTime(
+//          Duration(milliseconds: 500),
+//        ),
+//        next,
+//      );
 
   @override
   void onError(Object error, StackTrace stacktrace){

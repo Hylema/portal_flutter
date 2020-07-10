@@ -35,7 +35,7 @@ class PhoneBookPage extends StatelessWidget {
         else currentViewOnPage = Container(color: Colors.white, child: PhoneBookPageShimmer());
 
         if(state is LoadedPhoneBookState){
-          currentViewOnPage = PhoneBookPageBody(listPhoneBook: state.phoneBooks, bloc: bloc);
+          currentViewOnPage = PhoneBookPageBody(listPhoneBook: state.phoneBooks, bloc: bloc, first: title == null);
         }
 
         if(state is LoadedPhoneBookUserState){

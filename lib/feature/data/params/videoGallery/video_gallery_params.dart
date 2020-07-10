@@ -10,10 +10,12 @@ class VideoGalleryParams extends Params{
     @required this.pageSize,
   });
 
-  Map toMap(){
-    return createParams(map: {
-      'pageIndex': pageIndex,
-      'pageSize': pageSize,
-    });
-  }
+  @override
+  List get props => [pageIndex, pageSize];
+
+  @override
+  Map get urlProps => {
+    'pageIndex': pageIndex,
+    'pageSize': pageSize
+  };
 }

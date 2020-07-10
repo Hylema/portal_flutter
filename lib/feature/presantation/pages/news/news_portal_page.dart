@@ -36,6 +36,7 @@ class NewsPortalPage extends StatelessWidget {
         }
 
         return Scaffold(
+          extendBody: true,
           appBar: HeaderAppBar(
             title: 'Новости холдинга',
             actions: <Widget>[

@@ -30,6 +30,14 @@ void main() async {
                 create: (BuildContext context) => di.sl<NavigationBarBloc>()),
           ],
           child: MaterialApp(
+//            localizationsDelegates: [
+//              GlobalMaterialLocalizations.delegate,
+//              GlobalWidgetsLocalizations.delegate,
+//              GlobalCupertinoLocalizations.delegate,
+//            ],
+//            supportedLocales: [
+//              const Locale('ru', '')
+//            ],
             debugShowCheckedModeBanner: false,
             initialRoute: Routes.welcome,
             theme: ThemeData(
@@ -63,4 +71,5 @@ void main() async {
       )
   );
 }
+
 

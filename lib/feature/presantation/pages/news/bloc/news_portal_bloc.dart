@@ -20,16 +20,16 @@ class NewsPortalBloc extends Bloc<NewsPortalEvent, NewsPortalState>{
 
   NewsPortalBloc({@required this.repository, @required this.networkInfo, @required this.storage});
 
-  @override
-  Stream<NewsPortalState> transformEvents(
-      Stream<NewsPortalEvent> events,
-      Stream<NewsPortalState> Function(NewsPortalEvent event) next) =>
-      super.transformEvents(
-        events.debounceTime(
-          Duration(milliseconds: 500),
-        ),
-        next,
-      );
+//  @override
+//  Stream<NewsPortalState> transformEvents(
+//      Stream<NewsPortalEvent> events,
+//      Stream<NewsPortalState> Function(NewsPortalEvent event) next) =>
+//      super.transformEvents(
+//        events.debounceTime(
+//          Duration(milliseconds: 500),
+//        ),
+//        next,
+//      );
 
   @override
   NewsPortalState get initialState => _initialState();

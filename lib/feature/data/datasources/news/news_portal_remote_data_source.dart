@@ -28,8 +28,9 @@ class NewsPortalRemoteDataSource with ResponseHandler implements INewsPortalRemo
 
   @override
   Future<List<NewsModel>> getNewsWithParams({@required NewsParams params}) async {
-    print('params ======================================== ${params.pageIndex}');
-    String uri = Uri.http('${Api.HOST_URL}', '/api/news', params.toMap()).toString();
+    String uri = Uri.http('${Api.HOST_URL}', '/api/v2/news', params.toUrlParams()).toString();
+
+    print('uri ================== $uri');
 
     final response = await http.get(
       uri,

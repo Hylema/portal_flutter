@@ -12,13 +12,21 @@ class LikesSeenWidget extends StatelessWidget{
 
   final getIt = GetIt.instance;
 
+  final int index;
+  final NewsPortalBloc bloc;
   final Color color;
   final NewsModel news;
-  final Function likeFunc;
   final bool dense;
-  final NewsPortalBloc bloc;
+  final NewsPortalLikeSeenWidgetViewModel viewModel;
 
-  LikesSeenWidget({@required this.news, @required this.color, @required this.bloc, this.likeFunc, this.dense = false});
+  LikesSeenWidget({
+    this.index,
+    @required this.bloc,
+    @required this.news,
+    @required this.color,
+    this.viewModel,
+    this.dense = false
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -74,16 +82,16 @@ class LikesSeenWidget extends StatelessWidget{
                     ),
                   ],
                 ),
-                onTap: () => likeFunc == null ? null : model.likeIt(),
+                onTap: model.likeIt,
               ),
             )
           ],
         ),
       ),
-      viewModelBuilder: () => NewsPortalLikeSeenWidgetViewModel(
-        likeFunc: likeFunc,
-        news: news,
-        newsBloc: bloc,
+      viewModelBuilder: () => viewModel ?? NewsPortalLikeSeenWidgetViewModel(
+          news: news,
+          newsBloc: bloc,
+          index: index
       ),
     );
   }

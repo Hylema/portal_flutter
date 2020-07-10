@@ -7,6 +7,7 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/selectedT
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_state.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/app/app_page_super_visor.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/birthday/birthday_page.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/listBookingRooms/list_booking_rooms_view.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/calendar/calendar_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/main/main_page.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/news_portal_page.dart';
@@ -40,10 +41,7 @@ class CurrentPage extends StatelessWidget {
       POLLS_PAGE_INDEX_NUMBER: PollsPage(bloc: singletonBlocs.pollsBloc),
       PHONE_BOOK_PAGE_INDEX_NUMBER: PhoneBookPage(bloc: singletonBlocs.phoneBookBloc),
       CALENDAR_PAGE_INDEX_NUMBER: CalendarPage(),
-      BOOKING_PAGE_INDEX_NUMBER: Scaffold(
-        appBar: AppBar(title: Text('Бронирование переговорных'),),
-        body: Center(child: Text('Эта страница в разработке'),),
-      ),
+      BOOKING_PAGE_INDEX_NUMBER: ListBookingRoomsView(),
       9: Scaffold(
         appBar: AppBar(title: Text('Заявки'),),
         body: Center(child: Text('На эту страницу нет макета'),),

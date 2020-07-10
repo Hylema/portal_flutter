@@ -124,33 +124,25 @@ class RawParameter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(top: 10, bottom: 10, right: 20, left: 20),
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height/12,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Row(
             children: <Widget>[
-              GestureDetector(
-                onTap: () => changePositionFunc(index, isVisible),
+              Container(
+                padding: EdgeInsets.only(right: 10),
                 child: Container(
-                  width: 50,
-                  height: 50,
-                  color: Colors.transparent,
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(50.0),
-                            color: isVisible
-                                ? Color.fromRGBO(255, 59, 48, 1)
-                                : Color.fromRGBO(76, 217, 100, 1)
-                        ),
-                        child: !isVisible
-                            ? Icon(Icons.add, color: Colors.white, size: 15,)
-                            : Icon(Icons.remove, color: Colors.white, size: 15,)
+                  height: 30,
+                    width: 30,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50.0),
+                        color: isVisible
+                            ? Color.fromRGBO(255, 59, 48, 1)
+                            : Color.fromRGBO(76, 217, 100, 1)
                     ),
-                  )
+                    child: !isVisible
+                        ? IconButton(icon: Icon(Icons.add, color: Colors.white, size: 15), onPressed: () => changePositionFunc(index, isVisible))
+                        : IconButton(icon: Icon(Icons.remove, color: Colors.white, size: 15), onPressed: () => changePositionFunc(index, isVisible))
                 ),
               ),
               Padding(

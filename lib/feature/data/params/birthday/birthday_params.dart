@@ -31,19 +31,18 @@ class BirthdayParams extends Params{
     startMonthNumber, endMonthNumber, searchString
   ];
 
-  Map toMap(){
-    return createParams(map: {
-      'dayNumber': dayNumber,
-      'monthNumber': monthNumber,
-      'pageIndex': pageIndex,
-      'pageSize': pageSize,
-      'startDayNumber': startDayNumber,
-      'endDayNumber': endDayNumber,
-      'startMonthNumber': startMonthNumber,
-      'endMonthNumber': endMonthNumber,
-      'searchString': searchString,
-    });
-  }
+  @override
+  Map get urlProps =>   {
+    'dayNumber': dayNumber,
+    'monthNumber': monthNumber,
+    'pageIndex': pageIndex,
+    'pageSize': pageSize,
+    'startDayNumber': startDayNumber,
+    'endDayNumber': endDayNumber,
+    'startMonthNumber': startMonthNumber,
+    'endMonthNumber': endMonthNumber,
+    'searchString': searchString,
+  };
 
   bool dataIsEmpty() {
     if (monthNumber == null &&

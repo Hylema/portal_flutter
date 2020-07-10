@@ -31,7 +31,7 @@ class BirthdayRemoteDataSource with ResponseHandler implements IBirthdayRemoteDa
   Future<List<BirthdayModel>> getStartEndDayBirthdayWithParams({
     @required BirthdayParams birthdayParams,
   }) async {
-    String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays/filter', birthdayParams.toMap()).toString();
+    String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays/filter', birthdayParams.toUrlParams()).toString();
 
     final response = await http.get(
         uri,
@@ -48,7 +48,7 @@ class BirthdayRemoteDataSource with ResponseHandler implements IBirthdayRemoteDa
   Future<List<BirthdayModel>> getConcreteDayBirthdayWithParams({
     @required BirthdayParams birthdayParams,
   }) async {
-    String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays', birthdayParams.toMap()).toString();
+    String uri = Uri.http('${Api.HOST_URL}', '/api/birthdays', birthdayParams.toUrlParams()).toString();
 
     final response = await http.get(
       uri,

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/auth/auth_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/birthday_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/listBookingRooms/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/polls/bloc/bloc.dart';
@@ -17,6 +19,7 @@ class SingletonBlocs {
   final ProfileBloc profileBloc;
   final PhoneBookBloc phoneBookBloc;
   final PollsBloc pollsBloc;
+  final BookingRoomsBloc bookingBloc;
 
   SingletonBlocs({
     @required this.authBloc,
@@ -27,5 +30,6 @@ class SingletonBlocs {
     @required this.profileBloc,
     @required this.phoneBookBloc,
     @required this.pollsBloc,
+    @required this.bookingBloc,
   });
 }

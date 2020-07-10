@@ -35,7 +35,7 @@ class BirthdayMainPageSwipeWidgetStateBuild extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return  Orientation.portrait == MediaQuery.of(context).orientation ? Container(
       margin: EdgeInsets.only(bottom: 0),
       child: Swiper(
           autoplay: true,
@@ -45,6 +45,18 @@ class BirthdayMainPageSwipeWidgetStateBuild extends StatelessWidget {
           },
           itemCount: listModel.length,
           viewportFraction: 0.34
+      ),
+      height: 220,
+    ) : Container(
+      margin: EdgeInsets.only(bottom: 0),
+      child: Swiper(
+          autoplay: true,
+          autoplayDelay: 4000,
+          itemBuilder: (BuildContext context, int index) {
+            return BirthdayMainPageSwipeListWidget(birthdayModel: listModel[index]);
+          },
+          itemCount: listModel.length,
+          viewportFraction: 0.2
       ),
       height: 220,
     );

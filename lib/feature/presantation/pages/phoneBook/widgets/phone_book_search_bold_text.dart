@@ -8,6 +8,7 @@ class PhoneBookSearchBoldText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(text == null || text == '') return Text('-');
     if(searchString == null || searchString == '') return Text(text);
 
     int start = RegExp((searchString).toLowerCase()).firstMatch((text).toLowerCase())?.start;

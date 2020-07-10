@@ -38,16 +38,12 @@ class PhoneBookRemoteSearchPage extends StatelessWidget {
               backButtonColor: Colors.black,
               actions: <Widget>[
                 Expanded(
-                  flex: 2,
+                  flex: 1,
                   child: Container(),
                 ),
                 Expanded(
                   flex: 10,
                   child: PhoneBookRemoteSearch(bloc: bloc,),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Container(),
                 ),
               ],
             ),

@@ -229,4 +229,8 @@ class BirthdayPageFilterViewModel extends BaseViewModel {
 
     navigation.pop();
   }
+
+  void onPressed() {
+    if(!disable) applyFilter();
+  }
 }

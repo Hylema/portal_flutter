@@ -10,27 +10,42 @@ BirthdayParams oldParams;
 
 class AppPageViewModel extends BaseViewModel {
 
-  AppPageViewModel({@required NavigationBarBloc navigationBar}){
+  final NavigationBarBloc navigationBar;
+  Orientation orientation;
+  AppPageViewModel({
+    @required this.navigationBar,
+    @required this.orientation,
+  }){
 
+
+    GlobalState.hideAppNavigationBarController = hideButtonController;
+  }
+
+  void onModelReady() {
     hideButtonController.addListener(() {
       if (hideButtonController.position.userScrollDirection ==
           ScrollDirection.reverse) {
         if(isVisible) {
+          print('HIDE!!!!!!!!!!!!!!!!!!!!!!!');
           navigationBar.add(HideNavigationBarEvent());
         }
         offset = hideButtonController.offset.ceil();
         isVisible = false;
       }
-      if (hideButtonController.position.userScrollDirection ==
-          ScrollDirection.forward) {
+      if (hideButtonController.position.userScrollDirection == ScrollDirection.forward) {
         if(!isVisible && (offset - hideButtonController.offset.ceil()) > 10) {
-          navigationBar.add(ShowNavigationBarEvent());
+          if(Orientation.portrait == orientation){
+            print('SHOW!!!!!!!!!!!!!!!!!!!!!!!$orientation');
+            navigationBar.add(ShowNavigationBarEvent());
+          }
           isVisible = true;
         }
       }
     });
+  }
 
-    GlobalState.hideAppNavigationBarController = hideButtonController;
+  void setOrientation(Orientation newOrientation) {
+    orientation = newOrientation;
   }
 
   ScrollController hideButtonController = new ScrollController();

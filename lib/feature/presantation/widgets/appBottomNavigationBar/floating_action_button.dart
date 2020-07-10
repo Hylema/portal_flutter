@@ -50,16 +50,16 @@ class MainFloatingActionButtonWidgetState extends State<MainFloatingActionButton
 
     return GestureDetector(
       onVerticalDragUpdate: DefaultBottomBarController.of(context).onDrag,
-      //onVerticalDragEnd: DefaultBottomBarController.of(context).onDragEnd,
+      onVerticalDragEnd: DefaultBottomBarController.of(context).onDragEnd,
 //      onVerticalDragUpdate: (v) {////        print('v 1=======================1 $v');
 ////        animate();
 //        return DefaultBottomBarController.of(context).onDrag;
 //      },
-      onVerticalDragEnd: (DragEndDetails v) {
-        print('primaryVelocity 2=======================2 ${v.primaryVelocity.ceil()}');
-        //animate();
-        return DefaultBottomBarController.of(context).onDragEnd(v);
-      },
+//      onVerticalDragEnd: (DragEndDetails v) {
+//        print('primaryVelocity 2=======================2 ${v.primaryVelocity.ceil()}');
+//        //animate();
+//        return DefaultBottomBarController.of(context).onDragEnd(v);
+//      },
       //child: Icon(Icons.minimize, color: Colors.red, size: 50,)
       child: FloatingActionButton(
         backgroundColor: Color.fromRGBO(238, 0, 38, 1),

@@ -14,7 +14,13 @@ class PhoneBookPageBody extends StatelessWidget {
   final List<PhoneBookModel> listPhoneBook;
   final bool fromCache;
   final PhoneBookBloc bloc;
-  PhoneBookPageBody({@required this.listPhoneBook, this.fromCache = false, @required this.bloc});
+  final bool first;
+  PhoneBookPageBody({
+    @required this.listPhoneBook,
+    this.fromCache = false,
+    @required this.bloc,
+    this.first,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +42,7 @@ class PhoneBookPageBody extends StatelessWidget {
 //    });
 
     return CustomScrollView(
-//      controller: hideButtonController,
+      controller: first ? GlobalState.hideAppNavigationBarController : ScrollController(),
       slivers: <Widget>[
         SliverList(
           delegate: SliverChildListDelegate([
@@ -46,7 +52,10 @@ class PhoneBookPageBody extends StatelessWidget {
         ),
         SliverList(
           delegate: SliverChildBuilderDelegate((BuildContext context, index){
-            return PhoneBookCreateItem(phoneBookModel: listPhoneBook[index]);
+            return PhoneBookCreateItem(
+                phoneBookModel: listPhoneBook[index],
+                last: listPhoneBook.length == index + 1
+            );
           },
               childCount: listPhoneBook.length
           ),

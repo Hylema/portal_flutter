@@ -15,13 +15,11 @@ class PhoneBookUserParams extends Params{
     this.favoriteOnly,
   });
 
-  Map toMap(){
-    return createParams(map: {
-      'departmentCode': departmentCode,
-      'searchString': searchString,
-      'favoriteOnly': favoriteOnly,
-      'pageIndex': pageIndex,
-      'pageSize': pageSize,
-    });
-  }
+  Map get urlProps => {
+    'departmentCode': departmentCode,
+    'searchString': searchString,
+    'favoriteOnly': favoriteOnly,
+    'pageIndex': pageIndex,
+    'pageSize': pageSize,
+  };
 }

@@ -2,6 +2,11 @@ import 'dart:wasm';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+///Boking
+const String METALLOINVEST = 'METALLOINVEST';
+const String JSA = 'JSA';
+const String OSKOL = 'OSKOL';
+
 
 ///Tokens
 const String JWT_TOKEN = 'jwt_token';
@@ -98,6 +103,7 @@ const String CACHE_POSITION_PAGES = 'cache_position_pages';
 const String CACHE_NEWS = 'cache_news';
 const String CACHE_PROFILE = 'cache_profile';
 const String CACHE_PHONE_BOOKS_CODES = 'cache_phone_books_codes';
+const String CACHE_BOOKING_ROOMS = 'cache_booking_rooms';
 
 
 const int BIRTHDAY_PAGE_SIZE = 15;
@@ -152,3 +158,4 @@ const String POLLS_PAGE = 'Опросы';
 const String VIDEO_PAGE = 'Видеогалерея';
 const String BIRTHDAY_PAGE = 'Дни рождения';
 const String BOOKING_PAGE = 'Бронирование переговорных';
+

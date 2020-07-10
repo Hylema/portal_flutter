@@ -43,19 +43,32 @@ class NewsMainPageSwipeWidgetBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 250,
-      child: Swiper(
-          autoplay: true,
-          autoplayDelay: 5000,
-          itemBuilder: (BuildContext context, int index) {
-            return Container(
-              child: NewsPortalItem(vertical: true, news: news[index], index: index, bloc: bloc),
-            );
-          },
-          itemCount: news.length,
-          viewportFraction: 0.8
-      )
+    return Orientation.portrait == MediaQuery.of(context).orientation ? Container(
+        height: 250,
+        child: Swiper(
+            autoplay: true,
+            autoplayDelay: 10000,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                child: NewsPortalItem(vertical: true, news: news[index], index: index, bloc: bloc),
+              );
+            },
+            itemCount: news.length,
+            viewportFraction: 0.8
+        )
+    ) : Container(
+        height: 200,
+        child: Swiper(
+            autoplay: true,
+            autoplayDelay: 10000,
+            itemBuilder: (BuildContext context, int index) {
+              return Container(
+                child: NewsPortalItem(vertical: true, news: news[index], index: index, bloc: bloc),
+              );
+            },
+            itemCount: news.length,
+            viewportFraction: 0.5
+        )
     );
   }
 }

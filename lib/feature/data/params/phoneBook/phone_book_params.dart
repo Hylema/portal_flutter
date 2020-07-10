@@ -8,9 +8,8 @@ class PhoneBookParams extends Params{
     @required this.parentCode,
   });
 
-  Map toMap(){
-    return createParams(map: {
-      'parentCode': parentCode,
-    });
-  }
+  @override
+  Map get urlProps => {
+    'parentCode': parentCode,
+  };
 }

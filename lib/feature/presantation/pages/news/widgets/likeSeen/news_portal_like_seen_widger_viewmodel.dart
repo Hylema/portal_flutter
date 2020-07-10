@@ -7,20 +7,16 @@ import 'package:flutter_architecture_project/feature/presantation/pages/news/blo
 
 class NewsPortalLikeSeenWidgetViewModel extends BaseViewModel {
 
+  final int index;
   final NewsModel news;
-  final Function likeFunc;
   final NewsPortalBloc newsBloc;
-  NewsPortalLikeSeenWidgetViewModel({@required this.news, @required this.likeFunc, @required this.newsBloc}){
+  NewsPortalLikeSeenWidgetViewModel({
+    @required this.news,
+    @required this.newsBloc,
+    @required this.index
+  }){
     isLikeNow = news.isLike();
     _likeCount = news.likesCount.toString();
-
-//    newsBloc.listen((state) {
-//      if(state is LoadedNewsPortal){
-//        actionIn = false;
-//
-//        notifyListeners();
-//      }
-//    });
   }
 
   String _likeCount;
@@ -30,6 +26,11 @@ class NewsPortalLikeSeenWidgetViewModel extends BaseViewModel {
   bool isLikeNow;
 
   Timer _debounce;
+
+  void like(String id, String guid) {
+    if(news.isLike()) newsBloc.add(RemoveLikeEvent(guid: guid, id: id, index: index));
+    else newsBloc.add(LikeNewsEvent(guid: guid, id: id, index: index));
+  }
 
   void likeIt() {
     isLikeNow = !isLikeNow;
@@ -42,7 +43,7 @@ class NewsPortalLikeSeenWidgetViewModel extends BaseViewModel {
 
     if (_debounce?.isActive ?? false) _debounce.cancel();
     _debounce = Timer(const Duration(milliseconds: 500), () {
-      if(news.isLike() != isLikeNow) likeFunc(news.id, news.guid);
+      if(news.isLike() != isLikeNow) like(news.id, news.guid);
     });
   }
 }

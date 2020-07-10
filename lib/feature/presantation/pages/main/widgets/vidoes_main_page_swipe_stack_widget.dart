@@ -34,17 +34,30 @@ class VideoGallerySwipeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: MediaQuery.of(context).size.height/3.3,
+    return Orientation.portrait == MediaQuery.of(context).orientation ? Container(
+        height: 200,
         child: Swiper(
           autoplay: true,
-          autoplayDelay: 7000,
+          autoplayDelay: 10000,
           itemBuilder: (BuildContext context, int index) {
             return VideoGalleryItemWidget(videoData: listModels[index]);
           },
           itemCount: listModels.length,
           itemWidth: MediaQuery.of(context).size.width / 1.2,
           viewportFraction: 0.8,
+          layout: SwiperLayout.STACK,
+        )
+    ) : Container(
+        height: 200,
+        child: Swiper(
+          autoplay: true,
+          autoplayDelay: 10000,
+          itemBuilder: (BuildContext context, int index) {
+            return VideoGalleryItemWidget(videoData: listModels[index]);
+          },
+          itemCount: listModels.length,
+          itemWidth: MediaQuery.of(context).size.width / 2,
+          viewportFraction: 0.5,
           layout: SwiperLayout.STACK,
         )
     );

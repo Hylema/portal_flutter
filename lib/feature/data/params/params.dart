@@ -1,14 +1,34 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
 class Params extends Equatable{
-  Map<String, String> createParams({@required Map map}){
-    Map params = {};
 
-    map.forEach((key, value) {
-      if (value != null && value != '') params[key] = '$value';
+  Map urlProps;
+  Map bodyProps;
+
+  Map<String, String> toUrlParams() {
+    Map<String, String> map = new Map();
+
+    urlProps.forEach((key, value) {
+      if(value != null && value != ''){
+        map[key] = '$value';
+      }
     });
 
-    return Map<String, String>.from(params);
+    return map;
+  }
+
+  String toBodyParams() {
+    Map map = new Map();
+
+    bodyProps.forEach((key, value) {
+      if(value != null && value != ''){
+        map[key] = value;
+      }
+    });
+
+    return jsonEncode(map);
   }
 }

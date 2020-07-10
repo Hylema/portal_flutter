@@ -91,7 +91,7 @@ class VideoGalleryItemWidget extends StatelessWidget {
     final Storage storage = getIt<Storage>();
 
     return Container(
-      height: MediaQuery.of(context).size.height/3,
+      height: 200,
       padding: EdgeInsets.only(top: 10, left: 10, right: 10),
       child: GestureDetector(
         onTap: (){
@@ -114,27 +114,6 @@ class VideoGalleryItemWidget extends StatelessWidget {
                   )
               )
           );
-//            videoData.fromYoutube() ? Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                  builder: (context) => VideoPlayerPage(videoData: videoData,)
-//                )
-//            ) : Navigator.push(
-//                context,
-//                MaterialPageRoute(
-//                    builder: (context) => WebviewScaffold(
-//                      url: videoData.videoUrl,
-//                      headers: {
-//                        'Accept': 'application/json',
-//                        'Authorization': 'Bearer ${storage.token}',
-//                      },
-//                      appBar: AppBar(
-//                        automaticallyImplyLeading: true,
-//                        backgroundColor: Colors.transparent,
-//                      ),
-//                    ),
-//                )
-//            );
         },
         child: Card(
           color: Colors.white,
@@ -147,13 +126,13 @@ class VideoGalleryItemWidget extends StatelessWidget {
                 children: <Widget>[
                   videoData.getPreviewUrl() != null ? Image.network(
                     '${videoData.getPreviewUrl()}',
-                    fit: BoxFit.fill,
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
+                    fit: BoxFit.fill,
                   ) :  Padding(
                     padding: EdgeInsets.all(20),
                     child: Image.asset(
                       'assets/images/metInvestIcon.png',
+                      width: MediaQuery.of(context).size.width,
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -165,7 +144,7 @@ class VideoGalleryItemWidget extends StatelessWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           const Color(0x00000000),
-                          const Color(0xC0000000),
+                          const Color(0xC0000000).withOpacity(0.7),
                         ],
                       ),
                     ),
@@ -177,16 +156,6 @@ class VideoGalleryItemWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                   ),
-//                        Center(
-//                          child: IconButton(
-//                            icon: Icon(
-//                              Icons.play_arrow,
-//                              size: 50,
-//                              color: Colors.white,
-//                            ),
-//                            onPressed: (){},
-//                          ),
-//                        ),
                   Padding(
                     padding: EdgeInsets.all(15),
                     child: Column(
@@ -219,4 +188,62 @@ class VideoGalleryItemWidget extends StatelessWidget {
     );
   }
 }
+
+//Stack(
+//children: <Widget>[
+//videoData.getPreviewUrl() != null ? Image.network(
+//'${videoData.getPreviewUrl()}',
+//fit: BoxFit.fill,
+//) :  Padding(
+//padding: EdgeInsets.all(20),
+//child: Image.asset(
+//'assets/images/metInvestIcon.png',
+//fit: BoxFit.fill,
+//),
+//),
+//Container(
+//decoration: BoxDecoration(
+//gradient: LinearGradient(
+//begin: Alignment.topCenter,
+//end: Alignment.bottomCenter,
+//colors: [
+//const Color(0x00000000),
+//const Color(0xC0000000),
+//],
+//),
+//),
+//),
+//Center(
+//child: Icon(
+//Icons.play_arrow,
+//size: 50,
+//color: Colors.white,
+//),
+//),
+//Padding(
+//padding: EdgeInsets.all(15),
+//child: Column(
+//mainAxisSize: MainAxisSize.max,
+//crossAxisAlignment: CrossAxisAlignment.start,
+//mainAxisAlignment: MainAxisAlignment.end,
+//children: <Widget>[
+//Padding(
+//padding: EdgeInsets.only(bottom: 15),
+//child: DateTimeWidget(
+//dataTime: videoData.created,
+//color: Colors.white,
+//),
+//),
+//Text(
+//videoData.title,
+//overflow: TextOverflow.fade,
+//maxLines: 3,
+//softWrap: true,
+//style: TextStyle(fontSize: 18, color: Colors.white),
+//),
+//],
+//),
+//),
+//]
+//),
 

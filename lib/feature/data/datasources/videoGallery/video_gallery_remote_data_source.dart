@@ -25,7 +25,7 @@ class VideoGalleryRemoteDataSource with ResponseHandler implements IVideoGallery
   Future<List<VideosGalleryModel>> getVideos({
     @required VideoGalleryParams videoGalleryParams,
   }) async {
-    String uri = Uri.http('${Api.HOST_URL}', '/api/videos', videoGalleryParams.toMap()).toString();
+    String uri = Uri.http('${Api.HOST_URL}', '/api/videos', videoGalleryParams.toUrlParams()).toString();
 
     final response = await http.get(
       uri,

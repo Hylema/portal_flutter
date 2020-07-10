@@ -12,11 +12,14 @@ class CalendarViewModel extends BaseViewModel {
   DateTime selectedDate = DateTime.now();
   String currentMonth;
   bool isExpanded = true;
-  String displayMonth = "";
+  String displayMonth = '';
   List weekDays = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"];
   List events;
 
-  CalendarViewModel({this.events});
+  CalendarViewModel({this.events}){
+    final monthFormat = DateFormat("MMMM yyyy").format(selectedDate);
+    displayMonth = "${monthFormat[0].toUpperCase()}${monthFormat.substring(1)}";
+  }
 
   List<Widget> calendarBuilder() {
     selectedMonthsDays = CalendarUtils.daysInMonth(selectedDate);
@@ -88,7 +91,13 @@ class CalendarViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onVerticalSwipe(SwipeDirection swipeDirection) {}
+  void onVerticalSwipe(SwipeDirection swipeDirection) {
+    selectedMonthsDays = CalendarUtils.daysInMonth(selectedDate);
+    if(swipeDirection == SwipeDirection.down) isExpanded = true;
+    else if(swipeDirection == SwipeDirection.up) isExpanded = false;
+
+    notifyListeners();
+  }
 
   void onHorizontalSwipe(SwipeDirection swipeDirection) {
     if (isExpanded) nextMonth();

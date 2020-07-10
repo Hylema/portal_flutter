@@ -9,6 +9,8 @@ import 'package:flutter_architecture_project/feature/data/datasources/auth/auth_
 import 'package:flutter_architecture_project/feature/data/datasources/auth/auth_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/birthday/birthday_remote_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/booking/booking_local_data_source.dart';
+import 'package:flutter_architecture_project/feature/data/datasources/booking/booking_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/main/main_params_json_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_local_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/datasources/news/news_portal_remote_data_source.dart';
@@ -20,6 +22,7 @@ import 'package:flutter_architecture_project/feature/data/datasources/profile/pr
 import 'package:flutter_architecture_project/feature/data/datasources/videoGallery/video_gallery_remote_data_source.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/auth/auth_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/birthday/birthday_repository.dart';
+import 'package:flutter_architecture_project/feature/data/repositories/booking/booking_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/main/main_params_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/news/news_portal_repository.dart';
 import 'package:flutter_architecture_project/feature/data/repositories/phoneBook/phone_book_repository.dart';
@@ -39,6 +42,16 @@ import 'package:flutter_architecture_project/feature/presantation/bloc/birthday/
 import 'package:flutter_architecture_project/feature/presantation/bloc/main/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/navigationBar/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/bloc/selectedTabIndexNavigation/selected_index_bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/booking_bloc_data.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/bookedRooms/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/listBookingRooms/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/reservation/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/reservation/models/reservation_viewmodel.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/searchUsers/bloc/bloc.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/searchUsers/models/booking_search_model.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/searchUsers/models/booking_user_search_model.dart';
+import 'package:flutter_architecture_project/feature/presantation/pages/booking/views/searchUsers/widgets/userItem/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/news/bloc/news_portal_bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/phoneBook/bloc/bloc.dart';
 import 'package:flutter_architecture_project/feature/presantation/pages/polls/bloc/bloc.dart';
@@ -57,6 +70,42 @@ Future<void> init() async {
 
 
   ///! BLOCS
+
+  /// booking
+  sl.registerFactory(() => BookingBloc(
+      repository: sl()
+  ));
+  sl.registerFactory(() => BookingRoomsBloc(
+      repository: sl(),
+      data: sl()
+  ));
+  sl.registerFactory(() => CurrentBookedRoomBloc(
+      repository: sl(),
+      data: sl()
+  ));
+  sl.registerFactory(() => ReservationRoomBloc(
+      repository: sl(),
+      storage: sl(),
+      data: sl(),
+      model: sl()
+  ));
+  sl.registerFactory(() => UsersBookingBloc(
+      repository: sl(),
+      data: sl(),
+      viewModel: sl()
+  ));
+  sl.registerFactory(() => BookingUserItemBloc(
+      repository: sl(),
+      data: sl(),
+      viewModel: sl()
+  ));
+  sl.registerFactory(() => ReservationModel());
+  sl.registerFactory(() => BookingSearchModel());
+  sl.registerFactory(() => BookingUserSearchModel());
+  sl.registerLazySingleton<BookingBlocsData>(
+        () => BookingBlocsData(),
+  );
+
 
   /// phone book
   sl.registerFactory(() => PhoneBookBloc(
@@ -126,6 +175,14 @@ Future<void> init() async {
 
 
   ///! REPOSITORY
+
+  /// booking
+  sl.registerLazySingleton<BookingRepository>(
+        () => BookingRepository(
+        remoteDataSource: sl(),
+          localDataSource: sl()
+    ),
+  );
 
   /// phone book
   sl.registerLazySingleton<PhoneBookRepository>(
@@ -197,6 +254,17 @@ Future<void> init() async {
 
 
   ///! DATA SOURCE
+
+  /// booking
+  sl.registerLazySingleton<BookingRemoteDataSource>(
+        () => BookingRemoteDataSource(
+        client: sl(),
+        storage: sl()
+    ),
+  );
+  sl.registerLazySingleton<BookingLocalDataSource>(
+        () => BookingLocalDataSource(sharedPreferences: sl(), cachedName: CACHE_BOOKING_ROOMS),
+  );
 
   /// phone book
   sl.registerLazySingleton<PhoneBookRemoteDataSource>(
@@ -307,7 +375,8 @@ Future<void> init() async {
     videoGalleryBloc: sl(),
     newsPortalBloc: sl(),
     phoneBookBloc: sl(),
-    pollsBloc: sl()
+    pollsBloc: sl(),
+    bookingBloc: sl()
   ));
 
 

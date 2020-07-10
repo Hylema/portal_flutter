@@ -6,17 +6,19 @@ import 'package:stacked/stacked.dart';
 
 class PhoneBookRemoteSearchViewModel extends BaseViewModel {
   final PhoneBookBloc bloc;
-  final FocusScopeNode focusScope;
   final String departmentCode;
   PhoneBookRemoteSearchViewModel({
     @required this.bloc,
-    @required this.focusScope,
     @required this.departmentCode,
-  });
+  }){
+    focusNode.addListener(() {
+      notifyListeners();
+    });
+  }
 
   Timer _debounce;
-  bool closeButton = false;
   TextEditingController searchController = TextEditingController();
+  FocusNode focusNode = new FocusNode();
 
   void onChanged(String value) {
     notifyListeners();
@@ -28,24 +30,9 @@ class PhoneBookRemoteSearchViewModel extends BaseViewModel {
     });
   }
 
-  void onTap() {
-    openKeyBoardPanel();
-  }
+  void onTap() {}
 
-  void onSubmit() {
-    closeKeyBoardPanel();
-  }
-
-  void openKeyBoardPanel(){
-    closeButton = true;
-    notifyListeners();
-  }
-
-  void closeKeyBoardPanel(){
-    focusScope.unfocus();
-    closeButton = false;
-    notifyListeners();
-  }
+  void onSubmit(String value) {}
 
   void clearSearch() {
     searchController.clear();

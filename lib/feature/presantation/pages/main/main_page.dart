@@ -96,7 +96,6 @@ class MainPageBody extends StatelessWidget {
         ));
       }
     }
-
     return Scaffold(
       backgroundColor: Colors.white.withOpacity(0),
       appBar: HeaderAppBar(
@@ -128,7 +127,7 @@ class MainPageBody extends StatelessWidget {
           slivers: <Widget>[
             SliverList(
               delegate: SliverChildListDelegate(list),
-            )
+            ),
           ],
         ),
       ),

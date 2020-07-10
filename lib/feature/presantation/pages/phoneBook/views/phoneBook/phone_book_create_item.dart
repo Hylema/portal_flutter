@@ -15,8 +15,12 @@ import 'package:get_it/get_it.dart';
 
 class PhoneBookCreateItem extends StatelessWidget {
   final PhoneBookModel phoneBookModel;
+  final bool last;
   final getIt = GetIt.instance;
-  PhoneBookCreateItem({@required this.phoneBookModel});
+  PhoneBookCreateItem({
+    @required this.phoneBookModel,
+    @required this.last,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +56,7 @@ class PhoneBookCreateItem extends StatelessWidget {
               );
             } : null
           ),
-          Container(
+          !last ? Container(
             margin: EdgeInsets.only(right: 20, left: 20),
             decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(
@@ -60,7 +64,7 @@ class PhoneBookCreateItem extends StatelessWidget {
                   color: Colors.grey[400],
                 ))
             ),
-          ),
+          ) : Container()
         ],
       ),
     );

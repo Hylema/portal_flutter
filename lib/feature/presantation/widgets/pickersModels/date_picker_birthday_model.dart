@@ -47,10 +47,6 @@ class DatePickerBirthdayModel extends CommonPickerModel {
 
   @override
   DateTime finalTime() {
-    print('YEAR === ${currentTime.year}');
-    print('MONTH === ${currentTime.month}');
-    print('DAY === ${currentTime.day}');
-
     return DateTime.utc(
       currentTime.year,
       1 + this.currentRightIndex(),
